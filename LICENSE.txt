@@ -1,0 +1,36 @@
+================================================================
+  Maciej EmacArt — 3D Assets
+================================================================
+
+Copyright (c) 2026 Maciej EmacArt
+
+These 3D assets (models, meshes, textures, materials) are licensed under
+the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+Full license text:
+https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary:
+https://creativecommons.org/licenses/by/4.0/
+
+----------------------------------------------------------------
+  YOU ARE FREE TO:
+----------------------------------------------------------------
+  • Use these assets in personal and commercial projects
+  • Modify, adapt, and build upon them
+  • Redistribute them
+
+----------------------------------------------------------------
+  UNDER THE FOLLOWING CONDITION (ATTRIBUTION):
+----------------------------------------------------------------
+You must give appropriate credit, provide a link to the license,
+and indicate if changes were made. Credit:
+
+  "Maciej EmacArt"
+  Website: <emaceart.dev>
+  Discord: <https://discord.com/invite/ctXaf5Ftqw>
+
+No additional restrictions — you may not apply legal terms that
+legally restrict others from doing anything the license permits.
+
+THE ASSETS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+================================================================

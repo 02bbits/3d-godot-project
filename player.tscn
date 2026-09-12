@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=4 uid="uid://bs2nby0k3haoi"]
+
+[ext_resource type="Script" path="res://scripts/player/gameplay.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://addons/JehenoAdvancedFirstPersonController/PlayerCharacter/player_character_scene.tscn" id="2_controller"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_script")
+
+[node name="Controller" parent="." instance=ExtResource("2_controller")]

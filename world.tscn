@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cdpkhvqqo10yg"]
+
+[ext_resource type="PackedScene" uid="uid://b7yhlw6evmsy4" path="res://CyberMap.scn" id="1_aqk2v"]
+[ext_resource type="Script" uid="uid://ccggw0cpda1kp" path="res://scripts/performance/LightOptimizer.gd" id="2_light"]
+[ext_resource type="PackedScene" uid="uid://dm7t2a8ynxxye" path="res://Scenes/testing_area.tscn" id="3_test"]
+[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://addons/JehenoAdvancedFirstPersonController/PlayerCharacter/player_character_scene.tscn" id="4_aqk2v"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_fj7yv"]
+sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
+
+[sub_resource type="Environment" id="Environment_tlwt5"]
+background_mode = 2
+background_color = Color(0.046193488, 0.02944614, 0.19610858, 1)
+sky = SubResource("Sky_fj7yv")
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.2
+glow_hdr_threshold = 1.5
+
+[node name="World" type="Node3D" unique_id=870758113]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=564376876]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1905026253]
+environment = SubResource("Environment_tlwt5")
+
+[node name="LightOptimizer" type="Node" parent="." unique_id=1423402951]
+script = ExtResource("2_light")
+
+[node name="Map" parent="." unique_id=2090912923 instance=ExtResource("1_aqk2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -87.50976, -0.4989999, 51.5279)
+
+[node name="TestArea" parent="." unique_id=1645962691 instance=ExtResource("3_test")]
+
+[node name="PlayerCharacter" parent="." unique_id=1631114635 instance=ExtResource("4_aqk2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.010458, 1.7500001, 13.384482)

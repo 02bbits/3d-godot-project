@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c40ug7gqlwdkc"]
+
+[ext_resource type="PackedScene" uid="uid://xjytu64eh4a8" path="res://assets/Weapon/Guns.fbx" id="1_gebvf"]
+
+[node name="Guns" unique_id=499891262 instance=ExtResource("1_gebvf")]
