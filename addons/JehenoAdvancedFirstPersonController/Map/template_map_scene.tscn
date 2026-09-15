@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://oj3blpxqf1bl"]
 
-[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://addons/JehenoAdvancedFirstPersonController/PlayerCharacter/player_character_scene.tscn" id="1_hvhfo"]
+[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://scenes/player/player_character_scene.tscn" id="1_hvhfo"]
 [ext_resource type="Material" uid="uid://cmlreoo2qwhp4" path="res://addons/JehenoAdvancedFirstPersonController/Map/Materials/floor_structure_material.tres" id="2_ivwfa"]
 [ext_resource type="PackedScene" uid="uid://b84t3rpy4cau8" path="res://addons/JehenoAdvancedFirstPersonController/Map/MovementModifiers/jumpPads/verticalJumpPad/vertical_jump_pad_scene.tscn" id="4_7e7um"]
 [ext_resource type="Material" uid="uid://3ub3li5nvjsw" path="res://addons/JehenoAdvancedFirstPersonController/Map/Materials/not_floor_structure_material.tres" id="4_ivwfa"]

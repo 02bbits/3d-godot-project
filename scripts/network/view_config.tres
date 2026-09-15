@@ -1,0 +1,17 @@
+[gd_resource type="FusionReplicationConfig" format=3]
+
+[resource]
+property_count = 2
+properties/0/path = NodePath(":view_pitch")
+properties/0/max_array_capacity = 0
+properties/0/interface_tag = ""
+properties/0/interpolate = 2
+properties/0/element_type = 0
+properties/0/element_class_name = ""
+properties/1/path = NodePath(":view_yaw")
+properties/1/max_array_capacity = 0
+properties/1/interface_tag = ""
+properties/1/interpolate = 2
+properties/1/element_type = 0
+properties/1/element_class_name = ""
+resource_name = "ViewConfig"

@@ -59,18 +59,15 @@ func input_management() -> void:
 			transitioned.emit(self, "JumpState")
 		
 	if Input.is_action_just_pressed(play_char.dash_action):
-		if play_char.time_bef_can_dash_again <= 0.0 and play_char.nb_dashs_allowed > 0:
+		if play_char.can_dash():
 			transitioned.emit(self, "DashState")
-		
-	if Input.is_action_just_pressed(play_char.fly_action):
-		transitioned.emit(self, "FlyState")
 		
 	if Input.is_action_just_pressed(play_char.slide_action):
 		if play_char.slide_floor_check.is_colliding() and play_char.last_frame_position.y > play_char.position.y and  play_char.time_bef_can_slide_again <= 0.0:
 			play_char.slide_buff_on = true
 			
 func wall_check() -> void:
-	if play_char.can_wallrun and (!play_char.is_on_floor() or play_char.is_on_wall()) and !play_char.wallrun_floor_check.is_colliding():
+	if play_char.can_wallrun and play_char.has_wallrun_momentum() and (!play_char.is_on_floor() or play_char.is_on_wall()) and !play_char.wallrun_floor_check.is_colliding():
 		if play_char.left_wall_check.is_colliding() and !play_char.right_wall_check.is_colliding() and \
 		play_char.last_wallrunned_wall_out_of_time != -1:
 			play_char.side_check_raycast_collided = -1

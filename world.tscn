@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://cdpkhvqqo10yg"]
+[gd_scene format=3 uid="uid://wjtjhht6xynm"]
 
-[ext_resource type="PackedScene" uid="uid://b7yhlw6evmsy4" path="res://CyberMap.scn" id="1_aqk2v"]
 [ext_resource type="Script" uid="uid://ccggw0cpda1kp" path="res://scripts/performance/LightOptimizer.gd" id="2_light"]
-[ext_resource type="PackedScene" uid="uid://dm7t2a8ynxxye" path="res://Scenes/testing_area.tscn" id="3_test"]
-[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://addons/JehenoAdvancedFirstPersonController/PlayerCharacter/player_character_scene.tscn" id="4_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://dm7t2a8ynxxye" path="res://scenes/testing/testing_area.tscn" id="3_test"]
+[ext_resource type="Script" uid="uid://ch3gunig8tet6" path="res://scripts/network/multiplayer.gd" id="6_net"]
+[ext_resource type="Script" path="res://scripts/ui/lobby.gd" id="7_lobby"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -22,6 +22,9 @@ glow_intensity = 0.2
 glow_hdr_threshold = 1.5
 
 [node name="World" type="Node3D" unique_id=870758113]
+script = ExtResource("6_net")
+
+[node name="FusionSpawner" type="FusionSpawner" parent="." unique_id=1956542263]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=564376876]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -32,10 +35,81 @@ environment = SubResource("Environment_tlwt5")
 [node name="LightOptimizer" type="Node" parent="." unique_id=1423402951]
 script = ExtResource("2_light")
 
-[node name="Map" parent="." unique_id=2090912923 instance=ExtResource("1_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -87.50976, -0.4989999, 51.5279)
-
 [node name="TestArea" parent="." unique_id=1645962691 instance=ExtResource("3_test")]
 
-[node name="PlayerCharacter" parent="." unique_id=1631114635 instance=ExtResource("4_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.010458, 1.7500001, 13.384482)
+[node name="Lobby" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("7_lobby")
+
+[node name="Root" type="Control" parent="Lobby"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="Lobby/Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="Lobby/Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Lobby/Root/Center"]
+layout_mode = 2
+
+[node name="V" type="VBoxContainer" parent="Lobby/Root/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Lobby/Root/Center/Panel/V"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "FPS Lobby"
+
+[node name="NameRow" type="HBoxContainer" parent="Lobby/Root/Center/Panel/V"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NameEdit" type="LineEdit" parent="Lobby/Root/Center/Panel/V/NameRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+max_length = 32
+
+[node name="RefreshButton" type="Button" parent="Lobby/Root/Center/Panel/V/NameRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh"
+
+[node name="RoomList" type="ItemList" parent="Lobby/Root/Center/Panel/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 200)
+layout_mode = 2
+
+[node name="Status" type="Label" parent="Lobby/Root/Center/Panel/V"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create a room, or join one."
+
+[node name="Buttons" type="HBoxContainer" parent="Lobby/Root/Center/Panel/V"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="HostButton" type="Button" parent="Lobby/Root/Center/Panel/V/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create Room"
+
+[node name="JoinButton" type="Button" parent="Lobby/Root/Center/Panel/V/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Room"

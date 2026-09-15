@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://bj87hyp2whnbc"]
+[gd_scene format=4 uid="uid://enemy0001"]
 
 [ext_resource type="Script" uid="uid://0qpf5iqw3d" path="res://scripts/entities/enemy/enemy.gd" id="1_eg"]
 [ext_resource type="Texture2D" uid="uid://34y8khvlq3t4" path="res://assets/Enemy/Zombie_3.png" id="3_wujgv"]

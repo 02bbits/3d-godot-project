@@ -6,14 +6,26 @@ const ATTACK_INTERVAL = 1.0
 
 var health = 3
 var cooldown := 1.0
-var player: CharacterBody3D
 
 @onready var animPlayer = $AnimationPlayer
 @onready var skeleton3d = $Skeleton3D
 func _ready() -> void:
 	add_to_group("enemy")
-	player = get_tree().get_first_node_in_group("player")
 	_play_anim("run")
+
+func _nearest_player() -> CharacterBody3D:
+	var best: CharacterBody3D = null
+	var best_d := INF
+	for p in get_tree().get_nodes_in_group("player"):
+		if not is_instance_valid(p):
+			continue
+		if p.get("dead"):
+			continue
+		var d := global_position.distance_squared_to(p.global_position)
+		if d < best_d:
+			best = p
+			best_d = d
+	return best
 
 func _find_anim(keyword: String) -> String:
 	for name in animPlayer.get_animation_list():
@@ -28,6 +40,7 @@ func _play_anim(keyword: String) -> void:
 	animPlayer.play(name)
 
 func _physics_process(delta: float) -> void:
+	var player := _nearest_player()
 	if not player:
 		return
 	var to_player = player.global_position - global_position
