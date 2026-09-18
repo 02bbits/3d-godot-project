@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ccggw0cpda1kp" path="res://scripts/performance/LightOptimizer.gd" id="2_light"]
 [ext_resource type="PackedScene" uid="uid://dm7t2a8ynxxye" path="res://scenes/testing/testing_area.tscn" id="3_test"]
 [ext_resource type="Script" uid="uid://ch3gunig8tet6" path="res://scripts/network/multiplayer.gd" id="6_net"]
-[ext_resource type="Script" path="res://scripts/ui/lobby.gd" id="7_lobby"]
+[ext_resource type="Script" uid="uid://cj74ntvchpu14" path="res://scripts/ui/lobby.gd" id="7_lobby"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -21,6 +21,54 @@ glow_enabled = true
 glow_intensity = 0.2
 glow_hdr_threshold = 1.5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
+bg_color = Color(0.035, 0.045, 0.12, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.65, 0.85, 0.75)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.18, 0.28, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.75, 0.95, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.12, 0.38, 0.5, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.95, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="World" type="Node3D" unique_id=870758113]
 script = ExtResource("6_net")
 
@@ -37,79 +85,332 @@ script = ExtResource("2_light")
 
 [node name="TestArea" parent="." unique_id=1645962691 instance=ExtResource("3_test")]
 
-[node name="Lobby" type="CanvasLayer" parent="."]
+[node name="Lobby" type="CanvasLayer" parent="." unique_id=1670482727]
 layer = 10
 script = ExtResource("7_lobby")
 
-[node name="Root" type="Control" parent="Lobby"]
+[node name="Root" type="Control" parent="Lobby" unique_id=1396287116]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="Lobby/Root"]
+[node name="Dim" type="ColorRect" parent="Lobby/Root" unique_id=789232872]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 0.6)
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.005, 0.008, 0.035, 0.9)
 
-[node name="Center" type="CenterContainer" parent="Lobby/Root"]
+[node name="MainMenu" type="Control" parent="Lobby/Root" unique_id=2000436384]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Lobby/Root/Center"]
+[node name="Center" type="CenterContainer" parent="Lobby/Root/MainMenu" unique_id=1846146446]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Lobby/Root/MainMenu/Center" unique_id=2132185430]
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="V" type="VBoxContainer" parent="Lobby/Root/Center/Panel"]
+[node name="V" type="VBoxContainer" parent="Lobby/Root/MainMenu/Center/Panel" unique_id=1058380061]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Lobby/Root/MainMenu/Center/Panel/V" unique_id=382243553]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Sample FPS"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Lobby/Root/MainMenu/Center/Panel/V" unique_id=1440570271]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.75, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "ONLINE COMBAT // PHOTON SESSION"
+horizontal_alignment = 1
+
+[node name="MainStatus" type="Label" parent="Lobby/Root/MainMenu/Center/Panel/V" unique_id=373620478]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.85, 0.9, 1)
+text = "Connecting..."
+horizontal_alignment = 1
+
+[node name="PlayOnlineButton" type="Button" parent="Lobby/Root/MainMenu/Center/Panel/V" unique_id=1345156393]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "PLAY ONLINE"
+
+[node name="QuitButton" type="Button" parent="Lobby/Root/MainMenu/Center/Panel/V" unique_id=192118302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "QUIT"
+
+[node name="Browser" type="Control" parent="Lobby/Root" unique_id=1453888510]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="Lobby/Root/Browser" unique_id=868554888]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Lobby/Root/Browser/Center" unique_id=293493545]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Lobby/Root/Browser/Center/Panel" unique_id=1549092918]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="Lobby/Root/Center/Panel/V"]
+[node name="Header" type="HBoxContainer" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=1817546678]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "FPS Lobby"
+theme_override_constants/separation = 10
 
-[node name="NameRow" type="HBoxContainer" parent="Lobby/Root/Center/Panel/V"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="NameEdit" type="LineEdit" parent="Lobby/Root/Center/Panel/V/NameRow"]
+[node name="BackButton" type="Button" parent="Lobby/Root/Browser/Center/Panel/V/Header" unique_id=740753278]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "BACK"
+
+[node name="Title" type="Label" parent="Lobby/Root/Browser/Center/Panel/V/Header" unique_id=1429220502]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.35, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "LOBBY BROWSER"
+vertical_alignment = 1
+
+[node name="ConnectionStatus" type="Label" parent="Lobby/Root/Browser/Center/Panel/V/Header" unique_id=679905375]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.85, 0.9, 1)
+text = "Connecting..."
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="RefreshButton" type="Button" parent="Lobby/Root/Browser/Center/Panel/V/Header" unique_id=1030513973]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "REFRESH"
+
+[node name="NameRow" type="HBoxContainer" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=1127055912]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="Lobby/Root/Browser/Center/Panel/V/NameRow" unique_id=1348715907]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "ROOM NAME"
+vertical_alignment = 1
+
+[node name="NameEdit" type="LineEdit" parent="Lobby/Root/Browser/Center/Panel/V/NameRow" unique_id=1862683095]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Room name"
 max_length = 32
 
-[node name="RefreshButton" type="Button" parent="Lobby/Root/Center/Panel/V/NameRow"]
+[node name="PasswordRow" type="HBoxContainer" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=1126785933]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PasswordLabel" type="Label" parent="Lobby/Root/Browser/Center/Panel/V/PasswordRow" unique_id=1390570458]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "PASSWORD"
+vertical_alignment = 1
+
+[node name="PasswordEdit" type="LineEdit" parent="Lobby/Root/Browser/Center/Panel/V/PasswordRow" unique_id=506422985]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Optional, 4-64 characters"
+max_length = 64
+secret = true
+
+[node name="RoomList" type="ItemList" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=1052440343]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+auto_height = true
+
+[node name="Status" type="Label" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=1239098958]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Refresh"
+theme_override_colors/font_color = Color(0.65, 0.85, 0.9, 1)
+text = "Select a room or create one."
+autowrap_mode = 2
 
-[node name="RoomList" type="ItemList" parent="Lobby/Root/Center/Panel/V"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 200)
+[node name="Buttons" type="HBoxContainer" parent="Lobby/Root/Browser/Center/Panel/V" unique_id=2138541877]
 layout_mode = 2
-
-[node name="Status" type="Label" parent="Lobby/Root/Center/Panel/V"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Create a room, or join one."
-
-[node name="Buttons" type="HBoxContainer" parent="Lobby/Root/Center/Panel/V"]
-layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="HostButton" type="Button" parent="Lobby/Root/Center/Panel/V/Buttons"]
+[node name="CreateButton" type="Button" parent="Lobby/Root/Browser/Center/Panel/V/Buttons" unique_id=1303175122]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-text = "Create Room"
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "CREATE LOBBY"
 
-[node name="JoinButton" type="Button" parent="Lobby/Root/Center/Panel/V/Buttons"]
+[node name="JoinButton" type="Button" parent="Lobby/Root/Browser/Center/Panel/V/Buttons" unique_id=1016039673]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "JOIN SELECTED"
+
+[node name="Waiting" type="Control" parent="Lobby/Root" unique_id=764940673]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="Lobby/Root/Waiting" unique_id=1372772415]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Lobby/Root/Waiting/Center" unique_id=334650676]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Lobby/Root/Waiting/Center/Panel" unique_id=791238744]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=71085327]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "ROOM LOBBY"
+horizontal_alignment = 1
+
+[node name="WaitingRoom" type="Label" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=1877388853]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Join Room"
+theme_override_font_sizes/font_size = 20
+text = "Room"
+horizontal_alignment = 1
+
+[node name="WaitingPlayers" type="Label" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=1109050857]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Players: 0 / 6"
+horizontal_alignment = 1
+
+[node name="WaitingStatus" type="Label" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=1835795162]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Waiting for the host to start the match."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=1562923335]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "START MATCH"
+
+[node name="WaitingLeaveButton" type="Button" parent="Lobby/Root/Waiting/Center/Panel/V" unique_id=1122719792]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "LEAVE ROOM"
+
+[node name="GameMenu" type="Control" parent="Lobby/Root" unique_id=108334308]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Lobby/Root/GameMenu" unique_id=238370422]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 116.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Lobby/Root/GameMenu/Panel" unique_id=1357562610]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Hint" type="Label" parent="Lobby/Root/GameMenu/Panel/V" unique_id=629484495]
+layout_mode = 2
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="GameLeaveButton" type="Button" parent="Lobby/Root/GameMenu/Panel/V" unique_id=403134709]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "LEAVE ROOM"

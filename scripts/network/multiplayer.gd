@@ -1,6 +1,13 @@
 extends Node3D
 
 signal room_error(message: String)
+signal network_status_changed(connected: bool, message: String)
+signal room_list_changed(rooms: Array)
+signal room_ready(room_name: String, phase: String, password_required: bool)
+signal room_phase_changed(phase: String)
+signal room_members_changed(player_count: int, max_players: int, is_master: bool)
+signal match_started
+signal room_left
 
 const PlayerScene := preload("res://scripts/player/player.tscn")
 const MAP_COLLISION_MASK := 1
@@ -8,6 +15,12 @@ const SPAWN_COLLISION_MASK := 3
 const FLOOR_MAX_ANGLE := deg_to_rad(65.0)
 const SPAWN_RAY_HEIGHT := 8.0
 const SPAWN_CLEARANCE := 0.05
+const ROOM_PHASE_WAITING := "waiting"
+const ROOM_PHASE_PLAYING := "playing"
+const GAME_VERSION := "1"
+const MAX_PLAYERS := 6
+const PASSWORD_MIN_LENGTH := 4
+const PASSWORD_MAX_LENGTH := 64
 
 @onready var spawner: FusionSpawner = $FusionSpawner
 
@@ -23,10 +36,17 @@ var _restart_in_progress := false
 var _room_name := ""
 var _create_mode := false
 var _room_request_pending := false
+var _room_request_id := 0
+var _password_attempt := ""
+var _room_phase := ROOM_PHASE_WAITING
+var _room_access_granted := false
+var _room_state_watching := false
+var _match_started := false
 
 
 func _ready() -> void:
 	if not Engine.has_singleton("Fusion"):
+		network_status_changed.emit(false, "Multiplayer unavailable")
 		push_error("Fusion is not available; multiplayer cannot start")
 		return
 
@@ -37,6 +57,7 @@ func _ready() -> void:
 	Fusion.connection_status_changed.connect(_on_connection_status_changed)
 	Fusion.room_joined.connect(_on_room_joined)
 	Fusion.room_left.connect(_on_room_left)
+	Fusion.room_list_updated.connect(_on_room_list_updated)
 	Fusion.player_joined.connect(_on_player_joined)
 	Fusion.player_left.connect(_on_player_left)
 	Fusion.master_client_changed.connect(_on_master_client_changed)
@@ -46,54 +67,72 @@ func _ready() -> void:
 
 
 # Host a new room; fails cleanly (room_error) if the name is taken.
-func host_room(name: String) -> void:
-	_request_room(name, true)
+func host_room(name: String, password: String = "") -> void:
+	_request_room(name, true, password)
 
 
 # Join an existing room by name.
-func join_room(name: String) -> void:
-	_request_room(name, false)
+func join_room(name: String, password: String = "") -> void:
+	_request_room(name, false, password)
 
 
-func _request_room(name: String, create: bool) -> void:
+func _request_room(name: String, create: bool, password: String) -> void:
+	if _room_request_pending:
+		return
+	if not Engine.has_singleton("Fusion"):
+		room_error.emit("Multiplayer is unavailable in this build.")
+		return
 	name = name.strip_edges()
 	if name.is_empty() or name.length() > 32 \
 			or not RegEx.create_from_string("^[A-Za-z0-9_.\\- ]+$").search(name):
 		room_error.emit("Room name must be 1-32 chars: letters, digits, space, _ - .")
 		return
+	if not password.is_empty() and (password.length() < PASSWORD_MIN_LENGTH \
+			or password.length() > PASSWORD_MAX_LENGTH):
+		room_error.emit("Password must be 4-64 characters, or empty for a public room.")
+		return
+	_room_request_id += 1
 	_room_name = name
 	_create_mode = create
-	if _room_request_pending:
-		return
+	_password_attempt = password
 	if Fusion.is_connected_to_photon() and not Fusion.is_in_room():
-		_join_room_now()
+		_join_room_now(_room_request_id)
 	else:
 		_connect_to_photon()
 
 
-func _join_room_now() -> void:
+func _join_room_now(request_id: int) -> void:
 	_room_request_pending = true
 	_join_started = true
 	var options := FusionRoomOptions.new()
-	# matches the ten SpawnPoints markers; more players would leave a joiner
-	# without a free validated spawn
-	options.max_players = 6
+	options.max_players = MAX_PLAYERS
 	# Remove players that stop responding, and let the room die after the last
 	# player leaves so stale rooms cannot accumulate ghosts.
 	options.player_ttl_ms = 10000
 	options.empty_room_ttl_ms = 30000
 	if _create_mode:
+		var password_required := not _password_attempt.is_empty()
+		var salt := _new_password_salt() if password_required else ""
+		options.custom_properties = {
+			"game_version": GAME_VERSION,
+			"map_id": "testing",
+			"phase": ROOM_PHASE_WAITING,
+			"password_required": password_required,
+			"password_salt": salt,
+			"password_digest": _hash_password(_password_attempt, salt) if password_required else "",
+		}
+		options.lobby_properties = ["game_version", "map_id", "phase", "password_required"]
 		Fusion.create_room(_room_name, options)
 	else:
 		Fusion.join_room(_room_name, options)
-	_watch_room_join()
+	_watch_room_join(request_id)
 
 
 # ponytail: this Fusion build has no room-join-failed signal, so failure is
 # detected by timeout. Use a real failure callback when the addon ships one.
-func _watch_room_join() -> void:
+func _watch_room_join(request_id: int) -> void:
 	await get_tree().create_timer(8.0).timeout
-	if not _room_request_pending or _room_ready:
+	if request_id != _room_request_id or not _room_request_pending or _room_ready:
 		return
 	_room_request_pending = false
 	_join_started = false
@@ -120,11 +159,48 @@ func _connect_to_photon() -> void:
 	Fusion.connect_to_photon(user_id, region)
 
 
+func refresh_rooms() -> void:
+	if Engine.has_singleton("Fusion") and Fusion.is_connected_to_photon() and not Fusion.is_in_room():
+		_refresh_room_list()
+
+
+func leave_room() -> void:
+	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
+		Fusion.leave_room()
+
+
+func start_match() -> void:
+	if not _room_ready or not _room_access_granted or not Fusion.is_master_client():
+		return
+	var room: Object = Fusion.get_room()
+	if room == null or not room.has_method("set_property"):
+		room_error.emit("This Fusion build cannot start the room.")
+		return
+	if not bool(room.set_property("phase", ROOM_PHASE_PLAYING)):
+		room_error.emit("The host could not start the room.")
+		return
+	if room.has_method("set_open"):
+		room.set_open(false)
+	_room_phase = ROOM_PHASE_PLAYING
+	room_phase_changed.emit(_room_phase)
+	_spawn_local_player.call_deferred()
+
+
+func is_room_master() -> bool:
+	return _room_ready and Fusion.is_master_client()
+
+
+func is_in_room() -> bool:
+	return _room_ready
+
+
 func _on_connected_to_photon() -> void:
+	network_status_changed.emit(true, "Connected")
+	_refresh_room_list()
 	if _room_ready or _room_name.is_empty():
 		return
 	print("connected, %s room" % ("creating" if _create_mode else "joining"))
-	_join_room_now()
+	_join_room_now(_room_request_id)
 
 
 func _on_connection_failed(error: String) -> void:
@@ -134,12 +210,15 @@ func _on_connection_failed(error: String) -> void:
 	# Fusion also emits this for room join failures and stays on the master
 	# server; only a real connect failure needs a reconnect on retry.
 	_connection_started = Fusion.is_connected_to_photon()
+	network_status_changed.emit(false, "Connection failed")
 	room_error.emit("Photon connection failed: " + error)
 	push_error("Photon connection failed: " + error)
 
 
 func _on_connection_status_changed(status: int) -> void:
 	print("Photon connection status: ", status)
+	if not Fusion.is_connected_to_photon():
+		network_status_changed.emit(false, "Connecting to Photon...")
 
 
 func _on_room_joined() -> void:
@@ -148,7 +227,16 @@ func _on_room_joined() -> void:
 	_room_ready = true
 	_join_started = false
 	_room_request_pending = false
-	_spawn_local_player.call_deferred()
+	_room_access_granted = _verify_room_password(_password_attempt)
+	_password_attempt = ""
+	if not _room_access_granted:
+		room_error.emit("Incorrect password.")
+		Fusion.leave_room()
+		return
+	_room_phase = _get_room_phase()
+	room_ready.emit(_room_name, _room_phase, _room_requires_password())
+	_emit_room_members()
+	_watch_room_state.call_deferred()
 
 
 func _on_room_left() -> void:
@@ -159,16 +247,125 @@ func _on_room_left() -> void:
 	_restart_in_progress = false
 	_local_player = null
 	_players_by_owner.clear()
+	_room_access_granted = false
+	_room_phase = ROOM_PHASE_WAITING
+	_room_state_watching = false
+	_match_started = false
+	_room_name = ""
+	_create_mode = false
+	_password_attempt = ""
 	_clear_local_player_nodes()
+	room_left.emit()
 
 
 func _on_master_client_changed(old_id: int, new_id: int) -> void:
 	print("Photon master client changed: ", old_id, " -> ", new_id)
+	_emit_room_members()
 
 
 func _on_player_joined(player_id: int, _user_id: String) -> void:
+	_emit_room_members.call_deferred()
 	if player_id != Fusion.get_local_player_id():
 		_sync_life_state.call_deferred(player_id)
+
+
+func _on_player_left(player_id: int, _is_inactive: bool) -> void:
+	# ponytail: remove inactive players immediately; reconnect grace needs stable
+	# account identity and a room-level reservation protocol.
+	var player: Node = _players_by_owner.get(player_id)
+	if player == null:
+		player = _find_player_by_owner_id(player_id)
+	_players_by_owner.erase(player_id)
+	if player == null or not is_instance_valid(player):
+		if not _sweep_departed_replicas():
+			push_warning("Photon player left without a local replica: ", player_id)
+		_emit_room_members()
+		return
+	if player == _local_player:
+		_local_player = null
+	print("removing disconnected player ", player_id, " at ", player.get_path())
+	_remove_departed_player(player)
+	_emit_room_members()
+
+
+func _on_room_list_updated(rooms: Array) -> void:
+	room_list_changed.emit(rooms)
+
+
+func _refresh_room_list() -> void:
+	if Engine.has_singleton("Fusion") and Fusion.is_connected_to_photon() and not Fusion.is_in_room():
+		room_list_changed.emit(Fusion.get_room_list())
+
+
+func _emit_room_members() -> void:
+	if not _room_ready or not Fusion.is_in_room():
+		return
+	var room: Object = Fusion.get_room()
+	if room == null:
+		return
+	var count := int(room.get_player_count()) if room.has_method("get_player_count") else 0
+	var max_players := int(room.get_max_players()) if room.has_method("get_max_players") else MAX_PLAYERS
+	room_members_changed.emit(count, max_players, Fusion.is_master_client())
+
+
+func _watch_room_state() -> void:
+	if _room_state_watching:
+		return
+	_room_state_watching = true
+	while _room_ready and _room_access_granted:
+		var phase := _get_room_phase()
+		if phase != _room_phase:
+			_room_phase = phase
+			room_phase_changed.emit(phase)
+		_emit_room_members()
+		if phase == ROOM_PHASE_PLAYING:
+			_spawn_local_player.call_deferred()
+			_room_state_watching = false
+			return
+		await get_tree().create_timer(0.5).timeout
+	_room_state_watching = false
+
+
+func _get_room_custom_properties() -> Dictionary:
+	if not Fusion.is_in_room():
+		return {}
+	var room: Object = Fusion.get_room()
+	if room == null or not room.has_method("get_custom_properties"):
+		return {}
+	return room.get_custom_properties()
+
+
+func _get_room_phase() -> String:
+	var props := _get_room_custom_properties()
+	# Existing rooms created before the lobby phase metadata still start directly.
+	return String(props.get("phase", ROOM_PHASE_PLAYING))
+
+
+func _room_requires_password() -> bool:
+	return bool(_get_room_custom_properties().get("password_required", false))
+
+
+func _verify_room_password(password: String) -> bool:
+	var props := _get_room_custom_properties()
+	if not bool(props.get("password_required", false)):
+		return true
+	var salt := String(props.get("password_salt", ""))
+	var digest := String(props.get("password_digest", ""))
+	if salt.is_empty() or digest.is_empty():
+		return false
+	# ponytail: client-side room gate, not cheat-proof; use authoritative admission when hostile clients matter.
+	return _hash_password(password, salt) == digest
+
+
+func _new_password_salt() -> String:
+	return Crypto.new().generate_random_bytes(16).hex_encode()
+
+
+func _hash_password(password: String, salt: String) -> String:
+	var context := HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update((salt + "\n" + password).to_utf8_buffer())
+	return context.finish().hex_encode()
 
 
 func _sync_life_state(player_id: int) -> void:
@@ -193,26 +390,6 @@ func _register_player(node: Node) -> void:
 		_players_by_owner[owner_id] = node
 	if not bool(node.get("is_remote")):
 		_local_player = node as PlayerCharacter
-
-
-func _on_player_left(player_id: int, _is_inactive: bool) -> void:
-	# ponytail: remove inactive players immediately; reconnect grace needs stable
-	# account identity and a room-level reservation protocol.
-	var player: Node = _players_by_owner.get(player_id)
-	if player == null:
-		player = _find_player_by_owner_id(player_id)
-	_players_by_owner.erase(player_id)
-	if player == null or not is_instance_valid(player):
-		# ponytail: on a TTL reap Fusion can zero the replica's owner id before
-		# player_left arrives (owner=0), so the per-id lookup misses; sweep
-		# remote replicas not owned by an active room player instead.
-		if not _sweep_departed_replicas():
-			push_warning("Photon player left without a local replica: ", player_id)
-		return
-	if player == _local_player:
-		_local_player = null
-	print("removing disconnected player ", player_id, " at ", player.get_path())
-	_remove_departed_player(player)
 
 
 # Free remote player replicas whose owner is no longer an active room player.
@@ -271,7 +448,8 @@ func _clear_local_player_nodes() -> void:
 
 
 func _spawn_local_player() -> void:
-	if not _room_ready or _spawn_in_progress or is_instance_valid(_local_player):
+	if not _room_ready or not _room_access_granted or _room_phase != ROOM_PHASE_PLAYING \
+			or _spawn_in_progress or is_instance_valid(_local_player):
 		return
 	_spawn_in_progress = true
 	var spawn_transform: Variant = null
@@ -297,6 +475,8 @@ func _spawn_local_player() -> void:
 	_local_player = player
 	_spawn_in_progress = false
 	_register_player(player)
+	_match_started = true
+	match_started.emit()
 	print("joined room, spawned player at ", player.global_position)
 
 func respawn_player(player: PlayerCharacter) -> void:

@@ -321,7 +321,8 @@ func stamina_tick(delta: float) -> void:
 		_stamina_regen_timer = stamina_regen_delay
 		if stamina <= 0.0:
 			# HUD: add "stamina exhausted" cue here
-			state_machine.curr_state.transitioned.emit(state_machine.curr_state, "WalkState")
+			var exhausted_state := "WalkState" if is_on_floor() else "InairState"
+			state_machine.curr_state.transitioned.emit(state_machine.curr_state, exhausted_state)
 	elif _stamina_regen_timer > 0.0:
 		_stamina_regen_timer -= delta
 	elif stamina < stamina_max:

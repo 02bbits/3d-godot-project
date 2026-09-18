@@ -16,12 +16,13 @@ This document is the onboarding manual: how to run the project, how each system 
 ### Opening and running
 1. Open the project folder in Godot 4.7. First open triggers an import pass (FBX assets, sounds) — let it finish.
 2. The main scene is `world.tscn` (set in `project.godot` → `run/main_scene`). Press **F5** (Run Project).
-3. On start, the **lobby overlay** appears: type a room name (a random one is prefilled) and **Create Room** to host, or **Join Room** to join an existing one. Joining a room spawns your player; the overlay hides and the mouse is captured.
-4. To play together, one instance creates a room; every other instance joins with the **same room name** (or double-clicks it in the room browser list). Both instances then see each other's player as a red capsule.
+3. On start, the **main menu** appears. Choose **Play Online** to open the room browser. Create a room with a name and optional password, or select a listed room and enter its password when required.
+4. Joining a room opens its waiting screen. The host chooses **Start Match**; only then are players spawned and the mouse captured. Both instances then see each other's player as a red capsule.
 
 ### Testing multiplayer locally
-Run the project **twice** (two editor instances, or one editor + one exported build). In one, **Create Room** (keep the prefilled name); in the other, type the same name and **Join Room** (or pick it from the browser list after Refresh). Each sees the other's player as a red capsule.
+Run the project **twice** (two editor instances, or one editor + one exported build). In one, choose **Play Online** and **Create Lobby**; in the other, choose **Play Online** and join the same room from the list. Once both clients are in the waiting screen, the host chooses **Start Match**. Each then sees the other's player as a red capsule.
 
+- Escape: open the in-game leave menu
 - Left mouse button: shoot
 - R: reload
 - WASD/Space/Ctrl/Shift: the Jeheno controller's walk/run/jump/crouch/dash/slide/wallrun moves
@@ -83,7 +84,7 @@ Fusion is a Photon wrapper exposed as the global `Fusion` singleton. Key facts f
 | Concept | Where | What it does |
 |---|---|---|
 | `FusionSpawner` | `world.tscn` root level | Spawns networked scenes. `scripts/network/multiplayer.gd` validates a map spawn marker before calling `spawner.spawn()` and tracks the local player. Departed replicas are removed through Fusion when possible, with a local fallback after the owner is gone. |
-| Lobby overlay | `world.tscn` → `Lobby` (`scripts/ui/lobby.gd`) | Create/Join room by name, room browser (`Fusion.get_room_list` + `room_list_updated`), status/errors via `multiplayer.room_error`. Shown at startup and again on `room_left`; hides on `room_joined`. |
+| Main menu and lobby UI | `world.tscn` → `Lobby` (`scripts/ui/lobby.gd`) | Main menu, room browser, optional password, waiting room, match start, and leave flow. UI consumes signals from `scripts/network/multiplayer.gd` instead of connecting directly to Fusion. |
 | `FusionSharedReplicator` | child of each player (`player.tscn`) | Shared-authority replication. Root transform/velocity replication is enabled; the custom config (`scripts/network/view_config.tres`) adds interpolated `view_pitch` and `view_yaw` so remote copies aim their visible gun. |
 | `Fusion.rpc(callable, ...args)` | room broadcast | Calls the method (by `Callable(target, "method")`) on **every peer**, mapped to each peer's corresponding replica of that node. The sending peer also receives its own broadcast, so RPC handlers usually start with `if is_remote: ...`. |
 | `Fusion.rpc_to(target, callable, args)` | | Targeted RPC. `Fusion.TARGET_OWNER` routes to the owner client of a replica. |
@@ -107,7 +108,7 @@ Normal restart is an in-room respawn. The existing network player is reset inste
 ### Known networking limitations
 - **Shared Authority remains client-authoritative.** This is suitable for trusted co-op, not a cheat-resistant competitive FPS. Client-Server Fusion topology is still required for competitive production.
 - The bundled Fusion preview crashes when the optional pre-spawn callback, `PlayerAttached` ownership, extra custom replication properties, or **instantiating the player scene outside the tree** (its `FusionSharedReplicator` registers with the native client and corrupts the real spawn) are used. The implementation therefore assigns the validated transform immediately after `spawn()`, mirrors the hitbox capsule with `CapsuleShape3D.new()` for spawn validation, performs explicit local cleanup, and syncs dead/respawn visuals with RPCs. Upgrade the native Fusion addon before replacing those fallbacks.
-- The room is created/joined from the lobby (`Fusion.create_room` / `Fusion.join_room` in `scripts/network/multiplayer.gd`, driven by `scripts/ui/lobby.gd`) with a 6-player cap (matches the six spawn markers), a 10s player TTL for crashed clients, and a 30s empty-room TTL. There is no dedicated room-join-failed signal in this Fusion build, so a failed create/join (name taken, room full, room gone) is detected by an 8s watchdog and surfaced as `room_error` to the lobby. The room browser (`Fusion.get_room_list` + `room_list_updated`) lists every public room of this shared worldwide demo app id. Hard-killed clients leave ghosts until the player TTL reaps them; graceful exits call `Fusion.leave_room()` from `_exit_tree`.
+- The room is created/joined from the browser (`Fusion.create_room` / `Fusion.join_room` in `scripts/network/multiplayer.gd`) with a 6-player cap, a 10s player TTL for crashed clients, and a 30s empty-room TTL. New rooms advertise only safe metadata (`phase`, map, version, and whether a password is required). A password is checked before player spawn using a salted digest stored in room properties. This is a casual client-side gate, not cheat-proof admission; an authoritative service is required for hostile clients. There is no dedicated room-join-failed signal in this Fusion build, so a failed create/join (name taken, room full, room gone) is detected by an 8s watchdog and surfaced as `room_error` to the UI. The room browser lists public rooms in the configured `asia` region. Hard-killed clients leave ghosts until the player TTL reaps them; graceful exits call `Fusion.leave_room()` from `_exit_tree`.
 - Enemies are spawned per-client by a local spawner (`scripts/entities/enemy/spawner.gd`) and are not networked at all.
 
 ---
