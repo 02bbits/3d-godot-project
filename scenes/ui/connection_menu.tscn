@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://cuvjegawj3f6h"]
+
+[ext_resource type="Script" uid="uid://yr6i1ueijlh6" path="res://scripts/ui/connection_ui.gd" id="1_menu"]
+[ext_resource type="FontFile" uid="uid://bwr73i28ligrq" path="res://assets/fonts/Ticketing.ttf" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 40.0
+content_margin_top = 32.0
+content_margin_right = 40.0
+content_margin_bottom = 32.0
+bg_color = Color(0.09, 0.1, 0.13, 0.97)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="ConnectionMenu" type="Control" unique_id=1966866533]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=2046416075]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1847624530]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=1719900818]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Center/Panel" unique_id=549646642]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Center/Panel/V" unique_id=1484046787]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 42
+text = "Multi-Modifier FPS"
+horizontal_alignment = 1
+
+[node name="Nickname" type="LineEdit" parent="Center/Panel/V" unique_id=1165177732]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+placeholder_text = "Nickname"
+
+[node name="Room" type="LineEdit" parent="Center/Panel/V" unique_id=170534106]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "fps-room"
+placeholder_text = "Room name"
+
+[node name="ConnectButton" type="Button" parent="Center/Panel/V" unique_id=83492191]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 26
+text = "Connect"
+
+[node name="DisconnectButton" type="Button" parent="Center/Panel/V" unique_id=84361579]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 26
+text = "Disconnect"
+
+[node name="StatusLabel" type="Label" parent="Center/Panel/V" unique_id=1999587761]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+horizontal_alignment = 1

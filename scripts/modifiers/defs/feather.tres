@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"feather"
+display_name = "Feather"
+description = "You fall like a feather: 20% less gravity."
+tags = Array[StringName]([&"move"])
+rarity = 1
+stackable = false
+max_stacks = 1
+exclusive_group = &"gravity"
+stat_adds = {}
+stat_mults = {"gravity": 0.8}

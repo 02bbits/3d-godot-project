@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"plating"
+display_name = "Plating"
+description = "+25 max health, healed on pickup. Stacks up to 2."
+tags = Array[StringName]([&"defense"])
+rarity = 0
+stackable = true
+max_stacks = 2
+exclusive_group = &""
+stat_adds = {"max_health": 25.0}
+stat_mults = {}

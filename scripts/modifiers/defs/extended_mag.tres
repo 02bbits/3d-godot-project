@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"extended_mag"
+display_name = "Extended Mag"
+description = "+40% magazine size. Stacks up to 2."
+tags = Array[StringName]([&"weapon"])
+rarity = 0
+stackable = true
+max_stacks = 2
+exclusive_group = &""
+stat_adds = {}
+stat_mults = {"mag_size": 1.4}

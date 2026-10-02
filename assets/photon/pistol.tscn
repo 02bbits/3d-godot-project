@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Assets/gltf/Gun_Pistol.gltf" id="1_bjyjj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjyjj"]
+albedo_color = Color(1, 0.8, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.1, 1)
+emission_energy_multiplier = 5.0
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_iqmi6"]
+direction = Vector3(0, 0, -1)
+spread = 15.0
+initial_velocity_min = 3.0
+initial_velocity_max = 6.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.03
+scale_max = 0.08
+
+[sub_resource type="SphereMesh" id="SphereMesh_d50ra"]
+radius = 0.01
+height = 0.02
+
+[node name="Pistol" instance=ExtResource("1_bjyjj")]
+
+[node name="MuzzleFlash" type="GPUParticles3D" parent="." index="1"]
+transform = Transform3D(-1.5380682, -0.00021938463, 0.03484317, -0.0033394177, 1.5322782, -0.13776354, -0.034683548, -0.13780394, -1.5318866, -0.00059643015, 0.12450768, 0.6533601)
+material_override = SubResource("StandardMaterial3D_bjyjj")
+cast_shadow = 0
+emitting = false
+amount = 6
+lifetime = 0.15
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_iqmi6")
+draw_pass_1 = SubResource("SphereMesh_d50ra")

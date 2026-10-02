@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://c0lkag13jb6ru"]
+
+[ext_resource type="Script" uid="uid://8daitqvufwbi" path="res://scripts/entities/target/target.gd" id="1_tgt"]
+[ext_resource type="PackedScene" uid="uid://jryufdsu3dua" path="res://assets/KayKit_Prototype/Assets/fbx/target_small.fbx" id="2_vis"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.1, 1.1, 0.3)
+
+[sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_target"]
+property_count = 1
+properties/0/path = NodePath(":net_health")
+properties/0/max_array_capacity = 0
+properties/0/interface_tag = ""
+properties/0/interpolate = 0
+properties/0/element_type = 0
+properties/0/element_class_name = ""
+
+[node name="Target" type="StaticBody3D" unique_id=1621422719]
+script = ExtResource("1_tgt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=551600609]
+shape = SubResource("BoxShape3D_1")
+
+[node name="TargetVisual" parent="." unique_id=904203661 instance=ExtResource("2_vis")]
+
+[node name="FusionReplicator" type="FusionSharedReplicator" parent="." unique_id=733251842]
+owner_mode = 3
+replication_config = SubResource("FusionReplicationConfig_target")
+process_priority = -2147483647
+process_physics_priority = -2147483647

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"heavy_rounds"
+display_name = "Heavy Rounds"
+description = "+15% damage, 5% slower fire rate."
+tags = Array[StringName]([&"weapon", &"combat"])
+rarity = 1
+stackable = false
+max_stacks = 1
+exclusive_group = &""
+stat_adds = {}
+stat_mults = {"damage": 1.15, "fire_rate": 0.95}

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"fast_hands"
+display_name = "Fast Hands"
+description = "30% faster reloads."
+tags = Array[StringName]([&"weapon"])
+rarity = 1
+stackable = false
+max_stacks = 1
+exclusive_group = &""
+stat_adds = {}
+stat_mults = {"reload_time": 0.7}

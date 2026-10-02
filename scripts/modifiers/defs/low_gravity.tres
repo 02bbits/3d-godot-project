@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Modifier" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"low_gravity"
+display_name = "Moon Boots"
+description = "Your gravity is cut by 40%. Float everywhere."
+tags = Array[StringName]([&"chaos", &"move"])
+rarity = 2
+stackable = false
+max_stacks = 1
+exclusive_group = &"gravity"
+stat_adds = {}
+stat_mults = {"gravity": 0.6}
