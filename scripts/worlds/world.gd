@@ -29,7 +29,7 @@ func respawn_player(player: PlayerCharacter) -> void:
 	# embedded in the floor and tunnels through it.
 	# ponytail: flat-floor assumption; raycast the floor like /fps's
 	# _find_spawn_transform if markers ever sit on slopes or platforms.
-	var lift := player.base_hitbox_height * 0.5 + 0.05
+	var lift := player.base_hitbox_height * 0.5 + 0.5
 	player.reset_for_respawn(spawn_point.global_transform.translated(Vector3.UP * lift))
 
 

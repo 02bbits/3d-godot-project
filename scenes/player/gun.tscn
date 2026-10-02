@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://by585hceihoap" path="res://scripts/player/gun/gun.gd" id="1_nrf3j"]
 [ext_resource type="Script" uid="uid://ct57qr8d06w8d" path="res://scripts/player/hit_confirm.gd" id="2_hitc"]
 [ext_resource type="AudioStream" uid="uid://cohxjyjukvmit" path="res://assets/audio/metalLatch.ogg" id="3_kill"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4eqo"]
 resource_name = "metal"
@@ -203,8 +204,8 @@ _data = {
 script = ExtResource("1_nrf3j")
 
 [node name="Body" type="MeshInstance3D" parent="." unique_id=1871866254]
-visible = false
 transform = Transform3D(-3.496911e-07, -8, -3.496911e-07, 0, -3.496911e-07, 8, -8, 3.496911e-07, 1.5285484e-14, 0, 0, 0)
+visible = false
 mesh = SubResource("ArrayMesh_3nboo")
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=2024110002]
@@ -241,11 +242,11 @@ omni_range = 3.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1145642984]
 libraries/ = SubResource("AnimationLibrary_iti32")
 
-[node name="HitConfirm" type="CanvasLayer" parent="."]
+[node name="HitConfirm" type="CanvasLayer" parent="." unique_id=42008126]
 layer = 20
 script = ExtResource("2_hitc")
 
-[node name="HitMarker" type="Label" parent="HitConfirm"]
+[node name="HitMarker" type="Label" parent="HitConfirm" unique_id=1241218108]
 modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -253,13 +254,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
-theme_override_font_sizes/font_size = 64
-text = "×"
+theme_override_fonts/font = ExtResource("4_e0dt0")
+theme_override_font_sizes/font_size = 30
+text = "<  >"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="KillLabel" type="Label" parent="HitConfirm"]
+[node name="KillLabel" type="Label" parent="HitConfirm" unique_id=1828097359]
 modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -270,11 +273,12 @@ offset_right = 150.0
 offset_bottom = 96.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.3, 1)
+theme_override_fonts/font = ExtResource("4_e0dt0")
 theme_override_font_sizes/font_size = 34
-text = "ELIMINATED"
+text = "Eliminated"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="KillSound" type="AudioStreamPlayer" parent="HitConfirm"]
+[node name="KillSound" type="AudioStreamPlayer" parent="HitConfirm" unique_id=1195275382]
 stream = ExtResource("3_kill")
 pitch_scale = 0.6

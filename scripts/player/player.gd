@@ -90,7 +90,7 @@ var slide_buff_on: bool = false
 
 @export_group("Dash variables")
 var dash_direction: Vector3 = Vector3.ZERO
-@export var dash_speed: float = 34.0
+@export var dash_speed: float = 64.0
 @export var dash_time: float = 0.1
 var dash_time_ref: float
 @export var nb_dashs_allowed: int = 1
@@ -140,6 +140,7 @@ var is_remote: bool = false #true when this instance is a networked copy we don'
 var network_role_ready: bool = false #role resolved by setup_network_control
 var view_yaw: float = 0.0 #replicated camera yaw (radians), owner writes / remote reads
 var view_pitch: float = 0.0 #replicated camera pitch (radians), owner writes / remote reads
+var body_yaw: float = 0.0 #replicated torso facing (radians); lags view_yaw so the neck stays realistic
 
 # Replicated player state (starter-style event counters). Setters run on every
 # peer: the authority when it changes a value, replicas when the value arrives.
@@ -160,6 +161,19 @@ var net_reload_count: int = 0:
 		net_reload_count = value
 		if is_node_ready() and value > previous and not dead:
 			weapon.reload_visual()
+var net_hit_count: int = 0:
+	set(value):
+		var previous := net_hit_count
+		net_hit_count = value
+		if is_node_ready() and value > previous:
+			_show_hit()
+var net_dash_count: int = 0:
+	set(value):
+		var previous := net_dash_count
+		net_dash_count = value
+		if is_node_ready() and value > previous:
+			movement_state_machine.travel("Dash")
+var net_crouched: bool = false
 var net_jump_count: int = 0:
 	set(value):
 		var previous := net_jump_count
@@ -175,7 +189,6 @@ var net_land_count: int = 0:
 var net_is_grounded: bool = false
 var net_hit_position: Vector3 = Vector3.ZERO
 var net_hit_normal: Vector3 = Vector3.ZERO
-var _pistol_rest: Vector3 = Vector3.ZERO
 
 @export_group("Stamina variables")
 @export var stamina_max: float = 100.0
@@ -213,6 +226,12 @@ var default_input_actions : Dictionary
 @export var death_effect: PackedScene
 @export var head_meshes: Array[MeshInstance3D] = []
 
+@export_group("Head tracking")
+@export_range(0.0, 180.0, 1.0) var head_yaw_limit_degrees: float = 80.0 #neck turn before the torso follows
+@export var body_turn_smoothing: float = 8.0
+@export_range(0.0, 5.0, 0.01) var shot_body_turn_duration: float = 0.0 #torso aligns to the aim when firing
+var _shot_turn_tween: Tween
+
 #references variables
 @onready var cam_holder: Node3D = $CameraHolder
 @onready var cam: Camera3D = %Camera
@@ -225,6 +244,7 @@ var default_input_actions : Dictionary
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var weapon_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Weapon/playback")
 @onready var movement_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Movement/playback")
+@onready var head_look: LookAtModifier3D = $VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/HeadLook
 @onready var jump_sound: AudioStreamPlayer3D = $Sounds/JumpSound
 @onready var land_sound: AudioStreamPlayer3D = $Sounds/LandSound
 @onready var fire_sound: AudioStreamPlayer3D = $Sounds/FireSound
@@ -244,9 +264,9 @@ func _ready() -> void:
 	$Health.max_health = max_health
 	health = max_health
 	$Health.died.connect(_die)
+	$Health.damaged.connect(_on_damaged)
 	$Health.health_changed.connect(_on_health_changed)
 	$RespawnTimer.timeout.connect(request_restart)
-	_pistol_rest = pistol.position
 	nickname_label.text = net_nickname
 	stamina = stamina_max
 	hit_ground_cooldown_ref = hit_ground_cooldown
@@ -325,7 +345,7 @@ func _process(delta: float) -> void:
 
 	stamina_tick(delta)
 
-	network_view_sync()
+	network_view_sync(delta)
 
 	_animate_locomotion(delta)
 
@@ -333,6 +353,8 @@ func _process(delta: float) -> void:
 # it always decays back to one. Locomotion blends the animation tree in local
 # space so strafing/backpedal read correctly.
 func _animate_locomotion(delta: float) -> void:
+	if dead:
+		return
 	visual_root.scale = visual_root.scale.lerp(Vector3.ONE, delta * 8)
 
 	# blend in the model's facing space (already yawed by view_yaw); remote
@@ -344,15 +366,42 @@ func _animate_locomotion(delta: float) -> void:
 	animation_tree.set("parameters/Alive/Movement/Locomotion/blend_position",
 		last_blend.lerp(target_blend, delta * 12))
 
-func network_view_sync() -> void:
+func network_view_sync(delta: float) -> void:
 	if is_remote:
 		cam_holder.rotation.y = view_yaw
 		cam.rotation.x = view_pitch
 	else:
 		view_yaw = cam_holder.rotation.y
 		view_pitch = cam.rotation.x
-	# the visible model faces the owner's look direction on every peer
-	visual_root.rotation.y = view_yaw
+		_update_body_yaw(delta)
+	# the visible model faces body_yaw; the head (LookAtModifier3D) covers the
+	# remaining angle up to the neck limit on every peer
+	visual_root.rotation.y = body_yaw
+
+func _update_body_yaw(delta: float) -> void:
+	# a shot turn owns the torso until it finishes
+	if _shot_turn_tween != null and _shot_turn_tween.is_valid() and _shot_turn_tween.is_running():
+		return
+	# past the neck limit the torso catches up until the head can aim again
+	var limit := deg_to_rad(head_yaw_limit_degrees)
+	var offset := angle_difference(body_yaw, view_yaw)
+	if absf(offset) <= limit:
+		return
+	var target := view_yaw - signf(offset) * limit
+	body_yaw = lerp_angle(body_yaw, target, clampf(body_turn_smoothing * delta, 0.0, 1.0))
+
+func turn_body_to_aim() -> void:
+	# firing commits the torso to where the head is aiming
+	if is_remote:
+		return
+	if _shot_turn_tween != null and _shot_turn_tween.is_valid():
+		_shot_turn_tween.kill()
+	var from := body_yaw
+	var target := cam_holder.rotation.y
+	_shot_turn_tween = create_tween()
+	_shot_turn_tween.tween_method(
+		func(t: float) -> void: body_yaw = lerp_angle(from, target, t),
+		0.0, 1.0, shot_body_turn_duration)
 
 func _physics_process(_delta: float) -> void:
 	modify_physics_properties()
@@ -479,6 +528,7 @@ func rpc_draft_pick(index: int, use_reroll: bool = false) -> void:
 		dm.register_pick(requester, index, use_reroll)
 
 func _show_fire_effects() -> void:
+	turn_body_to_aim()
 	pistol_muzzle_flash.restart()
 	fire_sound.play()
 	weapon_state_machine.travel("Fire")
@@ -501,11 +551,20 @@ func _show_land() -> void:
 		visual_root.scale = Vector3(1.25, 0.75, 1.25)
 	land_sound.play()
 
+# Owner-side hit reaction: bumps the replicated counter so every peer replays
+# the flinch through the setter.
+func _on_damaged(_amount: float, _attacker_id: int) -> void:
+	net_hit_count += 1
+
+func _show_hit() -> void:
+	if dead:
+		return
+	var request := "parameters/Alive/HitB/request" if health < max_health * 0.5 \
+			else "parameters/Alive/HitA/request"
+	animation_tree.set(request, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+
 func animate_reload() -> void:
-	var t := create_tween()
-	t.tween_property(pistol, "position", _pistol_rest + Vector3(0, -0.12, 0.04), 0.18)
-	t.tween_interval(0.5)
-	t.tween_property(pistol, "position", _pistol_rest, 0.25)
+	weapon_state_machine.travel("Reload")
 
 func _on_health_changed(current: float, previous: float) -> void:
 	if current <= 0.0 and previous > 0.0 and death_effect != null:
@@ -541,6 +600,9 @@ func _die(attacker_id: int = -1) -> void:
 	if dead:
 		return
 	dead = true
+	if _shot_turn_tween != null and _shot_turn_tween.is_valid():
+		_shot_turn_tween.kill()
+	head_look.influence = 0.0 # keep the death animation's head pose
 	_set_dead_visuals()
 	if not is_remote:
 		# round-based respawn: automatic after a short death delay
@@ -616,9 +678,11 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 		state_machine.curr_state_name = idle.state_name
 	if weapon.has_method("reset_for_respawn"):
 		weapon.reset_for_respawn()
+	movement_state_machine.start("Locomotion")
+	weapon_state_machine.start("Idle")
+	head_look.influence = 1.0
 	_set_dead_visuals()
 	visual_root.scale = Vector3.ONE
-	pistol.position = _pistol_rest
 	net_is_grounded = false
 	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
 		Fusion.rpc(Callable(self, "respawn_fx"))
@@ -642,7 +706,9 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 		im.set_mode(im.Mode.GAMEPLAY)
 
 func _set_dead_visuals() -> void:
-	visual_root.visible = not dead
+	# remote copies keep the body visible so peers see the death animation;
+	# the local body stays hidden behind the death screen
+	visual_root.visible = is_remote or not dead
 	nickname_label.visible = not dead and is_remote
 	weapon.visible = not dead
 	hitbox.disabled = dead
@@ -709,6 +775,7 @@ func _enable_local_copy() -> void:
 	# instead of zeros (avoids a visible aim snap on joining peers)
 	view_yaw = cam_holder.rotation.y
 	view_pitch = cam.rotation.x
+	body_yaw = view_yaw
 	network_role_ready = true
 	network_ready.emit()
 
@@ -720,6 +787,7 @@ func _disable_remote_copy() -> void:
 	# Godot's physics interpolation must be off so it does not fight the
 	# FusionReplicator's root smoothing.
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	body_yaw = view_yaw
 	set_physics_process(false)
 	state_machine.set_process(false)
 	state_machine.set_physics_process(false)

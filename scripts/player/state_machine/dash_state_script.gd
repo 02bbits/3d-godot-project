@@ -18,6 +18,9 @@ func verifications():
 
 	play_char.nb_dashs_allowed -= 1
 
+	# replicated event counter: every peer replays the dodge animation
+	play_char.net_dash_count += 1
+
 	play_char.tween_hitbox_height(play_char.base_hitbox_height)
 	play_char.tween_model_height(play_char.base_model_height)
 

@@ -48,7 +48,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 11
+property_count = 15
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -115,6 +115,30 @@ properties/10/interface_tag = ""
 properties/10/interpolate = 0
 properties/10/element_type = 0
 properties/10/element_class_name = ""
+properties/11/path = NodePath(":net_hit_count")
+properties/11/max_array_capacity = 0
+properties/11/interface_tag = ""
+properties/11/interpolate = 0
+properties/11/element_type = 0
+properties/11/element_class_name = ""
+properties/12/path = NodePath(":net_dash_count")
+properties/12/max_array_capacity = 0
+properties/12/interface_tag = ""
+properties/12/interpolate = 0
+properties/12/element_type = 0
+properties/12/element_class_name = ""
+properties/13/path = NodePath(":net_crouched")
+properties/13/max_array_capacity = 0
+properties/13/interface_tag = ""
+properties/13/interpolate = 0
+properties/13/element_type = 0
+properties/13/element_class_name = ""
+properties/14/path = NodePath(":body_yaw")
+properties/14/max_array_capacity = 0
+properties/14/interface_tag = ""
+properties/14/interpolate = 2
+properties/14/element_type = 0
+properties/14/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -126,8 +150,34 @@ stream_2/stream = ExtResource("30_jc")
 filter_enabled = true
 filters = ["Rig_Medium/Skeleton3D:hand.r", "Rig_Medium/Skeleton3D:handslot.r", "Rig_Medium/Skeleton3D:head", "Rig_Medium/Skeleton3D:lowerarm.r", "Rig_Medium/Skeleton3D:upperarm.r", "Rig_Medium/Skeleton3D:wrist.r"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yaf0r"]
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_hit_a"]
+fadein_time = 0.1
+fadeout_time = 0.15
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hit_a"]
+animation = &"General/Hit_A"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_hit_b"]
+fadein_time = 0.1
+fadeout_time = 0.15
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hit_b"]
+animation = &"General/Hit_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_move_airborne"]
 animation = &"Movement/Jump_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_move_crouch"]
+animation = &"MovementAdvanced/Crouching"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_move_dash"]
+animation = &"MovementAdvanced/Dodge_Forward"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yaf0r"]
+animation = &"Movement/Jump_Start"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_move_land"]
+animation = &"Movement/Jump_Land"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l85co"]
 animation = &"General/Idle_A"
@@ -170,19 +220,77 @@ blend_point_4/name = &"4"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yaf0r"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_loco_crouch"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "net_crouched"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_crouch_loco"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "not net_crouched"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_crouch_jump"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_loco_dash"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_dash_loco"]
+xfade_time = 0.15
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_dash_jump"]
+xfade_time = 0.1
+
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xc0tn"]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t4tqk"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_jump_land"]
+xfade_time = 0.1
+priority = 0
 advance_mode = 2
 advance_expression = "net_is_grounded"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_jump_air"]
+xfade_time = 0.1
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_air_land"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "net_is_grounded"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_air_jump"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_air_dash"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_land_loco"]
+xfade_time = 0.15
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_land_jump"]
+xfade_time = 0.1
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_xc0tn"]
+states/Airborne/node = SubResource("AnimationNodeAnimation_move_airborne")
+states/Airborne/position = Vector2(720, 293)
+states/Crouch/node = SubResource("AnimationNodeAnimation_move_crouch")
+states/Crouch/position = Vector2(720, 90)
+states/Dash/node = SubResource("AnimationNodeAnimation_move_dash")
+states/Dash/position = Vector2(900, 240)
 states/Jump/node = SubResource("AnimationNodeAnimation_yaf0r")
 states/Jump/position = Vector2(547, 293)
+states/Land/node = SubResource("AnimationNodeAnimation_move_land")
+states/Land/position = Vector2(900, 380)
 states/Locomotion/node = SubResource("AnimationNodeBlendSpace2D_wod62")
 states/Locomotion/position = Vector2(547, 140)
 states/Start/position = Vector2(233, 140)
-transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_yaf0r"), "Locomotion", "Jump", SubResource("AnimationNodeStateMachineTransition_xc0tn"), "Jump", "Locomotion", SubResource("AnimationNodeStateMachineTransition_t4tqk")]
+transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_yaf0r"), "Locomotion", "Crouch", SubResource("AnimationNodeStateMachineTransition_t_loco_crouch"), "Crouch", "Locomotion", SubResource("AnimationNodeStateMachineTransition_t_crouch_loco"), "Crouch", "Jump", SubResource("AnimationNodeStateMachineTransition_t_crouch_jump"), "Locomotion", "Dash", SubResource("AnimationNodeStateMachineTransition_t_loco_dash"), "Dash", "Locomotion", SubResource("AnimationNodeStateMachineTransition_t_dash_loco"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_t_dash_jump"), "Locomotion", "Jump", SubResource("AnimationNodeStateMachineTransition_xc0tn"), "Jump", "Land", SubResource("AnimationNodeStateMachineTransition_t_jump_land"), "Jump", "Airborne", SubResource("AnimationNodeStateMachineTransition_t_jump_air"), "Airborne", "Land", SubResource("AnimationNodeStateMachineTransition_t_air_land"), "Airborne", "Jump", SubResource("AnimationNodeStateMachineTransition_t_air_jump"), "Airborne", "Dash", SubResource("AnimationNodeStateMachineTransition_t_air_dash"), "Land", "Locomotion", SubResource("AnimationNodeStateMachineTransition_t_land_loco"), "Land", "Jump", SubResource("AnimationNodeStateMachineTransition_t_land_jump")]
 graph_offset = Vector2(-475, -21)
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t4tqk"]
@@ -191,21 +299,40 @@ animation = &"CombatRanged/Fire"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xc0tn"]
 animation = &"AimingFull"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_weapon_reload"]
+animation = &"CombatRanged/Ranged_1H_Reload"
+
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_l85co"]
 advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i0t6w"]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_weapon_idle_reload"]
+xfade_time = 0.15
+
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wod62"]
 switch_mode = 2
 advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_weapon_fire_reload"]
+xfade_time = 0.15
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_weapon_reload_idle"]
+xfade_time = 0.15
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_weapon_reload_fire"]
+xfade_time = 0.1
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_rf615"]
 states/Fire/node = SubResource("AnimationNodeAnimation_t4tqk")
 states/Fire/position = Vector2(480, 235)
 states/Idle/node = SubResource("AnimationNodeAnimation_xc0tn")
 states/Idle/position = Vector2(480, 100)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_l85co"), "Idle", "Fire", SubResource("AnimationNodeStateMachineTransition_i0t6w"), "Fire", "Idle", SubResource("AnimationNodeStateMachineTransition_wod62")]
+states/Reload/node = SubResource("AnimationNodeAnimation_weapon_reload")
+states/Reload/position = Vector2(660, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_l85co"), "Idle", "Fire", SubResource("AnimationNodeStateMachineTransition_i0t6w"), "Idle", "Reload", SubResource("AnimationNodeStateMachineTransition_t_weapon_idle_reload"), "Fire", "Idle", SubResource("AnimationNodeStateMachineTransition_wod62"), "Fire", "Reload", SubResource("AnimationNodeStateMachineTransition_t_weapon_fire_reload"), "Reload", "Idle", SubResource("AnimationNodeStateMachineTransition_t_weapon_reload_idle"), "Reload", "Fire", SubResource("AnimationNodeStateMachineTransition_t_weapon_reload_fire")]
 graph_offset = Vector2(-349, -49)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3ukuh"]
@@ -216,17 +343,49 @@ nodes/Blend2/node = SubResource("AnimationNodeBlend2_xc0tn")
 nodes/Blend2/position = Vector2(-80, 160)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_xc0tn")
 nodes/Movement/position = Vector2(-740, 60)
-node_connections = [&"output", 0, &"Blend2", &"Blend2", 0, &"Movement", &"Blend2", 1, &"Weapon"]
+nodes/HitA/node = SubResource("AnimationNodeOneShot_hit_a")
+nodes/HitA/position = Vector2(160, 160)
+nodes/HitAMotion/node = SubResource("AnimationNodeAnimation_hit_a")
+nodes/HitAMotion/position = Vector2(-80, 360)
+nodes/HitB/node = SubResource("AnimationNodeOneShot_hit_b")
+nodes/HitB/position = Vector2(400, 160)
+nodes/HitBMotion/node = SubResource("AnimationNodeAnimation_hit_b")
+nodes/HitBMotion/position = Vector2(160, 360)
+node_connections = [&"output", 0, &"HitB", &"Blend2", 0, &"Movement", &"Blend2", 1, &"Weapon", &"HitA", 0, &"Blend2", &"HitA", 1, &"HitAMotion", &"HitB", 0, &"HitA", &"HitB", 1, &"HitBMotion"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_root_death"]
+animation = &"General/Death_A"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_root_spawn"]
+animation = &"General/Spawn_Ground"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dhupj"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_root_spawn_alive"]
+xfade_time = 0.2
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_root_alive_death"]
+xfade_time = 0.25
+advance_mode = 2
+advance_expression = "dead"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t_root_death_spawn"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "not dead"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_wod62"]
 states/Alive/node = SubResource("AnimationNodeBlendTree_3ukuh")
-states/Alive/position = Vector2(335, 111)
-states/End/position = Vector2(1075, 135)
+states/Alive/position = Vector2(560, 111)
+states/Death/node = SubResource("AnimationNodeAnimation_root_death")
+states/Death/position = Vector2(800, 240)
+states/Spawn/node = SubResource("AnimationNodeAnimation_root_spawn")
+states/Spawn/position = Vector2(335, 240)
 states/Start/position = Vector2(72, 117)
-transitions = ["Start", "Alive", SubResource("AnimationNodeStateMachineTransition_dhupj")]
+transitions = ["Start", "Spawn", SubResource("AnimationNodeStateMachineTransition_dhupj"), "Spawn", "Alive", SubResource("AnimationNodeStateMachineTransition_t_root_spawn_alive"), "Alive", "Death", SubResource("AnimationNodeStateMachineTransition_t_root_alive_death"), "Death", "Spawn", SubResource("AnimationNodeStateMachineTransition_t_root_death_spawn")]
 graph_offset = Vector2(-561, -73)
 
 [sub_resource type="Animation" id="Animation_oekrc"]
@@ -843,6 +1002,7 @@ shader_parameter/mask_edge = 0.800000038
 shader_parameter/animation_speed = 20.0
 
 [node name="PlayerCharacter" type="CharacterBody3D" unique_id=1247798821 node_paths=PackedStringArray("head_meshes") groups=["PlayerCharacter", "player"]]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 2.0215838, 0)
 collision_layer = 3
 floor_block_on_wall = false
 floor_max_angle = 1.13446
@@ -893,6 +1053,7 @@ script = ExtResource("21_health")
 owner_mode = 1
 replication_config = SubResource("FusionReplicationConfig_player")
 root_replication_mode = 1
+root_global_coordinates = true
 process_priority = -2147483647
 process_physics_priority = -2147483647
 
@@ -904,17 +1065,22 @@ wait_time = 3.0
 one_shot = true
 
 [node name="VisualRoot" type="Node3D" parent="." unique_id=232480131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3808961, 0)
 
 [node name="ScalingRoot" type="Node3D" parent="VisualRoot" unique_id=1097941104]
 
 [node name="PlayerModel" parent="VisualRoot/ScalingRoot" unique_id=1300319587 instance=ExtResource("14_yj68g")]
 transform = Transform3D(-0.65, 0, -5.6824803e-08, 0, 0.65, 0, 5.6824803e-08, 0, -0.65, 0, -1, 0)
 
+[node name="HeadLook" type="LookAtModifier3D" parent="VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D"]
+bone_name = "head"
+target_node = NodePath("../../../../../../CameraHolder/Camera/HeadLookTarget")
+
 [node name="NicknameLabel" type="Label3D" parent="VisualRoot" unique_id=1130007584]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
-pixel_size = 0.003
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8100108, 0)
 billboard = 1
 double_sided = false
+text = "test"
 font = ExtResource("33_font")
 font_size = 60
 
@@ -950,6 +1116,12 @@ advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Alive/Blend2/blend_amount = 0.95
 parameters/Alive/Movement/Locomotion/blend_position = Vector2(0, 0)
+parameters/Alive/HitA/active = false
+parameters/Alive/HitA/internal_active = false
+parameters/Alive/HitA/request = 0
+parameters/Alive/HitB/active = false
+parameters/Alive/HitB/internal_active = false
+parameters/Alive/HitB/request = 0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1637356515]
 root_node = NodePath("../VisualRoot/ScalingRoot/PlayerModel")
@@ -971,6 +1143,9 @@ current = true
 fov = 90.0
 near = 0.01
 far = 1000.0
+
+[node name="HeadLookTarget" type="Marker3D" parent="CameraHolder/Camera" unique_id=1916454888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 
 [node name="Weapon" parent="CameraHolder/Camera" unique_id=35109852 instance=ExtResource("6_gun")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.49997786, -0.34612805, -0.80293286)
@@ -1081,6 +1256,7 @@ theme_override_constants/separation = 24
 [node name="Title" type="Label" parent="HUD/DeathScreen/Center/V" unique_id=1279798917]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.15, 0.15, 1)
+theme_override_fonts/font = ExtResource("33_font")
 theme_override_font_sizes/font_size = 64
 text = "YOU DIED"
 
@@ -1118,3 +1294,5 @@ texture = ExtResource("23_cross")
 stretch_mode = 1
 
 [connection signal="change_fov" from="StateMachine" to="CameraHolder" method="change_fov"]
+
+[editable path="VisualRoot/ScalingRoot/PlayerModel"]

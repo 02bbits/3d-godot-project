@@ -36,7 +36,6 @@ shadow_enabled = true
 environment = SubResource("Environment_8hih5")
 
 [node name="TestingArea" parent="." unique_id=1822718095 instance=ExtResource("1_rj2o8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8264009, 39.12295, -0.32468677)
 
 [node name="PlayerSpawner" type="FusionSpawner" parent="." unique_id=1822758331]
 spawn_path = NodePath(".")

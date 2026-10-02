@@ -8,9 +8,14 @@ var play_char : CharacterBody3D
 
 func enter(play_char_ref : CharacterBody3D) -> void:
 	play_char = play_char_ref
-	
+
+	play_char.net_crouched = true
+
 	verifications()
-	
+
+func exit() -> void:
+	play_char.net_crouched = false
+
 func verifications() -> void:
 	play_char.move_speed = play_char.crouch_speed
 	play_char.move_accel = play_char.crouch_accel

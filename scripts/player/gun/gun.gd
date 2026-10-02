@@ -10,9 +10,10 @@ const RELOAD_SOUNDS: Array[AudioStream] = [
 	preload("res://assets/audio/metalLatch.ogg"),
 	preload("res://assets/audio/metalClick.ogg"),
 ]
+var custom_font = load("res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf")
 const RAY_RANGE := 60.0
 
-@export var damage: int = 34
+@export var damage: int = 30
 @export var mag_size: int = 24
 @export var reserve_max: int = 999 # INFINITE AMMO FOR DEBUGGING
 @export var fire_interval: float = 0.15
@@ -134,8 +135,9 @@ func _spawn_damage_number(pos: Vector3, amount: int) -> void:
 	label.text = str(amount)
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	label.no_depth_test = true
-	label.font_size = 48
+	label.font_size = 40 + 0.5 * amount
 	label.outline_size = 10
+	label.font = custom_font
 	get_tree().current_scene.add_child(label)
 	label.global_position = pos
 	var tw := create_tween()
