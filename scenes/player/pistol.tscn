@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cswiapk4jkjys"]
 
-[ext_resource type="PackedScene" uid="uid://diffbog5l4ikr" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Assets/gltf/Gun_Pistol.gltf" id="1_bjyjj"]
+[ext_resource type="PackedScene" uid="uid://diffbog5l4ikr" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Assets/gltf/Gun_Pistol.gltf" id="1_fux5x"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjyjj"]
 albedo_color = Color(1, 0.8, 0.2, 1)
@@ -25,7 +25,7 @@ scale_max = 0.08
 radius = 0.01
 height = 0.02
 
-[node name="Pistol" unique_id=272047843 instance=ExtResource("1_bjyjj")]
+[node name="Pistol" unique_id=272047843 instance=ExtResource("1_fux5x")]
 
 [node name="MuzzleFlash" type="GPUParticles3D" parent="." index="1" unique_id=1735289904]
 transform = Transform3D(-1.5380682, -0.00021938463, 0.03484317, -0.0033394177, 1.5322782, -0.13776354, -0.034683548, -0.13780394, -1.5318866, -0.00059643015, 0.12450768, 0.6533601)

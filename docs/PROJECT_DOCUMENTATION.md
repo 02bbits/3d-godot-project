@@ -37,7 +37,7 @@ world (Node3D)
 └── ConnectionMenu         connection_ui.gd (Control, mouse-driven)
 ```
 
-### `scenes/player/player.tscn` (spawnable, `scripts/player/player.gd`)
+### `scenes/player/player.tscn` (spawnable, `scripts/player/player.gd` — leaf of the player script chain, see §5)
 
 Groups: `player`, `PlayerCharacter`. `collision_layer = 2`.
 
@@ -82,7 +82,7 @@ All in `scripts/ui/connection_ui.gd` + `scripts/worlds/world.gd`.
 	 uses the first spawnable scene);
    - the master client calls `Fusion.register_current_scene()` so networked scene
 	 objects (the targets) are shared.
-5. **Role resolution**: `player.gd::_ready` → `setup_network_control()` reads
+5. **Role resolution**: `player.gd::_ready` → `player_network.gd::setup_network_control()` reads
    `FusionSharedReplicator.has_authority()` and applies one role (see §4). It emits
    `network_ready` / sets `network_role_ready`. `world.gd` waits for that before
    picking a **random** marker from group `spawn_point` and calling
@@ -106,7 +106,7 @@ One client is the Photon master client; each client owns its own player replica
 | Health | victim owner writes `net_health`; remote copies receive it | `Health:net_health` property |
 | Target health | master writes `Target:net_health` | target replicator (`owner_mode = MasterClient`) |
 
-### RPCs (`@rpc("any_peer")` on the player, `player.gd`)
+### RPCs (`@rpc("any_peer")`, kept on the leaf script `player.gd`)
 
 | RPC | Sent | Effect |
 |---|---|---|
@@ -126,7 +126,7 @@ to the owner client of that replica.
 1. Shooter (`gun.gd::_apply_damage`): base `damage` (34) → attacker `ModifierManager`
    hooks (`on_damage_dealt`, can mutate ctx) → clamp relative to base:
    `clampf(amount, damage*0.5, damage*2.5)` → `rpc_take_damage`.
-2. Victim (`player.gd::take_damage`): `ModifierManager.on_damage_taken(ctx)` → clamp
+2. Victim (`player_lifecycle.gd::take_damage`): `ModifierManager.on_damage_taken(ctx)` → clamp
    `clampf(amount, max_health*0.4, max_health*1.5)` → `Health.apply`.
 3. `Health.apply` subtracts, emits `damaged`, and on ≤ 0 emits `died(attacker_id)`.
 
@@ -154,6 +154,13 @@ root smoothing), model moved to render layer 1 and tinted red (visible to others
 
 ## 5. Player controller
 
+The player script is split by responsibility into an inheritance chain — each layer
+only calls downward, never upward: `player_base.gd` (exports, shared state, node refs)
+→ `player_movement.gd` (keybinds, timers, stamina, gravity, tweens) →
+`player_network.gd` (replicated counters, view/animation sync, ownership role) →
+`player_lifecycle.gd` (damage, death, respawn) → `player.gd` (leaf: `PlayerCharacter`,
+`_ready`/`_process`/`_physics_process`, `@rpc` entry points).
+
 ### State machine (`scripts/player/state_machine/`)
 
 - `State` (`state_script.gd`): `enter/exit/update/physics_update` hooks +
@@ -165,10 +172,10 @@ root smoothing), model moved to render layer 1 and tinted red (visible to others
 - States: Idle, Walk, Run, Jump, Inair, Crouch, Slide, Dash, Wallrun.
 - Transitions live in each state's `input_management()`/`applies()`; jump buffering and
   coyote time are tracked on the player. `player.gd::_process` ticks
-  wallrun/slide/dash/jump cooldowns and stamina; `_physics_process` calls
-  `move_and_slide()`.
+  wallrun/slide/dash/jump cooldowns and stamina (defined in `player_movement.gd`);
+  `_physics_process` calls `move_and_slide()`.
 
-### Movement values (`player.gd` exports)
+### Movement values (`player_base.gd` exports)
 
 | | speed | accel / decel | notes |
 |---|---|---|---|
@@ -316,8 +323,8 @@ There is no test suite, no linter, and no export preset committed.
 ## 11. Quirks and landmines
 
 - **Input actions are runtime-registered.** `project.godot` has no `[input]` section;
-  `player.gd` and `camera_script.gd` add `play_char_*` actions with default keys on
-  `_ready` if missing (and warn). They do not persist.
+  `player_movement.gd` and `camera_script.gd` add `play_char_*` actions with default
+  keys on `_ready` if missing (and warn). They do not persist.
 - **No region is passed to Photon.** `connection_ui.gd` calls
   `Fusion.connect_to_photon(user_id)`; the sibling `/fps` project found that an empty
   region lets Fusion pick "best" per machine, and clients in different regions cannot
@@ -366,5 +373,30 @@ Not ported yet (present in `/fps`):
   two-client integration tests (`rpc_test`, `match_test`, `mod_smoke`).
 
 When porting the draft/match systems, the existing integration points are:
-`ModifierManager.set_build()`, the inert `rpc_draft_pick` on the player, the
-`draft_manager` group lookup, and the `input_mode` group lookups in `player.gd`.
+`ModifierManager.set_build()`, the inert `rpc_draft_pick` on the player leaf, the
+`draft_manager` group lookup, and the `input_mode` group lookups in
+`player_lifecycle.gd`.
+
+## Animation
+
+Where clips live: the AnimationPlayer (player.tscn:1173) owns GLB libraries (General, Movement, MovementAdvanced, CombatRanged, plus inline AimingFull). You reference clips as "Library/Clip" (e.g. Movement/Walking_A). The AnimationTree decides when they play through its graphs:
+- Root SM: Spawn → Alive → Death
+- Alive/Movement SM: Locomotion (BlendSpace2D), Crouch, Jump, Airborne, Dash, Land
+- Alive/Weapon SM: Idle, Fire, Reload
+- HitA/HitB: one-shot nodes
+Pick the recipe by intent:
+1. One-shot event (emote, reaction) — add an AnimationNodeAnimation + AnimationNodeOneShot in the Alive blend tree wired like HitA/HitB, then trigger:
+animation_tree.set("parameters/Alive/MyShot/request",
+	AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+2. Networked one-shot — use the counter pattern already in player_network.gd:10:
+var net_emote_count: int = 0:
+	set(value):
+		var previous := net_emote_count
+		net_emote_count = value
+		if is_node_ready() and value > previous:
+			animation_tree.set("parameters/Alive/Emote/request",
+				AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+Increment it where the event happens (net_emote_count += 1, like gun.gd:86); Fusion replicates it and every peer replays the animation.
+3. Movement state — add a state + transitions in the Movement SM. Transitions can advance automatically via advance_expression (see net_crouched at player.tscn:226), or drive from code with movement_state_machine.travel("MyState") (like Dash at player_network.gd:33). Reset it in reset_for_respawn if needed.
+4. Locomotion blend — add an AnimationNodeAnimation and a blend_point_N to the BlendSpace2D (see Walking_A at player.tscn:228). _animate_locomotion feeds parameters/Alive/Movement/Locomotion/blend_position from horizontal velocity / run_speed.
+Rules: keep @rpc entry points on the leaf player.gd, put setters/methods in the layer that owns them, and author graph edits in the editor's AnimationTree panel — hand-editing state machines in .tscn is how typos happen. New clips must target the same rig (Rig_Medium: upperarm.r, wrist.r, etc.) or need a RetargetModifier3D. Quick check after adding: godot --headless --path . --quit.

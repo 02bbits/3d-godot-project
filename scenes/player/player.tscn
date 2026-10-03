@@ -23,7 +23,7 @@
 [ext_resource type="Script" uid="uid://c8y35mer47tpb" path="res://scripts/player/health.gd" id="21_health"]
 [ext_resource type="Script" uid="uid://bxenf2owi6qof" path="res://scripts/modifiers/modifier_manager.gd" id="22_mods"]
 [ext_resource type="Texture2D" uid="uid://dv747ov6fcrsg" path="res://assets/hud/crosshair.png" id="23_cross"]
-[ext_resource type="PackedScene" path="res://assets/photon/pistol.tscn" id="25_pistol"]
+[ext_resource type="PackedScene" uid="uid://cswiapk4jkjys" path="res://scenes/player/pistol.tscn" id="25_pistol"]
 [ext_resource type="PackedScene" path="res://assets/photon/scenes/impact.tscn" id="26_impact"]
 [ext_resource type="PackedScene" path="res://assets/photon/scenes/vfx_explosion.tscn" id="27_death"]
 [ext_resource type="AudioStream" uid="uid://bd32br31ax5qh" path="res://assets/photon/kenney_fps/sounds/jump_a.ogg" id="28_ja"]
@@ -48,7 +48,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 15
+property_count = 17
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -139,6 +139,18 @@ properties/14/interface_tag = ""
 properties/14/interpolate = 2
 properties/14/element_type = 0
 properties/14/element_class_name = ""
+properties/15/path = NodePath(":net_velocity")
+properties/15/max_array_capacity = 0
+properties/15/interface_tag = ""
+properties/15/interpolate = 0
+properties/15/element_type = 0
+properties/15/element_class_name = ""
+properties/16/path = NodePath(":net_wallrun_side")
+properties/16/max_array_capacity = 0
+properties/16/interface_tag = ""
+properties/16/interpolate = 0
+properties/16/element_type = 0
+properties/16/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -199,6 +211,9 @@ stretch_time_scale = true
 start_offset = 0.0
 loop_mode = 1
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_walk_a"]
+animation = &"Movement/Walking_A"
+
 [sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_wod62"]
 sync_mode = 1
 blend_point_0/node = SubResource("AnimationNodeAnimation_l85co")
@@ -214,8 +229,11 @@ blend_point_3/node = SubResource("AnimationNodeAnimation_0lhbw")
 blend_point_3/pos = Vector2(-1, 0)
 blend_point_3/name = &"3"
 blend_point_4/node = SubResource("AnimationNodeAnimation_mp5xf")
-blend_point_4/pos = Vector2(0, -1)
+blend_point_4/pos = Vector2(0, -0.7)
 blend_point_4/name = &"4"
+blend_point_5/node = SubResource("AnimationNodeAnimation_walk_a")
+blend_point_5/pos = Vector2(0, 0.7)
+blend_point_5/name = &"5"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yaf0r"]
 advance_mode = 2
@@ -294,7 +312,7 @@ transitions = ["Start", "Locomotion", SubResource("AnimationNodeStateMachineTran
 graph_offset = Vector2(-475, -21)
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t4tqk"]
-animation = &"CombatRanged/Fire"
+animation = &"CombatRanged/Ranged_1H_Shoot"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xc0tn"]
 animation = &"AimingFull"
@@ -336,7 +354,7 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(-349, -49)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3ukuh"]
-graph_offset = Vector2(-1309, -14)
+graph_offset = Vector2(-921.62335, 3.7703247)
 nodes/Weapon/node = SubResource("AnimationNodeStateMachine_rf615")
 nodes/Weapon/position = Vector2(-740, 400)
 nodes/Blend2/node = SubResource("AnimationNodeBlend2_xc0tn")
@@ -346,7 +364,7 @@ nodes/Movement/position = Vector2(-740, 60)
 nodes/HitA/node = SubResource("AnimationNodeOneShot_hit_a")
 nodes/HitA/position = Vector2(160, 160)
 nodes/HitAMotion/node = SubResource("AnimationNodeAnimation_hit_a")
-nodes/HitAMotion/position = Vector2(-80, 360)
+nodes/HitAMotion/position = Vector2(-100, 460)
 nodes/HitB/node = SubResource("AnimationNodeOneShot_hit_b")
 nodes/HitB/position = Vector2(400, 160)
 nodes/HitBMotion/node = SubResource("AnimationNodeAnimation_hit_b")
@@ -386,7 +404,7 @@ states/Spawn/node = SubResource("AnimationNodeAnimation_root_spawn")
 states/Spawn/position = Vector2(335, 240)
 states/Start/position = Vector2(72, 117)
 transitions = ["Start", "Spawn", SubResource("AnimationNodeStateMachineTransition_dhupj"), "Spawn", "Alive", SubResource("AnimationNodeStateMachineTransition_t_root_spawn_alive"), "Alive", "Death", SubResource("AnimationNodeStateMachineTransition_t_root_alive_death"), "Death", "Spawn", SubResource("AnimationNodeStateMachineTransition_t_root_death_spawn")]
-graph_offset = Vector2(-561, -73)
+graph_offset = Vector2(-333.1836, 38.64453)
 
 [sub_resource type="Animation" id="Animation_oekrc"]
 resource_name = "AimingFull"
@@ -977,7 +995,7 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5yjma"]
-height = 1.5532227
+height = 1.5868225
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bkys"]
 albedo_color = Color(0.196078, 0.223529, 1, 1)
@@ -1070,11 +1088,43 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3808961, 0)
 [node name="ScalingRoot" type="Node3D" parent="VisualRoot" unique_id=1097941104]
 
 [node name="PlayerModel" parent="VisualRoot/ScalingRoot" unique_id=1300319587 instance=ExtResource("14_yj68g")]
-transform = Transform3D(-0.65, 0, -5.6824803e-08, 0, 0.65, 0, 5.6824803e-08, 0, -0.65, 0, -1, 0)
+transform = Transform3D(-0.6498833, 0, 0.012316927, 0, 0.65, 0, -0.012316927, 0, -0.6498833, 0, -1, 0)
 
-[node name="HeadLook" type="LookAtModifier3D" parent="VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D"]
-bone_name = "head"
+[node name="Skeleton3D" parent="VisualRoot/ScalingRoot/PlayerModel/Rig_Medium" parent_id_path=PackedInt32Array(1300319587, 62239943) index="0" unique_id=817728199]
+bones/2/rotation = Quaternion(0.9998491, 7.426558e-08, -3.1726263e-08, 0.017373193)
+bones/3/rotation = Quaternion(0.10622513, -6.865223e-08, 7.376966e-08, 0.99434215)
+bones/3/scale = Vector3(1, 1.0000004, 1.0000001)
+bones/4/rotation = Quaternion(-0.45523903, 1.6598169e-07, 2.2507112e-09, 0.8903693)
+bones/5/rotation = Quaternion(2.1219837e-08, 0.92035496, -0.3910841, 6.450607e-08)
+bones/8/rotation = Quaternion(-0.51412165, 0.48546773, 0.48546776, 0.5141218)
+bones/8/scale = Vector3(0.99999934, 0.99999934, 0.99999976)
+bones/9/rotation = Quaternion(1.49426e-09, 6.228117e-08, 0.055285532, 0.99847066)
+bones/9/scale = Vector3(1.0000001, 0.9999998, 0.99999994)
+bones/10/rotation = Quaternion(5.1184217e-11, 3.0773717e-10, -0.026658095, 0.99964464)
+bones/11/rotation = Quaternion(1.1999162e-09, -9.210969e-08, 5.4551956e-06, 1)
+bones/12/rotation = Quaternion(1.6805921e-09, -1.6805919e-09, 0.7071068, 0.7071067)
+bones/14/rotation = Quaternion(-0.5141216, -0.48546767, -0.48546773, 0.5141217)
+bones/15/rotation = Quaternion(1.4942605e-09, -6.228117e-08, -0.055285532, 0.99847066)
+bones/15/scale = Vector3(1.0000001, 0.9999998, 0.99999994)
+bones/16/rotation = Quaternion(5.1184355e-11, -3.077425e-10, 0.026658095, 0.99964464)
+bones/17/rotation = Quaternion(1.2001637e-09, 1.3589292e-07, -5.4551956e-06, 1)
+bones/18/rotation = Quaternion(1.6806122e-09, 1.680612e-09, -0.7071068, 0.7071067)
+bones/19/rotation = Quaternion(0.9998491, -7.13275e-08, -1.20427455e-08, 0.017373193)
+bones/20/rotation = Quaternion(0.10622513, 6.8652206e-08, -7.376967e-08, 0.99434215)
+bones/20/scale = Vector3(1, 1.0000004, 1.0000001)
+bones/21/rotation = Quaternion(-0.45523903, 1.619773e-08, -3.435674e-08, 0.8903693)
+bones/22/rotation = Quaternion(4.7759816e-08, 0.92035496, -0.3910841, 5.801577e-08)
+
+[node name="HeadLook" type="LookAtModifier3D" parent="VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D" index="8" unique_id=866899068]
 target_node = NodePath("../../../../../../CameraHolder/Camera/HeadLookTarget")
+bone_name = "head"
+bone = 13
+use_angle_limitation = true
+symmetry_limitation = true
+primary_limit_angle = 0.8726646
+primary_damp_threshold = 1.0
+secondary_limit_angle = 1.3962634
+secondary_damp_threshold = 1.0
 
 [node name="NicknameLabel" type="Label3D" parent="VisualRoot" unique_id=1130007584]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8100108, 0)
@@ -1085,7 +1135,7 @@ font = ExtResource("33_font")
 font_size = 60
 
 [node name="HandAttachement" type="BoneAttachment3D" parent="VisualRoot" unique_id=1541909339]
-transform = Transform3D(0.64999926, -2.3536498e-07, -6.492397e-08, 7.861972e-08, -1.3951659e-07, 0.6499996, -2.1115235e-07, -0.6499995, -1.1586543e-07, 0.57403594, -0.31798053, 4.8116806e-07)
+transform = Transform3D(0.64988256, 0.01231674, -6.271675e-08, 7.861972e-08, -1.3951659e-07, 0.6499996, 0.012316759, -0.6498828, -1.1707489e-07, 0.5739328, -0.31798053, 0.010878006)
 bone_name = "handslot.r"
 bone_idx = 12
 use_external_skeleton = true
@@ -1130,6 +1180,7 @@ libraries/CombatRanged = ExtResource("36_combat")
 libraries/General = ExtResource("34_general")
 libraries/Movement = ExtResource("35_movement")
 libraries/MovementAdvanced = ExtResource("37_advanced")
+speed_scale = 1.547
 
 [node name="CameraHolder" type="Node3D" parent="." unique_id=1134565380]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.715, 0)
@@ -1148,7 +1199,11 @@ far = 1000.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 
 [node name="Weapon" parent="CameraHolder/Camera" unique_id=35109852 instance=ExtResource("6_gun")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.49997786, -0.34612805, -0.80293286)
+transform = Transform3D(0.0056993943, 0, -0.9999838, 0, 1, 0, 0.9999838, 0, 0.0056993943, 0.41569835, -0.3042159, -0.80293286)
+
+[node name="PhantomGun" parent="CameraHolder/Camera" unique_id=680268323 instance=ExtResource("25_pistol")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.7873827, -0.4906001, -0.54999995)
+visible = false
 
 [node name="CameraBasedRaycasts" type="Node3D" parent="CameraHolder/Camera" unique_id=579346454]
 
@@ -1169,7 +1224,7 @@ collision_mask = 5
 debug_shape_custom_color = Color(0.91764706, 0.79607844, 0.18039216, 1)
 
 [node name="Hitbox" type="CollisionShape3D" parent="." unique_id=2084443916]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22338867, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14578438, 0)
 shape = SubResource("CapsuleShape3D_5yjma")
 
 [node name="ArchivedModel" type="MeshInstance3D" parent="." unique_id=1234403018]

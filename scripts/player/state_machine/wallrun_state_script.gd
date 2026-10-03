@@ -11,6 +11,12 @@ func enter(play_char_ref : CharacterBody3D) -> void:
 	
 	verifications()
 	
+	# replicated so every peer can lean the model toward the same wall
+	play_char.net_wallrun_side = play_char.side_check_raycast_collided
+
+func exit() -> void:
+	play_char.net_wallrun_side = 0
+	
 func verifications() -> void:
 	wallrun_forward_direction_calculus()
 	

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bmlj3rijsaoyh"]
+
+[ext_resource type="PackedScene" uid="uid://cotgwlr60fiq7" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Character/Dummy.glb" id="1_2ckpl"]
+
+[node name="Dummy" unique_id=1374738731 instance=ExtResource("1_2ckpl")]

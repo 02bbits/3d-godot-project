@@ -32,8 +32,9 @@ func verifications() -> void:
 	if play_char.last_wallrunned_wall_out_of_time != 0:
 		play_char.last_wallrunned_wall_out_of_time = 0
 	
+	# only the hitbox lowers; the Crouching animation poses the body, no model
+	# scaling (scaling made the sprite sink with the floor)
 	play_char.tween_hitbox_height(play_char.crouch_hitbox_height)
-	play_char.tween_model_height(play_char.crouch_model_height)
 	
 func physics_update(delta : float) -> void:
 	applies(delta)

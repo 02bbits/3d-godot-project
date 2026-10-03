@@ -212,7 +212,7 @@ mesh = SubResource("ArrayMesh_3nboo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.12, 0.45)
 
 [node name="WeaponRaycast" type="RayCast3D" parent="Muzzle" unique_id=2024110003]
-transform = Transform3D(0.9988865, 0.007475844, 0.046580516, -0.0074676615, 0.99997216, -0.000349677, -0.046581827, 1.4401295e-06, 0.9989144, 0, -0.05265829, -0.46439874)
+transform = Transform3D(0.9997939, 0.0074729295, 0.018871007, -0.0074676615, 0.99997205, -0.000349677, -0.018873092, 0.0002086827, 0.9998217, 0, -0.05265829, -0.46439874)
 exclude_parent = false
 target_position = Vector3(-60, 0, 0)
 collision_mask = 7
@@ -256,7 +256,7 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
 theme_override_fonts/font = ExtResource("4_e0dt0")
 theme_override_font_sizes/font_size = 30
-text = "<  >"
+text = "[  ]"
 horizontal_alignment = 1
 vertical_alignment = 1
 
