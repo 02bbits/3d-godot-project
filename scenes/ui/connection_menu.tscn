@@ -1,7 +1,11 @@
 [gd_scene format=3 uid="uid://cuvjegawj3f6h"]
 
 [ext_resource type="Script" uid="uid://yr6i1ueijlh6" path="res://scripts/ui/connection_ui.gd" id="1_menu"]
-[ext_resource type="FontFile" uid="uid://bwr73i28ligrq" path="res://assets/fonts/Ticketing.ttf" id="2_font"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="2_font"]
+
+[sub_resource type="Theme" id="Theme_lilita"]
+default_font = ExtResource("2_font")
+default_font_size = 22
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 40.0
@@ -14,25 +18,26 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[node name="ConnectionMenu" type="Control" unique_id=1966866533]
+[node name="ConnectionMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_lilita")
 script = ExtResource("1_menu")
 
-[node name="Dim" type="ColorRect" parent="." unique_id=2046416075]
+[node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0, 0, 0, 0.72)
 
-[node name="Center" type="CenterContainer" parent="." unique_id=1847624530]
+[node name="Pages" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,55 +45,371 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center" unique_id=1719900818]
+[node name="MainMenu" type="CenterContainer" parent="Pages"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/MainMenu"]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="V" type="VBoxContainer" parent="Center/Panel" unique_id=549646642]
+[node name="V" type="VBoxContainer" parent="Pages/MainMenu/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="Center/Panel/V" unique_id=1484046787]
+[node name="Title" type="Label" parent="Pages/MainMenu/Panel/V"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 42
 text = "Multi-Modifier FPS"
 horizontal_alignment = 1
 
-[node name="Nickname" type="LineEdit" parent="Center/Panel/V" unique_id=1165177732]
-unique_name_in_owner = true
+[node name="PlayButton" type="Button" parent="Pages/MainMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Play"
+
+[node name="SettingsButton" type="Button" parent="Pages/MainMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+disabled = true
+tooltip_text = "Settings screen not implemented yet"
+text = "Settings"
+
+[node name="ExitButton" type="Button" parent="Pages/MainMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Exit"
+
+[node name="NameScreen" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/NameScreen"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/NameScreen/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Pages/NameScreen/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Choose a Name"
+horizontal_alignment = 1
+
+[node name="Nickname" type="LineEdit" parent="Pages/NameScreen/Panel/V"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 placeholder_text = "Nickname"
 
-[node name="Room" type="LineEdit" parent="Center/Panel/V" unique_id=170534106]
-unique_name_in_owner = true
+[node name="NextButton" type="Button" parent="Pages/NameScreen/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Next"
+
+[node name="BackButton" type="Button" parent="Pages/NameScreen/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Back"
+
+[node name="PlayChoice" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/PlayChoice"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/PlayChoice/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Pages/PlayChoice/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Play"
+horizontal_alignment = 1
+
+[node name="CreateLobbyButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Create Lobby"
+
+[node name="JoinLobbyButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="BackButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Back"
+
+[node name="CreateLobby" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/CreateLobby"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/CreateLobby/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Pages/CreateLobby/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Create Lobby"
+horizontal_alignment = 1
+
+[node name="RoomName" type="LineEdit" parent="Pages/CreateLobby/Panel/V"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-text = "fps-room"
 placeholder_text = "Room name"
 
-[node name="ConnectButton" type="Button" parent="Center/Panel/V" unique_id=83492191]
-unique_name_in_owner = true
+[node name="Password" type="LineEdit" parent="Pages/CreateLobby/Panel/V"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+placeholder_text = "Password (optional)"
+secret = true
+
+[node name="CountLabel" type="Label" parent="Pages/CreateLobby/Panel/V"]
+layout_mode = 2
+text = "Max players"
+
+[node name="PlayerCount" type="OptionButton" parent="Pages/CreateLobby/Panel/V"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="Pages/CreateLobby/Panel/V"]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 26
-text = "Connect"
+text = "Create"
 
-[node name="DisconnectButton" type="Button" parent="Center/Panel/V" unique_id=84361579]
-unique_name_in_owner = true
+[node name="BackButton" type="Button" parent="Pages/CreateLobby/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Back"
+
+[node name="BrowseLobbies" type="CenterContainer" parent="Pages"]
 visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/BrowseLobbies"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/BrowseLobbies/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Pages/BrowseLobbies/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Join Lobby"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Pages/BrowseLobbies/Panel/V"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RoomList" type="VBoxContainer" parent="Pages/BrowseLobbies/Panel/V/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="RefreshButton" type="Button" parent="Pages/BrowseLobbies/Panel/V"]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 26
-text = "Disconnect"
+text = "Refresh"
 
-[node name="StatusLabel" type="Label" parent="Center/Panel/V" unique_id=1999587761]
-unique_name_in_owner = true
+[node name="BackButton" type="Button" parent="Pages/BrowseLobbies/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Back"
+
+[node name="PasswordPrompt" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/PasswordPrompt"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/PasswordPrompt/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Prompt" type="Label" parent="Pages/PasswordPrompt/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "This lobby is password protected"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Password" type="LineEdit" parent="Pages/PasswordPrompt/Panel/V"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+placeholder_text = "Password"
+secret = true
+
+[node name="JoinButton" type="Button" parent="Pages/PasswordPrompt/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Join"
+
+[node name="BackButton" type="Button" parent="Pages/PasswordPrompt/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Back"
+
+[node name="Lobby" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/Lobby"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RoomTitle" type="Label" parent="Pages/Lobby/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 38
+text = "Lobby"
+horizontal_alignment = 1
+
+[node name="HostLabel" type="Label" parent="Pages/Lobby/Panel/V"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+text = "Host:"
+horizontal_alignment = 1
+
+[node name="CountLabel" type="Label" parent="Pages/Lobby/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+text = "Players"
+horizontal_alignment = 1
+
+[node name="PlayersList" type="VBoxContainer" parent="Pages/Lobby/Panel/V"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StartButton" type="Button" parent="Pages/Lobby/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Start Game"
+
+[node name="LeaveButton" type="Button" parent="Pages/Lobby/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Leave Lobby"
+
+[node name="InGameMenu" type="CenterContainer" parent="Pages"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Pages/InGameMenu"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="V" type="VBoxContainer" parent="Pages/InGameMenu/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Pages/InGameMenu/Panel/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Menu"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+disabled = true
+tooltip_text = "Settings screen not implemented yet"
+text = "Settings"
+
+[node name="LeaveLobbyButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "Leave Lobby"
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
 horizontal_alignment = 1

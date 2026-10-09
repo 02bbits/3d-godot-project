@@ -109,7 +109,7 @@ var wall_forward_dir : Vector3 = Vector3.ZERO
 @export var wallrun_speed : float = 9.65
 @export var wallrun_accel : float = 2.3
 @export var wallrun_deccel : float = 7.0
-@export_range(0.0, 1.0, 0.001) var wallrun_fall_gravity_multiplier : float = 0.08
+@export_range(0.0, 1.0, 0.001) var wallrun_fall_gravity_multiplier : float = 0.03
 @export var wallrun_time : float = 3.5
 var wallrun_time_ref : float
 @export var infinite_wallrun_time : bool = false
