@@ -17,8 +17,10 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.transitioned.connect(on_state_child_transition)
 			
-	#wait for the player character to be ready
-	await play_char.ready
+	#wait for the player character to be ready (skip if it already is: awaiting
+	#an already-emitted signal would hang and leave curr_state null)
+	if not play_char.is_node_ready():
+		await play_char.ready
 			
 	#if initial state, transition to it
 	if initial_state:

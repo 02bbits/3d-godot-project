@@ -50,7 +50,7 @@ var walk_or_run: String = "WalkState" #keep in memory if play char was walking o
 @export var backward_run_speed_multiplier : float = 0.7
 
 @export_group("Jump variables")
-@export var jump_height: float = 1.7
+@export var jump_height: float = 2.7
 @export var jump_time_to_peak: float = 0.3
 @export var jump_time_to_fall: float = 0.25
 @onready var jump_velocity: float = (2.0 * jump_height) / jump_time_to_peak
@@ -192,8 +192,9 @@ var _shot_turn_tween: Tween
 @onready var cam_holder: Node3D = $CameraHolder
 @onready var cam: Camera3D = %Camera
 @onready var weapon: Node = $CameraHolder/Camera/Weapon
-@onready var phantom_gun: Node3D = $CameraHolder/Camera/PhantomGun
-@onready var phantom_muzzle_flash: GPUParticles3D = $CameraHolder/Camera/PhantomGun/MuzzleFlash
+@onready var viewmodel_camera: Camera3D = $HUD/ViewModel/Viewport/Camera
+@onready var phantom_gun: Node3D = $HUD/ViewModel/Viewport/Camera/PhantomGun
+@onready var phantom_muzzle_flash: GPUParticles3D = $HUD/ViewModel/Viewport/Camera/PhantomGun/MuzzleFlash
 @onready var model: Node3D = $VisualRoot/ScalingRoot
 @onready var visual_root: Node3D = $VisualRoot
 @onready var nickname_label: Label3D = $VisualRoot/NicknameLabel

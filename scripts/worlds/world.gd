@@ -7,9 +7,10 @@ extends Node3D
 
 signal local_player_changed(player: PlayerCharacter)
 signal game_started
+signal game_ended
 
 # Rotation order. Index 0 is already instanced in main.tscn; the rest are
-# built at runtime by map_builder.gd.
+# baked GridMap scenes swapped into MapRoot.
 const MAP_PATHS := [
 	"res://scenes/worlds/testing_area.tscn",
 	"res://scenes/worlds/arena_pillars.tscn",
@@ -45,6 +46,7 @@ func _ready() -> void:
 	match_manager.game_started.connect(_start_game)
 	match_manager.respawn_requested.connect(_respawn_local_player)
 	match_manager.map_changed.connect(_on_map_changed)
+	match_manager.returned_to_lobby.connect(_return_to_lobby)
 
 
 func _process(delta: float) -> void:
@@ -80,6 +82,15 @@ func _start_game() -> void:
 func _respawn_local_player() -> void:
 	if local_player != null:
 		respawn_player(local_player)
+
+
+# Game over finished: remove the local player and hand the UI back to the lobby.
+func _return_to_lobby() -> void:
+	_stop_spectating()
+	if local_player != null:
+		player_spawner.despawn(local_player)
+		local_player = null
+	game_ended.emit()
 
 
 # MAP ROTATION
@@ -137,6 +148,9 @@ func _spawn_local_player() -> void:
 
 	# Each client spawns its own player and has authority over it
 	var player := player_spawner.spawn() as PlayerCharacter
+	# the node we spawned is ours: don't wait for the authority snapshot to
+	# resolve before simulating (a client stuck as "remote" would float)
+	player.claim_local_role()
 	if player.network_role_ready:
 		_register_local_player(player)
 		respawn_player(player)
@@ -175,7 +189,9 @@ func _update_spectator(delta: float) -> void:
 		_spectate_index = wrapi(_spectate_index - 1, 0, _spectate_targets.size())
 	if Input.is_action_just_pressed("ui_right"):
 		_spectate_index = wrapi(_spectate_index + 1, 0, _spectate_targets.size())
-	var target: Node3D = _spectate_targets[_spectate_index]
+	var target := instance_from_id(_spectate_targets[_spectate_index]) as Node3D
+	if target == null:
+		return
 	var head: Vector3 = target.global_position + Vector3.UP * 1.5
 	var yaw: float = target.cam_holder.rotation.y
 	var desired: Vector3 = head + Vector3(sin(yaw), 0.0, cos(yaw)) * 3.5 + Vector3.UP * 0.5
@@ -193,20 +209,24 @@ func _update_spectator(delta: float) -> void:
 
 
 func _refresh_spectate_targets() -> void:
-	var previous: Node = null
+	# instance ids survive frees: an object reference would crash when a target
+	# despawns between frames (e.g. players leaving when returning to the lobby)
+	var previous_id: int = 0
 	if _spectate_index < _spectate_targets.size():
-		previous = _spectate_targets[_spectate_index]
+		previous_id = _spectate_targets[_spectate_index]
 	_spectate_targets = []
 	for p in get_tree().get_nodes_in_group("player"):
 		if p == local_player or not is_instance_valid(p) or p.dead:
 			continue
-		_spectate_targets.append(p)
-	_spectate_index = _spectate_targets.find(previous)
+		_spectate_targets.append(p.get_instance_id())
+	_spectate_index = _spectate_targets.find(previous_id)
 	if _spectate_index < 0:
 		_spectate_index = 0
 
 
 func _stop_spectating() -> void:
+	_spectate_targets.clear()
+	_spectate_index = 0
 	if spectator_camera == null:
 		return
 	spectator_camera.current = false

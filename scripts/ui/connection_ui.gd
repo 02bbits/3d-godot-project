@@ -33,10 +33,13 @@ var _pending_room := ""
 var _pending_password := ""
 var _awaiting_password_check := false
 var _roster_poll := 0.0
+var _connected_name := ""
+var _reconnecting := false
 
 
 func _ready() -> void:
 	world.game_started.connect(_on_game_started)
+	world.game_ended.connect(_on_game_ended)
 
 	Fusion.connection_failed.connect(_on_connection_failed)
 	Fusion.connection_status_changed.connect(_on_connection_status_changed)
@@ -102,15 +105,28 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_name_next_pressed() -> void:
 	_save_nickname()
+	var nickname := get_nickname()
+
+	# Photon fixes the user id at connect time: if the name changed, drop the
+	# connection and reconnect so the new name is the identity everywhere.
+	if Fusion.is_connected_to_photon() and nickname != _connected_name:
+		_reconnecting = true
+		Fusion.disconnect_from_photon()
+		var disconnect_timeout := 5.0
+		while Fusion.is_connected_to_photon() and disconnect_timeout > 0.0:
+			disconnect_timeout -= 0.1
+			await get_tree().create_timer(0.1).timeout
+		_reconnecting = false
+
 	if Fusion.is_connected_to_photon():
 		_show_page("PlayChoice")
 		return
 
 	_error = ""
 	_status("Connecting...")
-	if not Fusion.is_connected_to_photon() \
-			and Fusion.get_connection_status() != Fusion.STATUS_CONNECTING_TO_PHOTON:
-		Fusion.connect_to_photon(get_nickname(), Fusion.get_default_region())
+	_connected_name = nickname
+	if Fusion.get_connection_status() != Fusion.STATUS_CONNECTING_TO_PHOTON:
+		Fusion.connect_to_photon(nickname, Fusion.get_default_region())
 
 	var timeout := 15.0
 	while not Fusion.is_connected_to_photon() and timeout > 0.0 \
@@ -171,7 +187,6 @@ func _on_start_pressed() -> void:
 		"phase": "playing",
 		"match_phase": "fight",
 		"round": 1,
-		"map_index": 0,
 	})
 	room.set_visible(false)
 	room.set_open(false)
@@ -238,7 +253,7 @@ func _on_connection_failed(error: String) -> void:
 
 
 func _on_connection_status_changed(status: int) -> void:
-	if status != Fusion.STATUS_DISCONNECTED or _room_leave_handled:
+	if status != Fusion.STATUS_DISCONNECTED or _room_leave_handled or _reconnecting:
 		return
 	if _leave_target == "MainMenu":
 		get_tree().reload_current_scene()
@@ -252,6 +267,12 @@ func _on_game_started() -> void:
 	_game_started = true
 	_hide_all_pages()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+
+# Results screen finished: back to the waiting lobby, still in the same room.
+func _on_game_ended() -> void:
+	_game_started = false
+	_show_page("Lobby")
 
 
 func _close_ingame_menu() -> void:

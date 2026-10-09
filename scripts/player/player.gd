@@ -35,6 +35,7 @@ func _ready() -> void:
 	# the player's own body and blocks stand-up/jump forever (stuck crouch).
 	ceiling_check.add_exception(self)
 	setup_arm_ik()
+	setup_viewmodel_layers()
 	setup_network_control()
 
 func _process(delta: float) -> void:

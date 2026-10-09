@@ -79,6 +79,9 @@ func network_view_sync(delta: float) -> void:
 		view_yaw = cam_holder.rotation.y
 		view_pitch = cam.rotation.x
 		_update_body_yaw(delta)
+	# the viewmodel camera rides the gameplay camera; the gun is its child, so
+	# the screen position stays fixed while lighting follows the aim
+	viewmodel_camera.global_transform = cam.global_transform
 	# the visible model faces body_yaw; the head (LookAtModifier3D) covers the
 	# remaining angle up to the neck limit on every peer. Wallrunning rolls the
 	# model toward the wall, matching the camera's 16 degree lean.
@@ -272,6 +275,15 @@ func _update_gun_visibility() -> void:
 	phantom_gun.visible = not is_remote
 	pistol.visible = is_remote
 
+# The viewmodel renders only in its own SubViewport (render layer 4, matching
+# the viewmodel camera's cull_mask), so it keeps a fixed FOV and never
+# depth-tests against walls.
+func setup_viewmodel_layers() -> void:
+	if phantom_gun is VisualInstance3D:
+		phantom_gun.layers = 4
+	for node in phantom_gun.find_children("*", "VisualInstance3D", true, false):
+		node.layers = 4
+
 func setup_network_control() -> void:
 	var rep: Node = find_child("FusionSharedReplicator", true, false)
 	if rep == null:
@@ -282,8 +294,26 @@ func setup_network_control() -> void:
 		rep.spawned.connect(_on_replicator_spawned)
 	if rep.has_signal("authority_changed"):
 		rep.authority_changed.connect(_on_authority_changed)
-	# role may already be known (spawned before _ready)
-	_apply_network_role(not rep.has_authority())
+	# role may already be known (spawned before _ready); a local claim wins
+	if _claimed_local:
+		_apply_network_role(false)
+	else:
+		_apply_network_role(not rep.has_authority())
+
+
+var _claimed_local := false
+
+
+# The node returned by FusionSpawner.spawn() is this client's own player, so
+# mark it local and claim authority even if the spawn snapshot has not granted
+# it yet. Remote replicas are created internally by Fusion and never pass
+# through here, so this cannot promote someone else's copy.
+func claim_local_role() -> void:
+	_claimed_local = true
+	var rep: Node = find_child("FusionSharedReplicator", true, false)
+	if rep != null and rep.has_method("want_authority"):
+		rep.want_authority(true)
+	_apply_network_role(false)
 
 
 func _on_replicator_spawned() -> void:
@@ -314,6 +344,8 @@ func _apply_network_role(remote: bool) -> void:
 
 func _enable_local_copy() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# a role can flip remote -> local: restore interpolation the remote path turned off
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_INHERIT
 	set_physics_process(true)
 	state_machine.set_process(true)
 	state_machine.set_physics_process(true)

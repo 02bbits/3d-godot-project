@@ -6,26 +6,29 @@ extends ProgressBar
 var play_char : PlayerCharacter
 
 func _ready() -> void:
-	resolve_player()
-	if play_char:
-		max_value = play_char.stamina_max
-		damage_bar.max_value = max_value
-		value = play_char.stamina
-		damage_bar.value = play_char.stamina
+	# bind to this HUD's own player: the old group lookup could pick a remote
+	# copy, whose stamina never changes (frozen bar)
+	var hud := get_parent() as HUD
+	if hud != null:
+		play_char = hud.play_char
+	if play_char == null:
+		return
+	max_value = play_char.stamina_max
+	damage_bar.max_value = max_value
+	value = play_char.stamina
+	damage_bar.value = play_char.stamina
 
 func _process(_delta : float) -> void:
-	resolve_player()
-	if play_char:
-		var s : float = play_char.stamina
-		damage_bar.value = s
-		if s < value:
-			timer.start()
-		elif s > value:
-			value = s
+	if play_char == null:
+		return
+	if damage_bar.max_value != max_value:
+		damage_bar.max_value = max_value
+	var s : float = play_char.stamina
+	damage_bar.value = s
+	if s < value:
+		timer.start()
+	elif s > value:
+		value = s
 
 func _on_timer_timeout() -> void:
 	value = damage_bar.value
-
-func resolve_player() -> void:
-	if not play_char:
-		play_char = get_tree().get_first_node_in_group("player")

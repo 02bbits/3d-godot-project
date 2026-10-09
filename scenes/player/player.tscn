@@ -1200,10 +1200,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 [node name="Weapon" parent="CameraHolder/Camera" unique_id=35109852 instance=ExtResource("6_gun")]
 transform = Transform3D(0.0056993943, 0, -0.9999838, 0, 1, 0, 0.9999838, 0, 0.0056993943, 0.41569835, -0.3042159, -0.80293286)
 
-[node name="PhantomGun" parent="CameraHolder/Camera" unique_id=680268323 instance=ExtResource("25_pistol")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.7873827, -0.4906001, -0.54999995)
-visible = false
-
 [node name="CameraBasedRaycasts" type="Node3D" parent="CameraHolder/Camera" unique_id=579346454]
 
 [node name="LeftWallCheck" type="RayCast3D" parent="CameraHolder/Camera/CameraBasedRaycasts" unique_id=2022751356]
@@ -1264,6 +1260,33 @@ debug_shape_custom_color = Color(0, 0.823529, 0.956863, 1)
 script = ExtResource("10_hud")
 play_char = NodePath("..")
 metadata/_edit_use_anchors_ = true
+
+[node name="ViewModel" type="SubViewportContainer" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="Viewport" type="SubViewport" parent="HUD/ViewModel"]
+handle_input_locally = false
+transparent_bg = true
+render_target_update_mode = 4
+size = Vector2i(1152, 648)
+
+[node name="Camera" type="Camera3D" parent="HUD/ViewModel/Viewport"]
+current = true
+fov = 90.0
+near = 0.01
+far = 100.0
+cull_mask = 4
+
+[node name="PhantomGun" parent="HUD/ViewModel/Viewport/Camera" unique_id=680268323 instance=ExtResource("25_pistol")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.7873827, -0.4906001, -0.54999995)
+visible = false
 
 [node name="Healthbar" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
 offset_left = 22.0
@@ -1433,7 +1456,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 22
-text = "Esc to leave the lobby"
+text = "Returning to the lobby..."
 horizontal_alignment = 1
 
 [node name="MatchBanner" type="Label" parent="HUD"]
