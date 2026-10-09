@@ -210,6 +210,14 @@ text = "Max players"
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 
+[node name="RoundsLabel" type="Label" parent="Pages/CreateLobby/Panel/V"]
+layout_mode = 2
+text = "Rounds"
+
+[node name="Rounds" type="OptionButton" parent="Pages/CreateLobby/Panel/V"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
 [node name="CreateButton" type="Button" parent="Pages/CreateLobby/Panel/V"]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2

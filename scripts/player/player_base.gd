@@ -134,7 +134,6 @@ var health: float:
 	set(value):
 		$Health.health = value
 var dead: bool = false
-var restart_pending: bool = false
 var is_remote: bool = false #true when this instance is a networked copy we don't control
 var network_role_ready: bool = false #role resolved by setup_network_control
 var view_yaw: float = 0.0 #replicated camera yaw (radians), owner writes / remote reads

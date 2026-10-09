@@ -51,6 +51,10 @@ func input_management() -> void:
 	if Input.is_action_just_pressed(play_char.jump_action):
 		if play_char.jump_cooldown <= 0.0:
 			jump()
+			
+	if Input.is_action_just_released(play_char.jump_action):
+		if play_char.velocity.y > 0:
+			play_char.velocity.y = play_char.velocity.y / 2
 
 	if Input.is_action_just_pressed(play_char.dash_action):
 		if play_char.can_dash():
@@ -102,6 +106,11 @@ func move(delta : float) -> void:
 
 func jump() -> void:
 	#manage the jump behaviour, depending of the different variables and states the character is
+
+	# no jumps at zero stamina (stamina drains while airborne and regenerates
+	# after a delay): without this gate, jump spam never cost anything
+	if play_char.stamina <= 0.0:
+		return
 
 	var can_jump : bool = false #jump condition
 

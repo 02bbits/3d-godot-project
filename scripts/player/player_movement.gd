@@ -45,6 +45,23 @@ func jump_timer(delta : float) -> void:
 	if jump_cooldown > 0.0:
 		jump_cooldown -= delta
 
+# Camera height is not replicated: each client lowers its own view while
+# crouching. Base height is captured in player.gd::_ready.
+var cam_base_height: float
+var _cam_height_tween: Tween
+
+func tween_camera_height(target_y: float) -> void:
+	if _cam_height_tween != null and _cam_height_tween.is_valid():
+		_cam_height_tween.kill()
+	_cam_height_tween = create_tween()
+	_cam_height_tween.tween_property(cam_holder, "position:y", target_y, height_change_duration)
+
+func camera_height_for(hitbox_height: float) -> float:
+	return cam_base_height - (base_hitbox_height - hitbox_height) * 0.5
+
+func crouch_camera_height() -> float:
+	return camera_height_for(crouch_hitbox_height)
+
 func wallrun_timer(delta : float) -> void:
 	if !can_wallrun:
 		if time_bef_can_wallrun_again > 0.0: time_bef_can_wallrun_again -= delta

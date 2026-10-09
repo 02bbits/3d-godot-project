@@ -32,9 +32,7 @@ func _die(attacker_id: int = -1) -> void:
 		arm_ik.influence = 0.0 # and let the death animation pose the arm
 	net_wallrun_side = 0 # dying out of a wallrun must not keep the model leaning
 	_set_dead_visuals()
-	if not is_remote:
-		# round-based respawn: automatic after a short death delay
-		$RespawnTimer.start()
+	# eliminated players stay out until the match ends (match_manager decides)
 	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
 		Fusion.rpc(Callable(self, "died_fx"), attacker_id)
 	set_physics_process(false)
@@ -50,28 +48,9 @@ func _die(attacker_id: int = -1) -> void:
 			im.set_mode(im.Mode.DEATH)
 		death_screen.visible = true
 
-func request_restart() -> void:
-	if is_remote or not dead or restart_pending:
-		return
-	restart_pending = true
-	var world: Node = get_tree().current_scene
-	if world == null or not world.has_method("respawn_player"):
-		world = get_tree().root.find_child("World", true, false)
-	if world != null and world.has_method("respawn_player"):
-		world.respawn_player(self)
-	else:
-		restart_failed()
-
-func restart_failed() -> void:
-	restart_pending = false
-	var restart_button := death_screen.get_node_or_null("Center/V/RestartButton") as Button
-	if restart_button != null:
-		restart_button.disabled = false
-
 func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	if is_remote:
 		return
-	restart_pending = false
 	global_transform = spawn_transform
 	velocity = Vector3.ZERO
 	health = max_health
@@ -128,9 +107,6 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	cam.current = true
 	hud.visible = true
 	death_screen.visible = false
-	var restart_button := death_screen.get_node_or_null("Center/V/RestartButton") as Button
-	if restart_button != null:
-		restart_button.disabled = false
 	var im: Node = get_tree().get_first_node_in_group("input_mode")
 	if im != null and im.has_method("set_mode"):
 		im.set_mode(im.Mode.GAMEPLAY)

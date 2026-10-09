@@ -9,7 +9,6 @@ func _ready() -> void:
 	$Health.died.connect(_die)
 	$Health.damaged.connect(_on_damaged)
 	$Health.health_changed.connect(_on_health_changed)
-	$RespawnTimer.timeout.connect(request_restart)
 	nickname_label.text = net_nickname
 	stamina = stamina_max
 	hit_ground_cooldown_ref = hit_ground_cooldown
@@ -28,6 +27,7 @@ func _ready() -> void:
 	time_bef_can_wallrun_again_ref = time_bef_can_wallrun_again
 	walljump_lock_in_air_movement_time_ref = walljump_lock_in_air_movement_time
 	walljump_lock_in_air_movement_time = -1.0
+	cam_base_height = cam_holder.position.y
 
 	build_default_keybinding()
 	input_actions_check()

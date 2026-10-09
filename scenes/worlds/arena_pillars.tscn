@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://0kbot1804344"]
+
+[ext_resource type="MeshLibrary" uid="uid://e0p3x8ld8f37" path="res://assets/KayKit_Prototype/kaykit_prototype.meshlib.tres" id="1_meshlib"]
+[ext_resource type="Script" uid="uid://csuuv37k25bv2" path="res://scripts/worlds/map_builder.gd" id="2_builder"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_map"]
+
+[node name="ArenaPillars" type="Node3D"]
+script = ExtResource("2_builder")
+layout = 0
+
+[node name="Tiles" type="GridMap" parent="."]
+mesh_library = ExtResource("1_meshlib")
+physics_material = SubResource("PhysicsMaterial_map")
+cell_size = Vector3(4, 4, 4)
+cell_center_y = false
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="SpawnPoint01" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -26)
+
+[node name="SpawnPoint02" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, -26)
+
+[node name="SpawnPoint03" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 26)
+
+[node name="SpawnPoint04" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 26)
+
+[node name="SpawnPoint05" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26)
+
+[node name="SpawnPoint06" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 26)
+
+[node name="SpawnPoint07" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 0)
+
+[node name="SpawnPoint08" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
+
+[node name="SpawnPoint09" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -13)
+
+[node name="SpawnPoint10" type="Marker3D" parent="SpawnPoints" groups=["spawn_point"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 13)

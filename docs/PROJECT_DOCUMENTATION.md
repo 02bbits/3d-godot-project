@@ -400,3 +400,18 @@ Increment it where the event happens (net_emote_count += 1, like gun.gd:86); Fus
 3. Movement state — add a state + transitions in the Movement SM. Transitions can advance automatically via advance_expression (see net_crouched at player.tscn:226), or drive from code with movement_state_machine.travel("MyState") (like Dash at player_network.gd:33). Reset it in reset_for_respawn if needed.
 4. Locomotion blend — add an AnimationNodeAnimation and a blend_point_N to the BlendSpace2D (see Walking_A at player.tscn:228). _animate_locomotion feeds parameters/Alive/Movement/Locomotion/blend_position from horizontal velocity / run_speed.
 Rules: keep @rpc entry points on the leaf player.gd, put setters/methods in the layer that owns them, and author graph edits in the editor's AnimationTree panel — hand-editing state machines in .tscn is how typos happen. New clips must target the same rig (Rig_Medium: upperarm.r, wrist.r, etc.) or need a RetargetModifier3D. Quick check after adding: godot --headless --path . --quit.
+
+Note:
+Bug:
+Wrong password -> Main menu
+What supposed to be:
+Wrong password -> reenter the form
+Jump cost no stamina
+Crouching no camera change
+Cant ESC after winning screen
+
+Fire through wall
+- Add health bar delay change
+UI: No winning notification for each match
+Map: No environement light
+Sound: widen radius

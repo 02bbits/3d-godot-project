@@ -12,6 +12,9 @@ func enter(play_char_ref : CharacterBody3D) -> void:
 	play_char = play_char_ref
 	
 	verifications()
+
+func exit() -> void:
+	play_char.tween_camera_height(play_char.cam_base_height)
 	
 func verifications() -> void:
 	play_char.move_speed = play_char.slide_speed
@@ -32,6 +35,7 @@ func verifications() -> void:
 	
 	play_char.tween_hitbox_height(play_char.slide_hitbox_height)
 	play_char.tween_model_height(play_char.slide_model_height)
+	play_char.tween_camera_height(play_char.camera_height_for(play_char.slide_hitbox_height))
 	
 func physics_update(delta : float) -> void:
 	applies(delta)

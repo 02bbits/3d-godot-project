@@ -1,14 +1,14 @@
 extends Control
 
-@onready var restart_button: Button = %RestartButton
+## Shown while the local player is eliminated: names the player being
+## spectated. Target cycling lives in world.gd; respawns hand back control
+## when the match ends.
 
-func _ready() -> void:
-	restart_button.pressed.connect(_on_restart_pressed)
+@onready var target_label: Label = %TargetLabel
 
-func _on_restart_pressed() -> void:
-	restart_button.disabled = true
-	var player := get_parent().get_parent()
-	if player != null and player.has_method("request_restart"):
-		player.request_restart()
+
+func set_spectate_target(nickname: String) -> void:
+	if nickname.is_empty():
+		target_label.text = "No players left"
 	else:
-		restart_button.disabled = false
+		target_label.text = "Spectating: %s" % nickname

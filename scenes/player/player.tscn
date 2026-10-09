@@ -1078,10 +1078,6 @@ process_physics_priority = -2147483647
 [node name="ModifierManager" type="Node" parent="." unique_id=111599797]
 script = ExtResource("22_mods")
 
-[node name="RespawnTimer" type="Timer" parent="." unique_id=2101056506]
-wait_time = 3.0
-one_shot = true
-
 [node name="VisualRoot" type="Node3D" parent="." unique_id=232480131]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3808961, 0)
 
@@ -1148,16 +1144,19 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0
 
 [node name="JumpSound" type="AudioStreamPlayer3D" parent="Sounds" unique_id=1437169489]
 stream = SubResource("AudioStreamRandomizer_jump")
-max_distance = 20.0
+unit_size = 30.0
+max_distance = 60.0
 
 [node name="LandSound" type="AudioStreamPlayer3D" parent="Sounds" unique_id=898739738]
 stream = ExtResource("31_land")
-max_distance = 20.0
+unit_size = 30.0
+max_distance = 60.0
 
 [node name="FireSound" type="AudioStreamPlayer3D" parent="Sounds" unique_id=388428587]
 stream = ExtResource("32_fire")
 volume_db = -5.0
-max_distance = 40.0
+unit_size = 30.0
+max_distance = 80.0
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=1896245489]
 root_node = NodePath("../VisualRoot/ScalingRoot/PlayerModel")
@@ -1313,14 +1312,23 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.15, 0.15, 1)
 theme_override_fonts/font = ExtResource("33_font")
 theme_override_font_sizes/font_size = 64
-text = "YOU DIED"
+text = "ELIMINATED"
 
-[node name="RestartButton" type="Button" parent="HUD/DeathScreen/Center/V" unique_id=1979332182]
+[node name="TargetLabel" type="Label" parent="HUD/DeathScreen/Center/V" unique_id=1979332182]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 50)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "Restart"
+theme_override_colors/font_color = Color(0.92, 0.92, 0.98, 1)
+theme_override_fonts/font = ExtResource("33_font")
+theme_override_font_sizes/font_size = 32
+text = "Spectating:"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="HUD/DeathScreen/Center/V" unique_id=1979332183]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
+theme_override_font_sizes/font_size = 22
+text = "Left / Right arrows to switch player"
+horizontal_alignment = 1
 
 [node name="SpeedLinesContainer" type="ColorRect" parent="HUD" unique_id=1381122063]
 unique_name_in_owner = true
@@ -1347,6 +1355,106 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("23_cross")
 stretch_mode = 1
+
+[node name="Scoreboard" type="PanelContainer" parent="HUD"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -340.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 150.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="V" type="VBoxContainer" parent="HUD/Scoreboard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RoundLabel" type="Label" parent="HUD/Scoreboard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_fonts/font = ExtResource("33_font")
+theme_override_font_sizes/font_size = 30
+text = "Round 1 / 3"
+horizontal_alignment = 1
+
+[node name="ScoreGrid" type="GridContainer" parent="HUD/Scoreboard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 2
+
+[node name="ResultsPanel" type="Control" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dim" type="ColorRect" parent="HUD/ResultsPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.05, 0.8)
+
+[node name="Center" type="CenterContainer" parent="HUD/ResultsPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="V" type="VBoxContainer" parent="HUD/ResultsPanel/Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="HUD/ResultsPanel/Center/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_fonts/font = ExtResource("33_font")
+theme_override_font_sizes/font_size = 56
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="ResultsList" type="VBoxContainer" parent="HUD/ResultsPanel/Center/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Hint" type="Label" parent="HUD/ResultsPanel/Center/V"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
+theme_override_font_sizes/font_size = 22
+text = "Esc to leave the lobby"
+horizontal_alignment = 1
+
+[node name="MatchBanner" type="Label" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 84.0
+offset_right = 320.0
+offset_bottom = 140.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.92, 0.65, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("33_font")
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="change_fov" from="StateMachine" to="CameraHolder" method="change_fov"]
 

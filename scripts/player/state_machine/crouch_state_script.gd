@@ -15,6 +15,7 @@ func enter(play_char_ref : CharacterBody3D) -> void:
 
 func exit() -> void:
 	play_char.net_crouched = false
+	play_char.tween_camera_height(play_char.cam_base_height)
 
 func verifications() -> void:
 	play_char.move_speed = play_char.crouch_speed
@@ -35,6 +36,7 @@ func verifications() -> void:
 	# only the hitbox lowers; the Crouching animation poses the body, no model
 	# scaling (scaling made the sprite sink with the floor)
 	play_char.tween_hitbox_height(play_char.crouch_hitbox_height)
+	play_char.tween_camera_height(play_char.crouch_camera_height())
 	
 func physics_update(delta : float) -> void:
 	applies(delta)
