@@ -61,7 +61,6 @@ var state : String
 @onready var camera : Camera3D = $Camera
 @onready var play_char : PlayerCharacter = $".."
 @onready var hud : CanvasLayer = $"../HUD"
-@onready var weapon : Node3D = $Camera/Weapon
 
 func _ready() -> void:
 	camera.fov = fov

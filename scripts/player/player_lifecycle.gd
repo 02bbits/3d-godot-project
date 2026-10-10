@@ -116,6 +116,6 @@ func _set_dead_visuals() -> void:
 	# the local body stays hidden behind the death screen
 	visual_root.visible = is_remote or not dead
 	nickname_label.visible = not dead and is_remote
-	weapon.visible = not dead
-	phantom_gun.visible = not dead and not is_remote
+	if weapon != null:
+		weapon.update_visibility()
 	hitbox.disabled = dead

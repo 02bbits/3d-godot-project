@@ -15,7 +15,7 @@ class_name HUD
 @onready var results_list: VBoxContainer = %ResultsList
 @onready var match_banner: Label = %MatchBanner
 @onready var scoreboard: PanelContainer = $Scoreboard
-@onready var crosshair: TextureRect = $Crosshair
+@onready var crosshair: CenterContainer = $Reticle
 
 var _match_manager: Node
 var _last_state := ""

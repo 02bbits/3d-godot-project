@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://c3e6dis83jouh" path="res://scripts/player/state_machine/slide_state_script.gd" id="3_slide"]
 [ext_resource type="Script" uid="uid://cdhjrqg5pjrno" path="res://scripts/player/state_machine/dash_state_script.gd" id="4_dash"]
 [ext_resource type="Script" uid="uid://bhguewy1thcsj" path="res://scripts/player/state_machine/wallrun_state_script.gd" id="5_wallrun"]
-[ext_resource type="PackedScene" uid="uid://jpky1wrl6pew" path="res://scenes/player/gun.tscn" id="6_gun"]
 [ext_resource type="Shader" uid="uid://jl76baah73hr" path="res://scripts/player/shader/speed_lines_shader.gdshader" id="8_shader"]
 [ext_resource type="PackedScene" uid="uid://foi4copqpjox" path="res://scenes/ui/healthbar/healthbar.tscn" id="9_hb"]
 [ext_resource type="Script" uid="uid://dx02l6p6behb8" path="res://scripts/player/hud/hud_script.gd" id="10_hud"]
@@ -22,20 +21,19 @@
 [ext_resource type="Script" uid="uid://cb8wjk2pfh1rl" path="res://scripts/player/state_machine/crouch_state_script.gd" id="20_crouch"]
 [ext_resource type="Script" uid="uid://c8y35mer47tpb" path="res://scripts/player/health.gd" id="21_health"]
 [ext_resource type="Script" uid="uid://bxenf2owi6qof" path="res://scripts/modifiers/modifier_manager.gd" id="22_mods"]
-[ext_resource type="Texture2D" uid="uid://dv747ov6fcrsg" path="res://assets/hud/crosshair.png" id="23_cross"]
-[ext_resource type="PackedScene" uid="uid://cswiapk4jkjys" path="res://scenes/player/pistol.tscn" id="25_pistol"]
 [ext_resource type="PackedScene" path="res://assets/photon/scenes/impact.tscn" id="26_impact"]
 [ext_resource type="PackedScene" path="res://assets/photon/scenes/vfx_explosion.tscn" id="27_death"]
 [ext_resource type="AudioStream" uid="uid://bd32br31ax5qh" path="res://assets/photon/kenney_fps/sounds/jump_a.ogg" id="28_ja"]
 [ext_resource type="AudioStream" uid="uid://dj8dyaoycilf2" path="res://assets/photon/kenney_fps/sounds/jump_b.ogg" id="29_jb"]
 [ext_resource type="AudioStream" uid="uid://64qyvg75eynn" path="res://assets/photon/kenney_fps/sounds/jump_c.ogg" id="30_jc"]
 [ext_resource type="AudioStream" uid="uid://dc5oois0e70wk" path="res://assets/photon/kenney_platformer/sounds/land.ogg" id="31_land"]
-[ext_resource type="AudioStream" uid="uid://cjw6kel8codph" path="res://assets/photon/kenney_fps/sounds/blaster.ogg" id="32_fire"]
+[ext_resource type="Script" uid="uid://b50e5gf1ri032" path="res://scenes/player/reticle.gd" id="32_kxw46"]
 [ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="33_font"]
 [ext_resource type="AnimationLibrary" uid="uid://b6r32phhejoeo" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="34_general"]
 [ext_resource type="AnimationLibrary" uid="uid://2foe2hw3i1hj" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb" id="35_movement"]
 [ext_resource type="AnimationLibrary" uid="uid://cxnjla3so1qx5" path="res://assets/photon/KayKit_Character_Animations_1.1/Animations/Rig_Medium/Rig_Medium_CombatRanged.glb" id="36_combat"]
 [ext_resource type="AnimationLibrary" uid="uid://cxoe4uc6wpsw8" path="res://assets/photon/KayKit_Character_Animations_1.1/Animations/Rig_Medium/Rig_Medium_MovementAdvanced.glb" id="37_advanced"]
+[ext_resource type="Resource" uid="uid://cmu36ofpnvfkp" path="res://resources/weapons/pistol.tres" id="38_def"]
 
 [sub_resource type="Curve" id="Curve_s7fsc"]
 _limits = [10.0, 30.0, 0.0, 60.0]
@@ -1032,6 +1030,7 @@ in_air_move_speed_curve = SubResource("Curve_gfbru")
 impact_effect = ExtResource("26_impact")
 death_effect = ExtResource("27_death")
 head_meshes = [NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/head/Dummy_Helmet"), NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/Dummy_Head")]
+weapon_definition = ExtResource("38_def")
 
 [node name="StateMachine" type="Node" parent="." unique_id=948360827 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("14_sm")
@@ -1137,9 +1136,6 @@ bone_idx = 12
 use_external_skeleton = true
 external_skeleton = NodePath("../ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D")
 
-[node name="Pistol" parent="VisualRoot/HandAttachement" unique_id=1502238739 instance=ExtResource("25_pistol")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.114, 0.036)
-
 [node name="Sounds" type="Node3D" parent="." unique_id=770776776]
 
 [node name="JumpSound" type="AudioStreamPlayer3D" parent="Sounds" unique_id=1437169489]
@@ -1151,12 +1147,6 @@ max_distance = 60.0
 stream = ExtResource("31_land")
 unit_size = 30.0
 max_distance = 60.0
-
-[node name="FireSound" type="AudioStreamPlayer3D" parent="Sounds" unique_id=388428587]
-stream = ExtResource("32_fire")
-volume_db = -5.0
-unit_size = 30.0
-max_distance = 80.0
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=1896245489]
 root_node = NodePath("../VisualRoot/ScalingRoot/PlayerModel")
@@ -1196,9 +1186,6 @@ far = 1000.0
 
 [node name="HeadLookTarget" type="Marker3D" parent="CameraHolder/Camera" unique_id=1916454888]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
-
-[node name="Weapon" parent="CameraHolder/Camera" unique_id=35109852 instance=ExtResource("6_gun")]
-transform = Transform3D(0.0056993943, 0, -0.9999838, 0, 1, 0, 0.9999838, 0, 0.0056993943, 0.41569835, -0.3042159, -0.80293286)
 
 [node name="CameraBasedRaycasts" type="Node3D" parent="CameraHolder/Camera" unique_id=579346454]
 
@@ -1261,8 +1248,39 @@ script = ExtResource("10_hud")
 play_char = NodePath("..")
 metadata/_edit_use_anchors_ = true
 
-[node name="ViewModel" type="SubViewportContainer" parent="HUD"]
-layout_mode = 3
+[node name="Reticle" type="CenterContainer" parent="HUD" unique_id=609938631 node_paths=PackedStringArray("RETICLE_LINES", "PLAYER_CHARACTER")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("32_kxw46")
+RETICLE_LINES = [NodePath("Top"), NodePath("Right"), NodePath("Bottom"), NodePath("Left")]
+PLAYER_CHARACTER = NodePath("../..")
+
+[node name="Top" type="Line2D" parent="HUD/Reticle" unique_id=269835423]
+points = PackedVector2Array(0, -5, 0, -15)
+width = 2.0
+
+[node name="Right" type="Line2D" parent="HUD/Reticle" unique_id=133271435]
+points = PackedVector2Array(5, 0, 15, 0)
+width = 2.0
+
+[node name="Bottom" type="Line2D" parent="HUD/Reticle" unique_id=840376985]
+points = PackedVector2Array(0, 5, 0, 15)
+width = 2.0
+
+[node name="Left" type="Line2D" parent="HUD/Reticle" unique_id=739388275]
+points = PackedVector2Array(-5, 0, -15, 0)
+width = 2.0
+
+[node name="ViewModel" type="SubViewportContainer" parent="HUD" unique_id=1714327811]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1271,22 +1289,18 @@ grow_vertical = 2
 mouse_filter = 2
 stretch = true
 
-[node name="Viewport" type="SubViewport" parent="HUD/ViewModel"]
-handle_input_locally = false
+[node name="Viewport" type="SubViewport" parent="HUD/ViewModel" unique_id=612222732]
 transparent_bg = true
-render_target_update_mode = 4
+handle_input_locally = false
 size = Vector2i(1152, 648)
+render_target_update_mode = 4
 
-[node name="Camera" type="Camera3D" parent="HUD/ViewModel/Viewport"]
+[node name="Camera" type="Camera3D" parent="HUD/ViewModel/Viewport" unique_id=1611658020]
+cull_mask = 4
 current = true
 fov = 90.0
 near = 0.01
 far = 100.0
-cull_mask = 4
-
-[node name="PhantomGun" parent="HUD/ViewModel/Viewport/Camera" unique_id=680268323 instance=ExtResource("25_pistol")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.7873827, -0.4906001, -0.54999995)
-visible = false
 
 [node name="Healthbar" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
 offset_left = 22.0
@@ -1334,8 +1348,8 @@ theme_override_constants/separation = 24
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.15, 0.15, 1)
 theme_override_fonts/font = ExtResource("33_font")
-theme_override_font_sizes/font_size = 64
-text = "ELIMINATED"
+theme_override_font_sizes/font_size = 50
+text = "YOU HAVE BEEN ELIMINATED"
 
 [node name="TargetLabel" type="Label" parent="HUD/DeathScreen/Center/V" unique_id=1979332182]
 unique_name_in_owner = true
@@ -1349,8 +1363,32 @@ horizontal_alignment = 1
 [node name="Hint" type="Label" parent="HUD/DeathScreen/Center/V" unique_id=1979332183]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
-theme_override_font_sizes/font_size = 22
-text = "Left / Right arrows to switch player"
+theme_override_font_sizes/font_size = 11
+text = "Use A / D to switch player"
+horizontal_alignment = 1
+
+[node name="Top" type="VBoxContainer" parent="HUD/DeathScreen"]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 24.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_constants/separation = 6
+
+[node name="SpectateLabel" type="Label" parent="HUD/DeathScreen/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.98, 1)
+theme_override_fonts/font = ExtResource("33_font")
+theme_override_font_sizes/font_size = 32
+text = "Spectating:"
+horizontal_alignment = 1
+
+[node name="TopHint" type="Label" parent="HUD/DeathScreen/Top"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
+theme_override_font_sizes/font_size = 11
+text = "Use A / D to switch player"
 horizontal_alignment = 1
 
 [node name="SpeedLinesContainer" type="ColorRect" parent="HUD" unique_id=1381122063]
@@ -1364,22 +1402,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Crosshair" type="TextureRect" parent="HUD" unique_id=128002962]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("23_cross")
-stretch_mode = 1
-
-[node name="Scoreboard" type="PanelContainer" parent="HUD"]
+[node name="Scoreboard" type="PanelContainer" parent="HUD" unique_id=1073410746]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -1390,11 +1413,11 @@ offset_bottom = 150.0
 grow_horizontal = 0
 mouse_filter = 2
 
-[node name="V" type="VBoxContainer" parent="HUD/Scoreboard"]
+[node name="V" type="VBoxContainer" parent="HUD/Scoreboard" unique_id=1836774013]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="RoundLabel" type="Label" parent="HUD/Scoreboard/V"]
+[node name="RoundLabel" type="Label" parent="HUD/Scoreboard/V" unique_id=854229304]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
@@ -1403,16 +1426,17 @@ theme_override_font_sizes/font_size = 30
 text = "Round 1 / 3"
 horizontal_alignment = 1
 
-[node name="ScoreGrid" type="GridContainer" parent="HUD/Scoreboard/V"]
+[node name="ScoreGrid" type="GridContainer" parent="HUD/Scoreboard/V" unique_id=1799165551]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 3
 theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 2
+columns = 3
 
-[node name="ResultsPanel" type="Control" parent="HUD"]
+[node name="ResultsPanel" type="Control" parent="HUD" unique_id=92363811]
 unique_name_in_owner = true
 visible = false
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1420,7 +1444,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Dim" type="ColorRect" parent="HUD/ResultsPanel"]
+[node name="Dim" type="ColorRect" parent="HUD/ResultsPanel" unique_id=560738969]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1428,18 +1452,18 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.02, 0.05, 0.8)
 
-[node name="Center" type="CenterContainer" parent="HUD/ResultsPanel"]
+[node name="Center" type="CenterContainer" parent="HUD/ResultsPanel" unique_id=408307636]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="V" type="VBoxContainer" parent="HUD/ResultsPanel/Center"]
+[node name="V" type="VBoxContainer" parent="HUD/ResultsPanel/Center" unique_id=457481264]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="HUD/ResultsPanel/Center/V"]
+[node name="Title" type="Label" parent="HUD/ResultsPanel/Center/V" unique_id=491452689]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
 theme_override_fonts/font = ExtResource("33_font")
@@ -1447,19 +1471,19 @@ theme_override_font_sizes/font_size = 56
 text = "GAME OVER"
 horizontal_alignment = 1
 
-[node name="ResultsList" type="VBoxContainer" parent="HUD/ResultsPanel/Center/V"]
+[node name="ResultsList" type="VBoxContainer" parent="HUD/ResultsPanel/Center/V" unique_id=2021861844]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Hint" type="Label" parent="HUD/ResultsPanel/Center/V"]
+[node name="Hint" type="Label" parent="HUD/ResultsPanel/Center/V" unique_id=2000998504]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 22
 text = "Returning to the lobby..."
 horizontal_alignment = 1
 
-[node name="MatchBanner" type="Label" parent="HUD"]
+[node name="MatchBanner" type="Label" parent="HUD" unique_id=2026448443]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 5
@@ -1470,7 +1494,6 @@ offset_top = 84.0
 offset_right = 320.0
 offset_bottom = 140.0
 grow_horizontal = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.92, 0.65, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 8

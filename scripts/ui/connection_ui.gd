@@ -187,6 +187,7 @@ func _on_start_pressed() -> void:
 		"phase": "playing",
 		"match_phase": "fight",
 		"round": 1,
+		"game_serial": int(room.get_custom_properties().get("game_serial", 0)) + 1,
 	})
 	room.set_visible(false)
 	room.set_open(false)

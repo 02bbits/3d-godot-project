@@ -26,6 +26,7 @@ folder_colors={
 "res://assets/": "green",
 "res://build/": "gray",
 "res://docs/": "yellow",
+"res://resources/": "pink",
 "res://scenes/": "blue",
 "res://scripts/": "red"
 }
@@ -39,7 +40,6 @@ connection/default_region="asia"
 
 common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
-3d/default_gravity=24.0
 common/physics_interpolation=true
 
 [rendering]

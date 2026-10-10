@@ -17,7 +17,7 @@ var net_reload_count: int = 0:
 	set(value):
 		var previous := net_reload_count
 		net_reload_count = value
-		if is_node_ready() and value > previous and not dead:
+		if is_node_ready() and value > previous and not dead and weapon != null:
 			weapon.reload_visual()
 var net_hit_count: int = 0:
 	set(value):
@@ -134,12 +134,10 @@ func _track_ground_state() -> void:
 
 func _show_fire_effects() -> void:
 	turn_body_to_aim()
-	_recoil_phantom_gun()
-	phantom_muzzle_flash.restart()
-	pistol_muzzle_flash.restart()
-	fire_sound.play()
+	if weapon != null:
+		weapon.recoil()
 	weapon_state_machine.travel("Fire")
-	if weapon != null and weapon.has_method("on_fire_event"):
+	if weapon != null:
 		weapon.on_fire_event(net_hit_position)
 	if net_hit_normal != Vector3.ZERO and impact_effect != null:
 		var impact := impact_effect.instantiate() as Node3D
@@ -237,52 +235,11 @@ func setup_arm_ik() -> void:
 		await get_tree().process_frame
 	arm_ik.active = true
 
-var _phantom_rest: Transform3D
-var _phantom_rest_set := false
-var _recoil_tween: Tween
-
-# Camera-space kick: backward (toward the camera) and muzzle up, springing
-# back to rest. The phantom's parent is the Camera, so +X rotation pitches the
-# muzzle up in view space. Restarted per shot, never stacked.
-# ponytail: position+rotation kick only; add a hand/arm kick if it reads flat.
-func _recoil_phantom_gun() -> void:
-	if not phantom_gun.visible:
-		return
-	if not _phantom_rest_set:
-		_phantom_rest = phantom_gun.transform
-		_phantom_rest_set = true
-	if _recoil_tween != null and _recoil_tween.is_valid():
-		_recoil_tween.kill()
-	var kick := _phantom_rest
-	kick.origin += Vector3(0.0, 0.012, 0.055)
-	kick.basis = _phantom_rest.basis.rotated(Vector3(1.0, 0.0, 0.0), deg_to_rad(8.0))
-	phantom_gun.transform = kick
-	_recoil_tween = create_tween()
-	_recoil_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_recoil_tween.tween_property(phantom_gun, "transform", _phantom_rest, 0.12)
-
-# Local first person shows the camera-mounted phantom pistol (an instance of
-# scenes/player/pistol.tscn); other peers see the hand-attached model gun on
-# this player's remote copy. gun.tscn's old Body mesh stays hidden and its
-# muzzle flash is only used by remote copies.
+# The weapon owns its viewmodel/world-model visibility (the world model is
+# parented to the hand, the viewmodel renders in the viewmodel SubViewport).
 func _update_gun_visibility() -> void:
-	var body := weapon.get_node_or_null("Body")
-	if body != null:
-		body.visible = false
-	var gun_flash := weapon.get_node_or_null("Muzzle/MuzzleFlash")
-	if gun_flash != null:
-		gun_flash.visible = is_remote
-	phantom_gun.visible = not is_remote
-	pistol.visible = is_remote
-
-# The viewmodel renders only in its own SubViewport (render layer 4, matching
-# the viewmodel camera's cull_mask), so it keeps a fixed FOV and never
-# depth-tests against walls.
-func setup_viewmodel_layers() -> void:
-	if phantom_gun is VisualInstance3D:
-		phantom_gun.layers = 4
-	for node in phantom_gun.find_children("*", "VisualInstance3D", true, false):
-		node.layers = 4
+	if weapon != null:
+		weapon.update_visibility()
 
 func setup_network_control() -> void:
 	var rep: Node = find_child("FusionSharedReplicator", true, false)

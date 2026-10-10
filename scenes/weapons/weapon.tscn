@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://c181lf72n1js2"]
+
+[ext_resource type="Script" uid="uid://bi8meonithmvt" path="res://scripts/weapons/weapon.gd" id="1_wpn"]
+[ext_resource type="Script" uid="uid://ct57qr8d06w8d" path="res://scripts/player/hit_confirm.gd" id="2_hitc"]
+[ext_resource type="AudioStream" uid="uid://cohxjyjukvmit" path="res://assets/audio/metalLatch.ogg" id="3_kill"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
+
+[node name="Weapon" type="Node3D" unique_id=66146724]
+script = ExtResource("1_wpn")
+
+[node name="ViewModel" type="Node3D" parent="." unique_id=1606829018]
+
+[node name="WorldModel" type="Node3D" parent="." unique_id=900729652]
+
+[node name="Muzzle" type="Marker3D" parent="." unique_id=452556839]
+
+[node name="ShootSound" type="AudioStreamPlayer3D" parent="." unique_id=635021120]
+unit_size = 30.0
+max_distance = 80.0
+
+[node name="ReloadSound" type="AudioStreamPlayer3D" parent="." unique_id=894390973]
+unit_size = 30.0
+max_distance = 80.0
+
+[node name="HitConfirm" type="CanvasLayer" parent="." unique_id=1451565828]
+layer = 20
+script = ExtResource("2_hitc")
+
+[node name="HitMarker" type="Label" parent="HitConfirm" unique_id=489082807]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_fonts/font = ExtResource("4_e0dt0")
+theme_override_font_sizes/font_size = 30
+text = "[  ]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KillLabel" type="Label" parent="HitConfirm" unique_id=1051278598]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 42.0
+offset_right = 150.0
+offset_bottom = 96.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.35, 0.3, 1)
+theme_override_fonts/font = ExtResource("4_e0dt0")
+theme_override_font_sizes/font_size = 34
+text = "Eliminated"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KillSound" type="AudioStreamPlayer" parent="HitConfirm" unique_id=194181507]
+stream = ExtResource("3_kill")
+pitch_scale = 0.6

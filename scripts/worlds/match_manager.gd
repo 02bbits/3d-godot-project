@@ -33,6 +33,9 @@ var last_result := "" # banner text published after every match
 var result_serial := 0
 var map_index := 0
 var map_count := 1
+# bumped by the host on every Start: lets a stalled client notice the room was
+# reset and restarted even if it missed the whole waiting window
+var game_serial := 0
 
 var _started := false
 var _match_ready := false # every expected player has been seen alive this match
@@ -68,6 +71,7 @@ func _host_process(delta: float) -> void:
 		round = int(props.get("round", 1))
 		match_phase = str(props.get("match_phase", "fight"))
 		map_index = int(props.get("map_index", 0))
+		game_serial = int(props.get("game_serial", 0))
 		rounds_won = {}
 		round_scores = {}
 		_evaluate_time = MATCH_START_GRACE
@@ -193,10 +197,19 @@ func _client_process(delta: float) -> void:
 		return
 	_poll_time = POLL_INTERVAL
 	var props := _room_props()
+	var serial := int(props.get("game_serial", 0))
+	if _started and serial != game_serial:
+		# a new game started while this client was stalled: tear down the
+		# finished game before joining the new one
+		_started = false
+		match_phase = ""
+		game_serial = serial
+		returned_to_lobby.emit()
 	if not _started:
 		if str(props.get("phase", "waiting")) != "playing":
 			return
 		_started = true
+		game_serial = serial
 		rounds_total = int(props.get("rounds", 3))
 		game_started.emit()
 
@@ -209,12 +222,15 @@ func _client_process(delta: float) -> void:
 	last_result = str(props.get("last_result", last_result))
 	result_serial = int(props.get("result_serial", result_serial))
 	_read_scores(props)
+	if str(props.get("phase", "playing")) != "playing":
+		# the host returned the room to its waiting state; checking the phase
+		# itself also catches clients that missed the short "game_over" window
+		_started = false
+		match_phase = ""
+		returned_to_lobby.emit()
+		return
 	if map_index != previous_map:
 		map_changed.emit(map_index)
-	if previous_phase == "game_over" and match_phase != "game_over":
-		# the host returned the room to its waiting state
-		_started = false
-		returned_to_lobby.emit()
 	if previous_phase == "intermission" and match_phase == "fight":
 		respawn_requested.emit()
 

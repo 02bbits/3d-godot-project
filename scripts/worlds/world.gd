@@ -22,6 +22,9 @@ const MAP_PATHS := [
 # under match_manager's ROUND_INTERMISSION_SECONDS.
 const MAP_SWAP_DELAY := 3.0
 const FADE_TIME := 0.35
+# Let the swapped-in map build (GridMap tiles, collisions) before anyone is
+# respawned into it.
+const MAP_SETTLE_SECONDS := 1.0
 
 @onready var player_spawner: FusionSpawner = $PlayerSpawner
 @onready var connection_menu: Control = $MenuLayer/ConnectionMenu
@@ -35,6 +38,7 @@ var _spectate_targets: Array = []
 var _spectate_index := 0
 var _current_map := 0
 var _swapping := false
+var _scene_registered := false
 var _fade: ColorRect
 
 
@@ -57,7 +61,7 @@ func respawn_player(player: PlayerCharacter) -> void:
 	_stop_spectating()
 	if spawn_points.is_empty():
 		return
-	var spawn_point: Node3D = spawn_points.pick_random()
+	var spawn_point: Node3D = _spawn_point_for_local_player()
 	# Spawn markers are floor points (y at the KayKit floor slab's center), but
 	# the player's origin is its capsule center: lift it clear or it spawns
 	# embedded in the floor and tunnels through it.
@@ -67,21 +71,43 @@ func respawn_player(player: PlayerCharacter) -> void:
 	player.reset_for_respawn(spawn_point.global_transform.translated(Vector3.UP * lift))
 
 
+# Every client indexes the same sorted spawn list with the same sorted room
+# player numbers, so two players can never be handed the same marker.
+func _spawn_point_for_local_player() -> Node3D:
+	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
+		var room = Fusion.get_room()
+		if room != null:
+			var ids: Array[int] = []
+			for p in room.get_players():
+				ids.append(int(p.get_number()))
+			ids.sort()
+			var slot := ids.find(int(Fusion.get_local_player_id()))
+			if slot >= 0:
+				return spawn_points[slot % spawn_points.size()]
+	return spawn_points.pick_random()
+
+
 # PRIVATE METHODS
 
 func _start_game() -> void:
 	_spawn_local_player()
 
-	# Make sure the scene objects are registered
-	if Fusion.is_master_client():
+	# Make sure the scene objects are registered; the scene never reloads, so
+	# registering it on every match would only pile registrations up
+	if Fusion.is_master_client() and not _scene_registered:
 		Fusion.register_current_scene()
+		_scene_registered = true
 
 	game_started.emit()
 
 
 func _respawn_local_player() -> void:
-	if local_player != null:
-		respawn_player(local_player)
+	if local_player == null:
+		return
+	# the round start can land while the new map is still being swapped in
+	while _swapping:
+		await get_tree().process_frame
+	respawn_player(local_player)
 
 
 # Game over finished: remove the local player and hand the UI back to the lobby.
@@ -99,6 +125,8 @@ func _collect_spawn_points() -> void:
 	spawn_points.clear()
 	for point in get_tree().get_nodes_in_group("spawn_point"):
 		spawn_points.append(point)
+	# stable order: every client maps the same player number to the same marker
+	spawn_points.sort_custom(func(a: Node3D, b: Node3D) -> bool: return a.name < b.name)
 
 
 func _setup_fade() -> void:
@@ -124,6 +152,8 @@ func _on_map_changed(index: int) -> void:
 	out.tween_property(_fade, "color:a", 1.0, FADE_TIME)
 	await out.finished
 	_swap_map(index)
+	# let the new map finish building before it receives players
+	await get_tree().create_timer(MAP_SETTLE_SECONDS).timeout
 	await get_tree().create_timer(0.15).timeout
 	var back := create_tween()
 	back.tween_property(_fade, "color:a", 0.0, FADE_TIME)
@@ -185,9 +215,10 @@ func _update_spectator(delta: float) -> void:
 	_refresh_spectate_targets()
 	if _spectate_targets.is_empty():
 		return
-	if Input.is_action_just_pressed("ui_left"):
+	# the player's own move bindings: A/D by default, arrows included
+	if Input.is_action_just_pressed(local_player.move_left_action):
 		_spectate_index = wrapi(_spectate_index - 1, 0, _spectate_targets.size())
-	if Input.is_action_just_pressed("ui_right"):
+	if Input.is_action_just_pressed(local_player.move_right_action):
 		_spectate_index = wrapi(_spectate_index + 1, 0, _spectate_targets.size())
 	var target := instance_from_id(_spectate_targets[_spectate_index]) as Node3D
 	if target == null:

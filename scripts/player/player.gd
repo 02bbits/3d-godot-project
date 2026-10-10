@@ -2,6 +2,8 @@ extends "res://scripts/player/player_lifecycle.gd"
 
 class_name PlayerCharacter
 
+const WEAPON_SCENE := preload("res://scenes/weapons/weapon.tscn")
+
 func _ready() -> void:
 	#set and value references
 	$Health.max_health = max_health
@@ -35,8 +37,19 @@ func _ready() -> void:
 	# the player's own body and blocks stand-up/jump forever (stuck crouch).
 	ceiling_check.add_exception(self)
 	setup_arm_ik()
-	setup_viewmodel_layers()
+	_setup_weapon()
 	setup_network_control()
+
+
+# Instantiates the equipped weapon (shared scene + per-weapon definition) under
+# the camera. Swapping weapons is a single `weapon_definition` change.
+func _setup_weapon() -> void:
+	if weapon_definition == null:
+		push_warning("Player has no weapon_definition assigned")
+		return
+	weapon = WEAPON_SCENE.instantiate()
+	cam.add_child(weapon)
+	weapon.setup(self, weapon_definition)
 
 func _process(delta: float) -> void:
 	wallrun_timer(delta)

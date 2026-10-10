@@ -188,25 +188,26 @@ var _shot_turn_tween: Tween
 @export var arm_target_offset: Vector3 = Vector3(0.25, -0.35, -2.0) #camera-space point the gun hand reaches for
 @export var arm_pole_offset: Vector3 = Vector3(0.5, 1.1, 0.3) #torso-space elbow pole position (tune per rig)
 
+@export_group("Weapon")
+# the equipped weapon: swap this one resource to change meshes, stats and
+# sounds; the weapon scene itself is shared by every weapon
+@export var weapon_definition: WeaponDefinition
+
 #references variables
 @onready var cam_holder: Node3D = $CameraHolder
 @onready var cam: Camera3D = %Camera
-@onready var weapon: Node = $CameraHolder/Camera/Weapon
 @onready var viewmodel_camera: Camera3D = $HUD/ViewModel/Viewport/Camera
-@onready var phantom_gun: Node3D = $HUD/ViewModel/Viewport/Camera/PhantomGun
-@onready var phantom_muzzle_flash: GPUParticles3D = $HUD/ViewModel/Viewport/Camera/PhantomGun/MuzzleFlash
+@onready var hand_attachment: Node3D = $VisualRoot/HandAttachement
+var weapon: Node3D
 @onready var model: Node3D = $VisualRoot/ScalingRoot
 @onready var visual_root: Node3D = $VisualRoot
 @onready var nickname_label: Label3D = $VisualRoot/NicknameLabel
-@onready var pistol: Node3D = $VisualRoot/HandAttachement/Pistol
-@onready var pistol_muzzle_flash: GPUParticles3D = $VisualRoot/HandAttachement/Pistol/MuzzleFlash
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var weapon_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Weapon/playback")
 @onready var movement_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Movement/playback")
 @onready var head_look: LookAtModifier3D = $VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/HeadLook
 @onready var jump_sound: AudioStreamPlayer3D = $Sounds/JumpSound
 @onready var land_sound: AudioStreamPlayer3D = $Sounds/LandSound
-@onready var fire_sound: AudioStreamPlayer3D = $Sounds/FireSound
 @onready var hitbox: CollisionShape3D = $Hitbox
 @onready var state_machine: Node = $StateMachine
 @onready var hud: CanvasLayer = $HUD
