@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bi8meonithmvt" path="res://scripts/weapons/weapon.gd" id="1_wpn"]
 [ext_resource type="Script" uid="uid://ct57qr8d06w8d" path="res://scripts/player/hit_confirm.gd" id="2_hitc"]
 [ext_resource type="AudioStream" uid="uid://cohxjyjukvmit" path="res://assets/audio/metalLatch.ogg" id="3_kill"]
-[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
 
 [node name="Weapon" type="Node3D" unique_id=66146724]
 script = ExtResource("1_wpn")

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/player/gun/gun.gd" id="1_nrf3j"]
 [ext_resource type="Script" uid="uid://ct57qr8d06w8d" path="res://scripts/player/hit_confirm.gd" id="2_hitc"]
 [ext_resource type="AudioStream" uid="uid://cohxjyjukvmit" path="res://assets/audio/metalLatch.ogg" id="3_kill"]
-[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="4_e0dt0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4eqo"]
 resource_name = "metal"

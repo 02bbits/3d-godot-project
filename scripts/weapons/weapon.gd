@@ -25,7 +25,7 @@ var reserve: int
 var reloading: bool = false
 var fire_cooldown: float = 0.0
 var _reload_generation := 0
-var custom_font = load("res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf")
+var custom_font = load("res://assets/fonts/lilita_one_regular.ttf")
 
 var _recoil_rest: Transform3D
 var _recoil_rest_set := false

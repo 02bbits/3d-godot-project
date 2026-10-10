@@ -28,7 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://64qyvg75eynn" path="res://assets/photon/kenney_fps/sounds/jump_c.ogg" id="30_jc"]
 [ext_resource type="AudioStream" uid="uid://dc5oois0e70wk" path="res://assets/photon/kenney_platformer/sounds/land.ogg" id="31_land"]
 [ext_resource type="Script" uid="uid://b50e5gf1ri032" path="res://scenes/player/reticle.gd" id="32_kxw46"]
-[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="33_font"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="33_font"]
 [ext_resource type="AnimationLibrary" uid="uid://b6r32phhejoeo" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="34_general"]
 [ext_resource type="AnimationLibrary" uid="uid://2foe2hw3i1hj" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb" id="35_movement"]
 [ext_resource type="AnimationLibrary" uid="uid://cxnjla3so1qx5" path="res://assets/photon/KayKit_Character_Animations_1.1/Animations/Rig_Medium/Rig_Medium_CombatRanged.glb" id="36_combat"]
@@ -1367,7 +1367,8 @@ theme_override_font_sizes/font_size = 11
 text = "Use A / D to switch player"
 horizontal_alignment = 1
 
-[node name="Top" type="VBoxContainer" parent="HUD/DeathScreen"]
+[node name="Top" type="VBoxContainer" parent="HUD/DeathScreen" unique_id=1262482704]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
 offset_top = 24.0
@@ -1375,7 +1376,7 @@ offset_bottom = 120.0
 grow_horizontal = 2
 theme_override_constants/separation = 6
 
-[node name="SpectateLabel" type="Label" parent="HUD/DeathScreen/Top"]
+[node name="SpectateLabel" type="Label" parent="HUD/DeathScreen/Top" unique_id=1329653007]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.98, 1)
@@ -1384,7 +1385,7 @@ theme_override_font_sizes/font_size = 32
 text = "Spectating:"
 horizontal_alignment = 1
 
-[node name="TopHint" type="Label" parent="HUD/DeathScreen/Top"]
+[node name="TopHint" type="Label" parent="HUD/DeathScreen/Top" unique_id=1509236821]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 11

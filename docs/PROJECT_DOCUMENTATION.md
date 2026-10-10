@@ -386,7 +386,7 @@ on `match_manager` is the intended future draft hook.
 
 | Piece | File | Notes |
 |---|---|---|
-| Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Ticketing headings/buttons, Rubik body, robot icons from `scripts/ui/robot_icon.gd`); lives in `MenuLayer` (CanvasLayer 10) |
+| Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scripts/ui/robot_icon.gd`); lives in `MenuLayer` (CanvasLayer 10) |
 | Lobby roster | same | player chips (robot icon, name, Host badge) + empty "Waiting for player" slots; room info panel; host-only Start (disabled with <2 players) |
 | HUD | `scripts/player/hud/hud_script.gd` | keeps bar max in sync, rebuilds the scoreboard, hides the gameplay HUD while a popup is up |
 | Health bar | `scenes/ui/healthbar/*` | red bar drops immediately; the white bar holds the gap and slides down after a 0.4 s delay (0.35 s slide) |
