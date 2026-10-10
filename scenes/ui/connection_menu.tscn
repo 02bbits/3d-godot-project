@@ -1,22 +1,8 @@
 [gd_scene format=3 uid="uid://cuvjegawj3f6h"]
 
 [ext_resource type="Script" uid="uid://yr6i1ueijlh6" path="res://scripts/ui/connection_ui.gd" id="1_menu"]
-[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/photon/kenney_platformer/fonts/lilita_one_regular.ttf" id="2_font"]
-
-[sub_resource type="Theme" id="Theme_lilita"]
-default_font = ExtResource("2_font")
-default_font_size = 22
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 40.0
-content_margin_top = 32.0
-content_margin_right = 40.0
-content_margin_bottom = 32.0
-bg_color = Color(0.09, 0.1, 0.13, 0.97)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[ext_resource type="Theme" path="res://resources/ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="Script" path="res://scripts/ui/robot_icon.gd" id="3_robot"]
 
 [node name="ConnectionMenu" type="Control"]
 layout_mode = 3
@@ -25,17 +11,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_lilita")
+theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.72)
+color = Color(0.1373, 0.1608, 0.2078, 1)
 
 [node name="Pages" type="Control" parent="."]
 layout_mode = 1
@@ -45,7 +31,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MainMenu" type="CenterContainer" parent="Pages"]
+[node name="MainMenu" type="Control" parent="Pages"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,38 +39,103 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Pages/MainMenu"]
-custom_minimum_size = Vector2(420, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+[node name="Center" type="CenterContainer" parent="Pages/MainMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="V" type="VBoxContainer" parent="Pages/MainMenu/Panel"]
+[node name="Stack" type="VBoxContainer" parent="Pages/MainMenu/Center"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 34
+alignment = 1
 
-[node name="Title" type="Label" parent="Pages/MainMenu/Panel/V"]
+[node name="Icons" type="HBoxContainer" parent="Pages/MainMenu/Center/Stack"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Multi-Modifier FPS"
-horizontal_alignment = 1
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="PlayButton" type="Button" parent="Pages/MainMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Icon1" type="Control" parent="Pages/MainMenu/Center/Stack/Icons"]
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
-text = "Play"
+script = ExtResource("3_robot")
+icon_color = Color(1, 0.7882, 0.2, 1)
 
-[node name="SettingsButton" type="Button" parent="Pages/MainMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Icon2" type="Control" parent="Pages/MainMenu/Center/Stack/Icons"]
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
+script = ExtResource("3_robot")
+icon_color = Color(0.302, 0.6353, 0.9961, 1)
+
+[node name="Icon3" type="Control" parent="Pages/MainMenu/Center/Stack/Icons"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+script = ExtResource("3_robot")
+icon_color = Color(1, 0.4157, 0.3608, 1)
+
+[node name="TitleRow" type="HBoxContainer" parent="Pages/MainMenu/Center/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="TitleA" type="Label" parent="Pages/MainMenu/Center/Stack/TitleRow"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 74
+text = "M.O.D.S"
+
+[node name="TitleB" type="Label" parent="Pages/MainMenu/Center/Stack/TitleRow"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_colors/font_color = Color(1, 0.7882, 0.2, 1)
+theme_override_font_sizes/font_size = 74
+text = "ARENA"
+
+[node name="Buttons" type="VBoxContainer" parent="Pages/MainMenu/Center/Stack"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="PlayButton" type="Button" parent="Pages/MainMenu/Center/Stack/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "PLAY"
+
+[node name="MainSettingsButton" type="Button" parent="Pages/MainMenu/Center/Stack/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_type_variation = &"BlueButton"
 disabled = true
 tooltip_text = "Settings screen not implemented yet"
-text = "Settings"
+text = "SETTINGS"
 
-[node name="ExitButton" type="Button" parent="Pages/MainMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="ExitButton" type="Button" parent="Pages/MainMenu/Center/Stack/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-text = "Exit"
+theme_type_variation = &"RedButton"
+text = "EXIT"
+
+[node name="Version" type="Label" parent="Pages/MainMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -44.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 16
+text = "v0.1"
+horizontal_alignment = 1
 
 [node name="NameScreen" type="CenterContainer" parent="Pages"]
 visible = false
@@ -95,38 +146,81 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Pages/NameScreen"]
-custom_minimum_size = Vector2(420, 0)
+[node name="Card" type="PanelContainer" parent="Pages/NameScreen"]
+custom_minimum_size = Vector2(760, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"CardPanel"
 
-[node name="V" type="VBoxContainer" parent="Pages/NameScreen/Panel"]
+[node name="V" type="VBoxContainer" parent="Pages/NameScreen/Card"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 26
 
-[node name="Title" type="Label" parent="Pages/NameScreen/Panel/V"]
+[node name="Title" type="Label" parent="Pages/NameScreen/Card/V"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Choose a Name"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
+text = "CHOOSE YOUR NAME"
 horizontal_alignment = 1
 
-[node name="Nickname" type="LineEdit" parent="Pages/NameScreen/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="Row" type="HBoxContainer" parent="Pages/NameScreen/Card/V"]
 layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="Icon" type="Control" parent="Pages/NameScreen/Card/V/Row"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("3_robot")
+icon_color = Color(0.302, 0.6353, 0.9961, 1)
+
+[node name="Field" type="VBoxContainer" parent="Pages/NameScreen/Card/V/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="Pages/NameScreen/Card/V/Row/Field"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "NICKNAME"
+horizontal_alignment = 1
+
+[node name="Nickname" type="LineEdit" parent="Pages/NameScreen/Card/V/Row/Field"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+max_length = 16
 placeholder_text = "Nickname"
+alignment = 1
 
-[node name="NextButton" type="Button" parent="Pages/NameScreen/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Hint" type="Label" parent="Pages/NameScreen/Card/V"]
 layout_mode = 2
-text = "Next"
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "3 to 16 characters. Other players will see this above your robot."
+horizontal_alignment = 1
+autowrap_mode = 3
 
-[node name="BackButton" type="Button" parent="Pages/NameScreen/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Buttons" type="HBoxContainer" parent="Pages/NameScreen/Card/V"]
 layout_mode = 2
-text = "Back"
+theme_override_constants/separation = 24
+alignment = 1
 
-[node name="PlayChoice" type="CenterContainer" parent="Pages"]
+[node name="NameBackButton" type="Button" parent="Pages/NameScreen/Card/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "BACK"
+
+[node name="NameNextButton" type="Button" parent="Pages/NameScreen/Card/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 48)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "CONTINUE"
+
+[node name="PlayChoice" type="MarginContainer" parent="Pages"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -134,39 +228,118 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
 
-[node name="Panel" type="PanelContainer" parent="Pages/PlayChoice"]
-custom_minimum_size = Vector2(420, 0)
+[node name="V" type="VBoxContainer" parent="Pages/PlayChoice"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/separation = 26
 
-[node name="V" type="VBoxContainer" parent="Pages/PlayChoice/Panel"]
+[node name="PlayTitle" type="Label" parent="Pages/PlayChoice/V"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Pages/PlayChoice/Panel/V"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Play"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 52
+text = "READY?"
 horizontal_alignment = 1
 
-[node name="CreateLobbyButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Cards" type="HBoxContainer" parent="Pages/PlayChoice/V"]
 layout_mode = 2
-text = "Create Lobby"
+size_flags_vertical = 3
+theme_override_constants/separation = 36
 
-[node name="JoinLobbyButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="CreateCard" type="PanelContainer" parent="Pages/PlayChoice/V/Cards"]
 layout_mode = 2
-text = "Join Lobby"
+size_flags_horizontal = 3
+theme_type_variation = &"YellowCard"
 
-[node name="BackButton" type="Button" parent="Pages/PlayChoice/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="V" type="VBoxContainer" parent="Pages/PlayChoice/V/Cards/CreateCard"]
 layout_mode = 2
-text = "Back"
+theme_override_constants/separation = 14
 
-[node name="CreateLobby" type="CenterContainer" parent="Pages"]
+[node name="Title" type="Label" parent="Pages/PlayChoice/V/Cards/CreateCard/V"]
+layout_mode = 2
+theme_type_variation = &"CardTitleLabel"
+theme_override_font_sizes/font_size = 40
+text = "CREATE LOBBY"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Pages/PlayChoice/V/Cards/CreateCard/V"]
+layout_mode = 2
+theme_type_variation = &"CardDescLabel"
+theme_override_font_sizes/font_size = 21
+text = "Set the rules and host a match for your friends."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer" type="Control" parent="Pages/PlayChoice/V/Cards/CreateCard/V"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/CreateCard/V"]
+layout_mode = 2
+alignment = 2
+
+[node name="CreateLobbyButton" type="Button" parent="Pages/PlayChoice/V/Cards/CreateCard/V/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "CREATE"
+
+[node name="JoinCard" type="PanelContainer" parent="Pages/PlayChoice/V/Cards"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BlueCard"
+
+[node name="V" type="VBoxContainer" parent="Pages/PlayChoice/V/Cards/JoinCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Pages/PlayChoice/V/Cards/JoinCard/V"]
+layout_mode = 2
+theme_type_variation = &"CardTitleLabel"
+theme_override_font_sizes/font_size = 40
+text = "JOIN LOBBY"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Pages/PlayChoice/V/Cards/JoinCard/V"]
+layout_mode = 2
+theme_type_variation = &"CardDescLabel"
+theme_override_font_sizes/font_size = 21
+text = "Browse open rooms and jump into a match."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer" type="Control" parent="Pages/PlayChoice/V/Cards/JoinCard/V"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/JoinCard/V"]
+layout_mode = 2
+alignment = 2
+
+[node name="JoinLobbyButton" type="Button" parent="Pages/PlayChoice/V/Cards/JoinCard/V/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(290, 48)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "BROWSE LOBBIES"
+
+[node name="BackRow" type="HBoxContainer" parent="Pages/PlayChoice/V"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayBackButton" type="Button" parent="Pages/PlayChoice/V/BackRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "BACK"
+
+[node name="CreateLobby" type="MarginContainer" parent="Pages"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -174,61 +347,176 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
 
-[node name="Panel" type="PanelContainer" parent="Pages/CreateLobby"]
-custom_minimum_size = Vector2(420, 0)
+[node name="V" type="VBoxContainer" parent="Pages/CreateLobby"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/separation = 24
 
-[node name="V" type="VBoxContainer" parent="Pages/CreateLobby/Panel"]
+[node name="Title" type="Label" parent="Pages/CreateLobby/V"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Pages/CreateLobby/Panel/V"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Create Lobby"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 52
+text = "CREATE LOBBY"
 horizontal_alignment = 1
 
-[node name="RoomName" type="LineEdit" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="Card" type="PanelContainer" parent="Pages/CreateLobby/V"]
 layout_mode = 2
-placeholder_text = "Room name"
+size_flags_vertical = 3
+theme_type_variation = &"CardPanel"
 
-[node name="Password" type="LineEdit" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="Columns" type="HBoxContainer" parent="Pages/CreateLobby/V/Card"]
 layout_mode = 2
-placeholder_text = "Password (optional)"
+theme_override_constants/separation = 64
+
+[node name="Left" type="VBoxContainer" parent="Pages/CreateLobby/V/Card/Columns"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Left"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "LOBBY NAME"
+horizontal_alignment = 1
+
+[node name="RoomName" type="LineEdit" parent="Pages/CreateLobby/V/Card/Columns/Left"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+max_length = 24
+placeholder_text = "My lobby"
+alignment = 1
+
+[node name="Gap" type="Control" parent="Pages/CreateLobby/V/Card/Columns/Left"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="PasswordLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Left"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "PASSWORD (OPTIONAL)"
+horizontal_alignment = 1
+
+[node name="Password" type="LineEdit" parent="Pages/CreateLobby/V/Card/Columns/Left"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+placeholder_text = "No password"
 secret = true
+alignment = 1
 
-[node name="CountLabel" type="Label" parent="Pages/CreateLobby/Panel/V"]
+[node name="Right" type="VBoxContainer" parent="Pages/CreateLobby/V/Card/Columns"]
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
-text = "Max players"
+theme_override_constants/separation = 12
 
-[node name="PlayerCount" type="OptionButton" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="PlayersLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "MAX PLAYERS"
+horizontal_alignment = 1
+
+[node name="PlayersRow" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/Columns/Right"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="PlayerMinus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "-"
+
+[node name="PlayerCountValue" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 30
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerPlus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "+"
+
+[node name="Gap" type="Control" parent="Pages/CreateLobby/V/Card/Columns/Right"]
+custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 
-[node name="RoundsLabel" type="Label" parent="Pages/CreateLobby/Panel/V"]
+[node name="RoundsLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right"]
 layout_mode = 2
-text = "Rounds"
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "ROUNDS TO WIN THE MATCH"
+horizontal_alignment = 1
 
-[node name="Rounds" type="OptionButton" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="RoundsRow" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/Columns/Right"]
 layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
 
-[node name="CreateButton" type="Button" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="RoundsMinus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 46)
 layout_mode = 2
-text = "Create"
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "-"
 
-[node name="BackButton" type="Button" parent="Pages/CreateLobby/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="RoundsCountValue" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-text = "Back"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 30
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="BrowseLobbies" type="CenterContainer" parent="Pages"]
+[node name="RoundsPlus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "+"
+
+[node name="Buttons" type="HBoxContainer" parent="Pages/CreateLobby/V"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="CreateBackButton" type="Button" parent="Pages/CreateLobby/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "BACK"
+
+[node name="CreateButton" type="Button" parent="Pages/CreateLobby/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 52)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "CREATE LOBBY"
+
+[node name="BrowseLobbies" type="MarginContainer" parent="Pages"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -236,43 +524,63 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 28
 
-[node name="Panel" type="PanelContainer" parent="Pages/BrowseLobbies"]
-custom_minimum_size = Vector2(420, 0)
+[node name="V" type="VBoxContainer" parent="Pages/BrowseLobbies"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/separation = 18
 
-[node name="V" type="VBoxContainer" parent="Pages/BrowseLobbies/Panel"]
+[node name="Title" type="Label" parent="Pages/BrowseLobbies/V"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Pages/BrowseLobbies/Panel/V"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Join Lobby"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 52
+text = "JOIN LOBBY"
 horizontal_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="Pages/BrowseLobbies/Panel/V"]
-custom_minimum_size = Vector2(0, 260)
+[node name="SearchLabel" type="Label" parent="Pages/BrowseLobbies/V"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "SEARCH"
+
+[node name="SearchRow" type="HBoxContainer" parent="Pages/BrowseLobbies/V"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Search" type="LineEdit" parent="Pages/BrowseLobbies/V/SearchRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search lobby name"
+
+[node name="RefreshButton" type="Button" parent="Pages/BrowseLobbies/V/SearchRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 52)
+layout_mode = 2
+theme_type_variation = &"BlueButton"
+text = "REFRESH"
+
+[node name="Scroll" type="ScrollContainer" parent="Pages/BrowseLobbies/V"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="RoomList" type="VBoxContainer" parent="Pages/BrowseLobbies/Panel/V/Scroll"]
+[node name="RoomList" type="VBoxContainer" parent="Pages/BrowseLobbies/V/Scroll"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 
-[node name="RefreshButton" type="Button" parent="Pages/BrowseLobbies/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="BrowseBackButton" type="Button" parent="Pages/BrowseLobbies/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-text = "Refresh"
-
-[node name="BackButton" type="Button" parent="Pages/BrowseLobbies/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
-layout_mode = 2
-text = "Back"
+theme_type_variation = &"CreamButton"
+text = "BACK"
 
 [node name="PasswordPrompt" type="CenterContainer" parent="Pages"]
 visible = false
@@ -283,40 +591,59 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Pages/PasswordPrompt"]
-custom_minimum_size = Vector2(420, 0)
+[node name="Card" type="PanelContainer" parent="Pages/PasswordPrompt"]
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"CardPanel"
 
-[node name="V" type="VBoxContainer" parent="Pages/PasswordPrompt/Panel"]
+[node name="V" type="VBoxContainer" parent="Pages/PasswordPrompt/Card"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 22
 
-[node name="Prompt" type="Label" parent="Pages/PasswordPrompt/Panel/V"]
+[node name="Title" type="Label" parent="Pages/PasswordPrompt/Card/V"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 30
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 42
+text = "PASSWORD REQUIRED"
+horizontal_alignment = 1
+
+[node name="Prompt" type="Label" parent="Pages/PasswordPrompt/Card/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 20
 text = "This lobby is password protected"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Password" type="LineEdit" parent="Pages/PasswordPrompt/Panel/V"]
-custom_minimum_size = Vector2(0, 44)
+[node name="PromptPassword" type="LineEdit" parent="Pages/PasswordPrompt/Card/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 placeholder_text = "Password"
 secret = true
+alignment = 1
 
-[node name="JoinButton" type="Button" parent="Pages/PasswordPrompt/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Buttons" type="HBoxContainer" parent="Pages/PasswordPrompt/Card/V"]
 layout_mode = 2
-text = "Join"
+theme_override_constants/separation = 24
+alignment = 1
 
-[node name="BackButton" type="Button" parent="Pages/PasswordPrompt/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="PromptBackButton" type="Button" parent="Pages/PasswordPrompt/Card/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 48)
 layout_mode = 2
-text = "Back"
+theme_type_variation = &"CreamButton"
+text = "BACK"
 
-[node name="Lobby" type="CenterContainer" parent="Pages"]
+[node name="PromptJoinButton" type="Button" parent="Pages/PasswordPrompt/Card/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 48)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "JOIN"
+
+[node name="Lobby" type="MarginContainer" parent="Pages"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -324,48 +651,147 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 28
 
-[node name="Panel" type="PanelContainer" parent="Pages/Lobby"]
-custom_minimum_size = Vector2(420, 0)
+[node name="V" type="VBoxContainer" parent="Pages/Lobby"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/separation = 24
 
-[node name="V" type="VBoxContainer" parent="Pages/Lobby/Panel"]
+[node name="Title" type="Label" parent="Pages/Lobby/V"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="RoomTitle" type="Label" parent="Pages/Lobby/Panel/V"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 38
-text = "Lobby"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 52
+text = "WAITING ROOM"
 horizontal_alignment = 1
 
-[node name="HostLabel" type="Label" parent="Pages/Lobby/Panel/V"]
+[node name="Body" type="HBoxContainer" parent="Pages/Lobby/V"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
-text = "Host:"
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+
+[node name="PlayersCard" type="PanelContainer" parent="Pages/Lobby/V/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/V/Body/PlayersCard"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="PlayersTitle" type="Label" parent="Pages/Lobby/V/Body/PlayersCard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 34
+text = "PLAYERS  0 / 4"
 horizontal_alignment = 1
 
-[node name="CountLabel" type="Label" parent="Pages/Lobby/Panel/V"]
+[node name="PlayersList" type="GridContainer" parent="Pages/Lobby/V/Body/PlayersCard/V"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
-text = "Players"
-horizontal_alignment = 1
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 14
+columns = 2
 
-[node name="PlayersList" type="VBoxContainer" parent="Pages/Lobby/Panel/V"]
+[node name="InfoCard" type="PanelContainer" parent="Pages/Lobby/V/Body"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/V/Body/InfoCard"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="StartButton" type="Button" parent="Pages/Lobby/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="Title" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
 layout_mode = 2
-text = "Start Game"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 30
+text = "ROOM INFO"
+horizontal_alignment = 1
 
-[node name="LeaveButton" type="Button" parent="Pages/Lobby/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="NameKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
 layout_mode = 2
-text = "Leave Lobby"
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Name"
+horizontal_alignment = 1
+
+[node name="RoomTitle" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "Lobby"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HostKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Host"
+horizontal_alignment = 1
+
+[node name="HostLabel" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "-"
+horizontal_alignment = 1
+
+[node name="RoundsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Rounds to win"
+horizontal_alignment = 1
+
+[node name="InfoRounds" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "3"
+horizontal_alignment = 1
+
+[node name="MaxKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Max players"
+horizontal_alignment = 1
+
+[node name="InfoMax" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "4"
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Pages/Lobby/V"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="LobbyLeaveButton" type="Button" parent="Pages/Lobby/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 54)
+layout_mode = 2
+theme_type_variation = &"RedButton"
+text = "LEAVE"
+
+[node name="LobbyStartButton" type="Button" parent="Pages/Lobby/V/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 54)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "START MATCH"
 
 [node name="InGameMenu" type="CenterContainer" parent="Pages"]
 visible = false
@@ -376,48 +802,56 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Pages/InGameMenu"]
-custom_minimum_size = Vector2(420, 0)
+[node name="Card" type="PanelContainer" parent="Pages/InGameMenu"]
+custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"CardPanel"
 
-[node name="V" type="VBoxContainer" parent="Pages/InGameMenu/Panel"]
+[node name="V" type="VBoxContainer" parent="Pages/InGameMenu/Card"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="Pages/InGameMenu/Panel/V"]
+[node name="Title" type="Label" parent="Pages/InGameMenu/Card/V"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "Menu"
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 46
+text = "MENU"
 horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="ResumeButton" type="Button" parent="Pages/InGameMenu/Card/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-text = "Resume"
+theme_type_variation = &"PrimaryButton"
+text = "RESUME"
 
-[node name="SettingsButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="InGameSettingsButton" type="Button" parent="Pages/InGameMenu/Card/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_type_variation = &"BlueButton"
 disabled = true
 tooltip_text = "Settings screen not implemented yet"
-text = "Settings"
+text = "SETTINGS"
 
-[node name="LeaveLobbyButton" type="Button" parent="Pages/InGameMenu/Panel/V"]
-custom_minimum_size = Vector2(0, 52)
+[node name="LeaveLobbyButton" type="Button" parent="Pages/InGameMenu/Card/V"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-text = "Leave Lobby"
+theme_type_variation = &"RedButton"
+text = "LEAVE LOBBY"
 
 [node name="StatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -60.0
-offset_bottom = -16.0
+offset_top = -52.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_colors/font_color = Color(1, 0.7882, 0.2, 1)
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
