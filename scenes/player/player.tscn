@@ -46,7 +46,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 17
+property_count = 18
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -149,6 +149,12 @@ properties/16/interface_tag = ""
 properties/16/interpolate = 0
 properties/16/element_type = 0
 properties/16/element_class_name = ""
+properties/17/path = NodePath(":net_color")
+properties/17/max_array_capacity = 0
+properties/17/interface_tag = ""
+properties/17/interpolate = 0
+properties/17/element_type = 0
+properties/17/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -1017,6 +1023,11 @@ shader_parameter/mask_size = 0.1
 shader_parameter/mask_edge = 0.800000038
 shader_parameter/animation_speed = 20.0
 
+[sub_resource type="Environment" id="Environment_viewmodel"]
+ambient_light_source = 2
+ambient_light_color = Color(0.7228621, 0.7682954, 0.89730513, 1)
+reflected_light_source = 1
+
 [node name="PlayerCharacter" type="CharacterBody3D" unique_id=1247798821 node_paths=PackedStringArray("head_meshes") groups=["PlayerCharacter", "player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6476, 0)
 collision_layer = 3
@@ -1296,7 +1307,9 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="Camera" type="Camera3D" parent="HUD/ViewModel/Viewport" unique_id=1611658020]
+physics_interpolation_mode = 2
 cull_mask = 4
+environment = SubResource("Environment_viewmodel")
 current = true
 fov = 90.0
 near = 0.01

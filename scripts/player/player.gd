@@ -12,6 +12,7 @@ func _ready() -> void:
 	$Health.damaged.connect(_on_damaged)
 	$Health.health_changed.connect(_on_health_changed)
 	nickname_label.text = net_nickname
+	apply_robot_color()
 	stamina = stamina_max
 	hit_ground_cooldown_ref = hit_ground_cooldown
 	jump_cooldown_ref = jump_cooldown

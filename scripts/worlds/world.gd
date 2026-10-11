@@ -57,6 +57,12 @@ func _process(delta: float) -> void:
 	_update_spectator(delta)
 
 
+# "res://scenes/worlds/arena_pillars.tscn" -> "PILLARS"
+static func map_display_name(index: int) -> String:
+	var file: String = MAP_PATHS[index].get_file().get_basename()
+	return file.trim_prefix("arena_").replace("_", " ").to_upper()
+
+
 func respawn_player(player: PlayerCharacter) -> void:
 	_stop_spectating()
 	if spawn_points.is_empty():
@@ -90,6 +96,13 @@ func _spawn_point_for_local_player() -> Node3D:
 # PRIVATE METHODS
 
 func _start_game() -> void:
+	# a game opens on the lobby's chosen map: swap it in (behind the menu, which
+	# hides on game_started) and let its colliders register before spawning
+	var index: int = match_manager.map_index
+	if index != _current_map and index >= 0 and index < MAP_PATHS.size():
+		_swap_map(index)
+		await get_tree().physics_frame
+		await get_tree().physics_frame
 	_spawn_local_player()
 
 	# Make sure the scene objects are registered; the scene never reloads, so
@@ -199,6 +212,9 @@ func _register_local_player(player: PlayerCharacter) -> void:
 	if player.net_nickname == "" and connection_menu != null \
 			and connection_menu.has_method("get_nickname"):
 		player.net_nickname = connection_menu.get_nickname()
+	if player.net_color == "" and connection_menu != null \
+			and connection_menu.has_method("get_robot_color"):
+		player.net_color = connection_menu.get_robot_color().to_html(false)
 	local_player_changed.emit(player)
 
 

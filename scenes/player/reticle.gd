@@ -15,8 +15,11 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	adjust_reticle_lines()
 
+# Everything is drawn around the container's center: its origin is the
+# top-left corner, which would put the reticle off the screen center (where
+# the shot ray goes).
 func _draw() -> void:
-	draw_circle(Vector2(0, 0), DOT_RADIUS, DOT_COLOR)
+	draw_circle(size * 0.5, DOT_RADIUS, DOT_COLOR)
 
 func adjust_reticle_lines() -> void:
 	if PLAYER_CHARACTER == null or RETICLE_LINES.size() < 4:
@@ -25,7 +28,7 @@ func adjust_reticle_lines() -> void:
 	# lines out while airborne for no reason
 	var vel := PLAYER_CHARACTER.get_real_velocity()
 	var speed := Vector2(vel.x, vel.z).length()
-	var pos := Vector2.ZERO
+	var pos := size * 0.5
 
 	# Adjust lines' position (top, right, bottom, left)
 	RETICLE_LINES[0].position = RETICLE_LINES[0].position.lerp(

@@ -1,36 +1,26 @@
 extends Control
 
 ## Lobby menu flow: main menu -> name -> create/join -> lobby -> in-game menu.
-## Owns the room browser and the client-side lobby password gate.
+## Owns connecting, joining (browser pick, lobby code, client-side password
+## gate) and page switching; each page with its own logic (create form,
+## browser, waiting room, settings) carries its own script.
 
 const USER_CONFIG := "user://user_config.cfg"
-const ROBOT_ICON := preload("res://scripts/ui/robot_icon.gd")
-const PLAYER_COLORS := [
-	Color("#FFC933"), Color("#4DA2FE"), Color("#FF6A5C"), Color("#7ADF7C"),
-]
-const MIN_PLAYERS := 2
-const MAX_PLAYERS := 4
-const MIN_ROUNDS := 1
-const MAX_ROUNDS := 10
+# Lobby codes are the Photon room name; no 0/O/1/I so they read aloud cleanly.
+const CODE_CHARS := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+const CODE_LENGTH := 5
+const JOIN_TIMEOUT := 10.0
 
 @onready var pages: Control = $Pages
 @onready var status_label: Label = %StatusLabel
 @onready var nickname_input: LineEdit = %Nickname
-@onready var room_name_input: LineEdit = %RoomName
-@onready var room_password_input: LineEdit = %Password
-@onready var room_list: VBoxContainer = %RoomList
 @onready var prompt_label: Label = %Prompt
 @onready var prompt_password_input: LineEdit = %PromptPassword
 @onready var play_title: Label = %PlayTitle
-@onready var player_count_value: Label = %PlayerCountValue
-@onready var rounds_count_value: Label = %RoundsCountValue
-@onready var players_title: Label = %PlayersTitle
-@onready var players_list: GridContainer = %PlayersList
-@onready var room_title: Label = %RoomTitle
-@onready var host_label: Label = %HostLabel
-@onready var info_rounds: Label = %InfoRounds
-@onready var info_max: Label = %InfoMax
-@onready var start_button: Button = %LobbyStartButton
+@onready var name_robot: Control = %NameRobot
+@onready var color_picker: Control = $ColorPicker
+@onready var create_form: Control = $Pages/CreateLobby
+@onready var lobby_page: Control = $Pages/Lobby
 @onready var world: Node = owner if owner != null else get_parent()
 
 # Static so a failed-connect message survives the reload triggered by leaving.
@@ -43,12 +33,12 @@ var _room_leave_handled := false
 var _pending_room := ""
 var _pending_password := ""
 var _awaiting_password_check := false
-var _roster_poll := 0.0
 var _connected_name := ""
 var _reconnecting := false
-var _room_filter := ""
-var _player_count := 4
-var _rounds := 3
+var _joining_code := false
+var _pending_title := ""
+var _settings_return := "MainMenu"
+var _robot_color := Color("#FFC933")
 
 
 func _ready() -> void:
@@ -59,10 +49,6 @@ func _ready() -> void:
 	Fusion.connection_status_changed.connect(_on_connection_status_changed)
 	Fusion.room_joined.connect(_on_room_joined)
 	Fusion.room_left.connect(_on_room_left)
-	Fusion.room_list_updated.connect(_on_room_list_updated)
-	Fusion.player_joined.connect(_refresh_roster.unbind(2))
-	Fusion.player_left.connect(_refresh_roster.unbind(2))
-	Fusion.master_client_changed.connect(_refresh_roster.unbind(2))
 
 	%PlayButton.pressed.connect(_show_page.bind("NameScreen"))
 	%ExitButton.pressed.connect(get_tree().quit)
@@ -73,7 +59,6 @@ func _ready() -> void:
 	%PlayBackButton.pressed.connect(_show_page.bind("NameScreen"))
 	%CreateButton.pressed.connect(_on_create_pressed)
 	%CreateBackButton.pressed.connect(_show_page.bind("PlayChoice"))
-	%RefreshButton.pressed.connect(_refresh_rooms)
 	%BrowseBackButton.pressed.connect(_show_page.bind("PlayChoice"))
 	%PromptJoinButton.pressed.connect(_on_password_join_pressed)
 	%PromptBackButton.pressed.connect(_show_page.bind("BrowseLobbies"))
@@ -81,30 +66,21 @@ func _ready() -> void:
 	%LobbyLeaveButton.pressed.connect(_on_leave_lobby_pressed)
 	%ResumeButton.pressed.connect(_close_ingame_menu)
 	%LeaveLobbyButton.pressed.connect(_on_leave_game_pressed)
-	# TODO: settings screens (main menu + in-game) are disabled placeholders;
-	# enable and wire them when the settings menu exists.
+	%MainSettingsButton.pressed.connect(_open_settings.bind("MainMenu"))
+	%InGameSettingsButton.pressed.connect(_open_settings.bind("InGameMenu"))
+	$Pages/Settings.closed.connect(func() -> void: _show_page(_settings_return))
+	%JoinCodeButton.pressed.connect(_on_join_code_pressed)
+	%JoinCode.text_submitted.connect(_on_join_code_pressed.unbind(1))
+	$Pages/BrowseLobbies.room_chosen.connect(_on_room_row_pressed)
+	lobby_page.code_copied.connect(_status.bind("Code copied"))
+	name_robot.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed \
+				and event.button_index == MOUSE_BUTTON_LEFT:
+			color_picker.open(_robot_color))
+	color_picker.color_chosen.connect(_set_robot_color)
 
-	%Search.text_changed.connect(func(text: String) -> void:
-		_room_filter = text.strip_edges().to_lower()
-		_refresh_rooms())
-	%PlayerMinus.pressed.connect(_step_player_count.bind(-1))
-	%PlayerPlus.pressed.connect(_step_player_count.bind(1))
-	%RoundsMinus.pressed.connect(_step_rounds.bind(-1))
-	%RoundsPlus.pressed.connect(_step_rounds.bind(1))
-
-	_load_nickname()
-	_update_create_form()
+	_load_player()
 	_show_page("MainMenu")
-
-
-func _process(delta: float) -> void:
-	# player names publish as room properties on join; poll so late arrivals show up
-	if _current_page != "Lobby":
-		return
-	_roster_poll -= delta
-	if _roster_poll <= 0.0:
-		_roster_poll = 1.0
-		_refresh_roster()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -157,51 +133,53 @@ func _on_name_next_pressed() -> void:
 		_status("Connection timed out")
 
 
-func _step_player_count(step: int) -> void:
-	_player_count = clampi(_player_count + step, MIN_PLAYERS, MAX_PLAYERS)
-	_update_create_form()
-
-
-func _step_rounds(step: int) -> void:
-	_rounds = clampi(_rounds + step, MIN_ROUNDS, MAX_ROUNDS)
-	_update_create_form()
-
-
-func _update_create_form() -> void:
-	player_count_value.text = str(_player_count)
-	rounds_count_value.text = str(_rounds)
-	%PlayerMinus.disabled = _player_count <= MIN_PLAYERS
-	%PlayerPlus.disabled = _player_count >= MAX_PLAYERS
-	%RoundsMinus.disabled = _rounds <= MIN_ROUNDS
-	%RoundsPlus.disabled = _rounds >= MAX_ROUNDS
-
-
 func _on_create_pressed() -> void:
-	var room_name := room_name_input.text.strip_edges()
-	if room_name.is_empty():
+	if create_form.room_title().is_empty():
 		_status("Enter a room name")
 		return
-	var password := room_password_input.text
-	var options := FusionRoomOptions.new()
-	options.max_players = _player_count
-	options.custom_properties = {
-		"phase": "waiting",
-		"passworded": not password.is_empty(),
-		# ponytail: the password is readable by anyone who joins the room; this
-		# is a client-side gate. Server enforcement needs Photon plugins/auth.
-		"password": password,
-		"rounds": _rounds,
-	}
-	# only these reach the lobby list; the password stays out of it
-	options.lobby_properties = PackedStringArray(["phase", "passworded"])
 	_status("Creating lobby...")
-	Fusion.create_room(room_name, options)
+	# ponytail: no collision check (32^5 codes); a clash fails the create, retry then
+	Fusion.create_room(_make_code(), create_form.room_options())
 
 
-func _on_room_row_pressed(room_name: String, passworded: bool) -> void:
+func _make_code() -> String:
+	var code := ""
+	for _i in CODE_LENGTH:
+		code += CODE_CHARS[randi() % CODE_CHARS.length()]
+	return code
+
+
+func _on_join_code_pressed() -> void:
+	var code: String = %JoinCode.text.strip_edges().to_upper()
+	if code.length() != CODE_LENGTH:
+		_status("Enter the %d-character lobby code" % CODE_LENGTH)
+		return
+	_pending_room = code
+	_pending_title = code
+	# empty password: an open room passes, a passworded one bounces to the prompt
+	_pending_password = ""
+	_awaiting_password_check = true
+	_leave_target = "PlayChoice"
+	_room_leave_handled = false
+	_joining_code = true
+	await _join_pending()
+	var timeout := JOIN_TIMEOUT
+	while _joining_code and timeout > 0.0:
+		timeout -= 0.1
+		await get_tree().create_timer(0.1).timeout
+	if _joining_code:
+		# neither joined nor rejected in time
+		_joining_code = false
+		_awaiting_password_check = false
+		_leave_target = "MainMenu"
+		_status("Lobby not found or already started")
+
+
+func _on_room_row_pressed(room_name: String, title: String, passworded: bool) -> void:
 	_pending_room = room_name
+	_pending_title = title
 	if passworded:
-		prompt_label.text = "'%s' is password protected" % room_name
+		prompt_label.text = "'%s' is password protected" % title
 		prompt_password_input.text = ""
 		_show_page("PasswordPrompt")
 		return
@@ -218,11 +196,17 @@ func _on_password_join_pressed() -> void:
 func _on_start_pressed() -> void:
 	# unlisting + closing keeps the room out of the browser and blocks late joins
 	var room = Fusion.get_room()
+	var props: Dictionary = room.get_custom_properties()
+	# the lobby's starting map, or a random one; every client swaps to it on start
+	var start_map := int(props.get("start_map", -1))
+	if start_map < 0 or start_map >= world.MAP_PATHS.size():
+		start_map = randi() % world.MAP_PATHS.size()
 	room.set_properties({
 		"phase": "playing",
 		"match_phase": "fight",
 		"round": 1,
-		"game_serial": int(room.get_custom_properties().get("game_serial", 0)) + 1,
+		"map_index": start_map,
+		"game_serial": int(props.get("game_serial", 0)) + 1,
 	})
 	room.set_visible(false)
 	room.set_open(false)
@@ -242,9 +226,11 @@ func _on_leave_game_pressed() -> void:
 func _on_room_joined() -> void:
 	_error = ""
 	_room_leave_handled = false
+	_joining_code = false
 	if _awaiting_password_check:
 		_awaiting_password_check = false
 		var room = Fusion.get_room()
+		_pending_title = str(room.get_custom_properties().get("title", _pending_room))
 		if str(room.get_custom_properties().get("password", "")) != _pending_password:
 			_leave_target = "PasswordPrompt"
 			Fusion.leave_room()
@@ -254,12 +240,16 @@ func _on_room_joined() -> void:
 
 
 func _publish_name() -> void:
-	# Fusion has no nickname setter; publish the chosen name as a room property
-	# so every client's roster can show it reliably
+	# Fusion has no nickname setter; publish the chosen name (and robot color)
+	# as room properties so every client's roster can show them reliably
 	var room = Fusion.get_room()
 	if room == null:
 		return
-	room.set_property("name_%d" % Fusion.get_local_player_id(), get_nickname())
+	var id: int = Fusion.get_local_player_id()
+	room.set_properties({
+		"name_%d" % id: get_nickname(),
+		"color_%d" % id: _robot_color.to_html(false),
+	})
 
 
 func _on_room_left() -> void:
@@ -272,15 +262,18 @@ func _on_room_left() -> void:
 		return
 	_show_page(_leave_target)
 	if _leave_target == "PasswordPrompt":
-		# wrong password: stay on the form with a clean field and a message
 		prompt_password_input.text = ""
-		_status("Wrong password")
+		if _pending_password.is_empty():
+			# joined by code without a password: ask for it
+			prompt_label.text = "'%s' is password protected" % _pending_title
+		else:
+			# wrong password: stay on the form with a clean field and a message
+			_status("Wrong password")
+	elif _joining_code:
+		_joining_code = false
+		_awaiting_password_check = false
+		_status("Lobby not found or already started")
 	_leave_target = "MainMenu"
-
-
-func _on_room_list_updated(_rooms: Array) -> void:
-	if _current_page == "BrowseLobbies":
-		_refresh_rooms()
 
 
 func _on_connection_failed(error: String) -> void:
@@ -311,6 +304,11 @@ func _on_game_ended() -> void:
 	_show_page("Lobby")
 
 
+func _open_settings(return_page: String) -> void:
+	_settings_return = return_page
+	_show_page("Settings")
+
+
 func _close_ingame_menu() -> void:
 	_hide_all_pages()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -319,17 +317,20 @@ func _close_ingame_menu() -> void:
 # PRIVATE METHODS
 
 func _show_page(page_name: String) -> void:
+	var changed := page_name != _current_page
 	_current_page = page_name
 	visible = true
+	color_picker.close()
+	# in a game the menu floats over a dimmed view instead of the backdrop
+	$Backdrop.visible = not _game_started
+	$InGameDim.visible = _game_started
 	for page in pages.get_children():
 		page.visible = page.name == page_name
+		if page.visible and changed:
+			$MenuFx.play_page(page)
 	_status("")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	if page_name == "BrowseLobbies":
-		_refresh_rooms()
-	elif page_name == "Lobby":
-		_refresh_roster()
-	elif page_name == "PlayChoice":
+	if page_name == "PlayChoice":
 		play_title.text = "READY, %s?" % get_nickname().to_upper()
 
 
@@ -361,168 +362,36 @@ func _join_pending() -> void:
 	Fusion.join_room(_pending_room, FusionRoomOptions.new())
 
 
-# ROOM BROWSER
-
-func _refresh_rooms() -> void:
-	for child in room_list.get_children():
-		child.free()
-	for room in Fusion.get_room_list():
-		var properties: Dictionary = room.get_custom_properties()
-		# only Waiting rooms are joinable
-		if str(properties.get("phase", "")) != "waiting":
-			continue
-		if not _room_filter.is_empty() \
-				and not room.get_name().to_lower().contains(_room_filter):
-			continue
-		room_list.add_child(_make_room_row(room, properties))
-
-
-func _make_room_row(room, properties: Dictionary) -> Control:
-	var passworded := bool(properties.get("passworded", false))
-	var full: bool = room.get_player_count() >= room.get_max_players() \
-			or not room.get_is_open()
-	var chip := PanelContainer.new()
-	chip.theme_type_variation = &"ChipPanel"
-	chip.custom_minimum_size = Vector2(0, 66)
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 24)
-	chip.add_child(hbox)
-
-	var names := VBoxContainer.new()
-	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hbox.add_child(names)
-	var title := Label.new()
-	title.theme_type_variation = &"TitleLabel"
-	title.text = room.get_name()
-	names.add_child(title)
-	var subtitle := Label.new()
-	subtitle.theme_type_variation = &"MutedLabel"
-	subtitle.text = "Password protected" if passworded else "Open lobby"
-	names.add_child(subtitle)
-
-	var count := Label.new()
-	count.theme_type_variation = &"TitleLabel"
-	count.text = "%d/%d" % [room.get_player_count(), room.get_max_players()]
-	hbox.add_child(count)
-
-	var rounds := Label.new()
-	rounds.theme_type_variation = &"MutedLabel"
-	rounds.text = "First to %d" % int(properties.get("rounds", 3))
-	hbox.add_child(rounds)
-
-	var join := Button.new()
-	join.theme_type_variation = &"BlueButton"
-	join.custom_minimum_size = Vector2(130, 46)
-	join.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	join.text = "FULL" if full else "JOIN"
-	join.disabled = full
-	if not full:
-		join.pressed.connect(_on_room_row_pressed.bind(room.get_name(), passworded))
-	hbox.add_child(join)
-	return chip
-
-
-# WAITING ROOM
-
-func _refresh_roster() -> void:
-	if not Fusion.is_in_room():
-		return
-	var room = Fusion.get_room()
-	if room == null:
-		return
-	var properties: Dictionary = room.get_custom_properties()
-	var player_count := room.get_player_count()
-	var max_players := room.get_max_players()
-	players_title.text = "PLAYERS  %d / %d" % [player_count, max_players]
-	room_title.text = room.get_room_name()
-	info_rounds.text = str(int(properties.get("rounds", 3)))
-	info_max.text = str(max_players)
-	for child in players_list.get_children():
-		child.free()
-	var host_name := ""
-	var shown := 0
-	for player in room.get_players():
-		if player.get_is_inactive():
-			continue
-		var number := int(player.get_number())
-		var display_name := str(properties.get("name_%d" % number, ""))
-		if display_name.is_empty():
-			display_name = player.get_name()
-		if display_name.is_empty():
-			display_name = "Player %d" % number
-		var is_host := player.get_is_master_client()
-		if is_host:
-			host_name = display_name
-		players_list.add_child(_make_player_chip(display_name, number, is_host))
-		shown += 1
-	for _i in maxi(max_players - shown, 0):
-		players_list.add_child(_make_empty_slot())
-	host_label.text = host_name
-	start_button.visible = Fusion.is_master_client()
-	start_button.disabled = player_count < 2
-	start_button.tooltip_text = "" if player_count >= 2 else "Needs at least 2 players"
-
-
-func _make_player_chip(display_name: String, number: int, is_host: bool) -> Control:
-	var chip := PanelContainer.new()
-	chip.theme_type_variation = &"ChipPanel"
-	chip.custom_minimum_size = Vector2(0, 56)
-	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 14)
-	chip.add_child(hbox)
-	hbox.add_child(_make_icon(number, 40))
-	var name_label := Label.new()
-	name_label.theme_type_variation = &"TitleLabel"
-	name_label.text = display_name
-	if number == Fusion.get_local_player_id():
-		name_label.text += " (you)"
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hbox.add_child(name_label)
-	if is_host:
-		var badge := PanelContainer.new()
-		badge.theme_type_variation = &"HostBadge"
-		badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		var badge_label := Label.new()
-		badge_label.theme_type_variation = &"CardTitleLabel"
-		badge_label.text = "Host"
-		badge.add_child(badge_label)
-		hbox.add_child(badge)
-	return chip
-
-
-func _make_empty_slot() -> Control:
-	var slot := PanelContainer.new()
-	slot.theme_type_variation = &"SlotPanel"
-	slot.custom_minimum_size = Vector2(0, 56)
-	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var label := Label.new()
-	label.theme_type_variation = &"MutedLabel"
-	label.text = "Waiting for player"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	slot.add_child(label)
-	return slot
-
-
-func _make_icon(number: int, side: float) -> Control:
-	var icon: Control = ROBOT_ICON.new()
-	icon.icon_color = PLAYER_COLORS[number % PLAYER_COLORS.size()]
-	icon.custom_minimum_size = Vector2(side, side)
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	return icon
-
-
 func get_nickname() -> String:
 	if nickname_input.text.strip_edges().is_empty():
 		nickname_input.text = "Player%d" % randi_range(100, 999)
 	return nickname_input.text.strip_edges()
 
 
-func _load_nickname() -> void:
+func get_robot_color() -> Color:
+	return _robot_color
+
+
+func _load_player() -> void:
 	var config := ConfigFile.new()
-	if config.load(USER_CONFIG) == Error.OK:
-		nickname_input.text = config.get_value("player", "nickname", "")
+	config.load(USER_CONFIG)
+	nickname_input.text = config.get_value("player", "nickname", "")
+	var color_html := str(config.get_value("player", "color", ""))
+	if Color.html_is_valid(color_html):
+		_robot_color = Color.html(color_html)
+		name_robot.icon_color = _robot_color
+	else:
+		# first run: a random robot color, so a fresh lobby isn't all one color
+		_set_robot_color(RobotColor.PALETTE.pick_random())
+
+
+func _set_robot_color(color: Color) -> void:
+	_robot_color = color
+	name_robot.icon_color = color
+	var config := ConfigFile.new()
+	config.load(USER_CONFIG)
+	config.set_value("player", "color", color.to_html(false))
+	config.save(USER_CONFIG)
 
 
 func _save_nickname() -> void:

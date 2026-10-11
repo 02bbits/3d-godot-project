@@ -51,8 +51,8 @@ var walk_or_run: String = "WalkState" #keep in memory if play char was walking o
 
 @export_group("Jump variables")
 @export var jump_height: float = 2.7
-@export var jump_time_to_peak: float = 0.3
-@export var jump_time_to_fall: float = 0.25
+@export var jump_time_to_peak: float = 0.6
+@export var jump_time_to_fall: float = 0.35
 @onready var jump_velocity: float = (2.0 * jump_height) / jump_time_to_peak
 @export var jump_cooldown: float = 0.25
 var jump_cooldown_ref: float
@@ -68,9 +68,9 @@ var released_input_in_air: bool = false
 @export_group("Slide variables")
 var slide_direction: Vector3 = Vector3.ZERO
 @export var use_desired_move_speed: bool = false
-@export var slide_speed: float = 8.2
-@export var slide_accel: float = 23.0
-@export var slide_time: float = 1.2
+@export var slide_speed: float = 10.2
+@export var slide_accel: float = 26.0
+@export var slide_time: float = 2.0
 var slide_time_ref: float
 @export var time_bef_can_slide_again: float = 0.2
 var time_bef_can_slide_again_ref: float

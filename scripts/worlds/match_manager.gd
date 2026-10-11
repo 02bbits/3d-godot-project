@@ -3,9 +3,9 @@ extends Node
 ## Master-authoritative match state, broadcast to every client through room
 ## custom properties (polled, like the lobby phase — Fusion exposes no
 ## property-changed signal). A match is one elimination bout: the last player
-## alive wins it and scores 1. First to 2 match wins takes the round; after
-## the configured number of rounds the game stops and the client shows the
-## top-3 ranking.
+## alive wins it and scores 1. First to `match_wins_per_round` match wins
+## (lobby setting, default 2) takes the round; after the configured number of
+## rounds the game stops and the client shows the top-3 ranking.
 
 signal game_started
 signal respawn_requested
@@ -33,6 +33,8 @@ var last_result := "" # banner text published after every match
 var result_serial := 0
 var map_index := 0
 var map_count := 1
+# match wins that take a round; set per lobby (room property "match_wins")
+var match_wins_per_round := MATCH_WINS_PER_ROUND
 # bumped by the host on every Start: lets a stalled client notice the room was
 # reset and restarted even if it missed the whole waiting window
 var game_serial := 0
@@ -72,6 +74,7 @@ func _host_process(delta: float) -> void:
 		match_phase = str(props.get("match_phase", "fight"))
 		map_index = int(props.get("map_index", 0))
 		game_serial = int(props.get("game_serial", 0))
+		match_wins_per_round = int(props.get("match_wins", MATCH_WINS_PER_ROUND))
 		rounds_won = {}
 		round_scores = {}
 		_evaluate_time = MATCH_START_GRACE
@@ -119,13 +122,13 @@ func _evaluate_match() -> void:
 		round_scores[winner_key] = int(round_scores.get(winner_key, 0)) + 1
 
 	_round_over = winner_key != "" \
-			and int(round_scores.get(winner_key, 0)) >= MATCH_WINS_PER_ROUND
+			and int(round_scores.get(winner_key, 0)) >= match_wins_per_round
 	if _round_over:
 		# round scores are per-round; only the round winner is persisted
 		rounds_won[winner_key] = int(rounds_won.get(winner_key, 0)) + 1
-		# next round plays on the next map (not after the final round)
+		# next round plays on a random other map (not after the final round)
 		if round < rounds_total and map_count > 1:
-			map_index = (map_index + 1) % map_count
+			map_index = (map_index + randi_range(1, map_count - 1)) % map_count
 			map_changed.emit(map_index)
 
 	result_serial += 1
@@ -185,7 +188,8 @@ func _return_to_lobby() -> void:
 			props["round_score_%s" % key] = 0
 		room.set_properties(props)
 		room.set_open(true)
-		room.set_visible(true)
+		# private lobbies stay out of the browser; joinable by code only
+		room.set_visible(not bool(room.get_custom_properties().get("private", false)))
 	returned_to_lobby.emit()
 
 
@@ -211,6 +215,10 @@ func _client_process(delta: float) -> void:
 		_started = true
 		game_serial = serial
 		rounds_total = int(props.get("rounds", 3))
+		# the starting map is part of the start, not a mid-game map change
+		map_index = int(props.get("map_index", map_index))
+		# kept in sync so a migrated host keeps the lobby's rule
+		match_wins_per_round = int(props.get("match_wins", MATCH_WINS_PER_ROUND))
 		game_started.emit()
 
 	var previous_phase := match_phase

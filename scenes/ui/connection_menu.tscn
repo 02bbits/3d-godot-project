@@ -2,10 +2,25 @@
 
 [ext_resource type="Script" uid="uid://yr6i1ueijlh6" path="res://scripts/ui/connection_ui.gd" id="1_menu"]
 [ext_resource type="Theme" uid="uid://dddyjvwbt6svc" path="res://resources/ui/menu_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/menu/menu-background.jpg" id="3_2rg7x"]
 [ext_resource type="Script" uid="uid://bagafyebha3kr" path="res://scripts/ui/robot_icon.gd" id="3_robot"]
+[ext_resource type="Script" uid="uid://bcnnwmbrbcd65" path="res://scripts/ui/settings_menu.gd" id="5_settings"]
+[ext_resource type="Script" uid="uid://cn2d5d3fx8nwi" path="res://scripts/ui/stepper.gd" id="6_stepper"]
+[ext_resource type="Script" uid="uid://djdj7xs50m30b" path="res://scripts/ui/create_lobby_form.gd" id="7_form"]
+[ext_resource type="Script" uid="uid://lfypx6a8ot7b" path="res://scripts/ui/card_art.gd" id="8_art"]
+[ext_resource type="Script" uid="uid://btu7ya73qhwx5" path="res://scripts/ui/robot_color_picker.gd" id="9_picker"]
+[ext_resource type="Script" uid="uid://wosgl4kpsg5b" path="res://scripts/ui/menu_fx.gd" id="10_fx"]
+[ext_resource type="Shader" uid="uid://bxa6m55ut41wc" path="res://scripts/ui/shader/blueprint_bg.gdshader" id="11_bg"]
+[ext_resource type="Script" uid="uid://b3g6enkee12go" path="res://scripts/ui/lobby_page.gd" id="12_lobby"]
+[ext_resource type="Script" uid="uid://bsh0dlqba6p58" path="res://scripts/ui/browse_page.gd" id="13_browse"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="4_2rg7x"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bx4y2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blueprint"]
+shader = ExtResource("11_bg")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6m8d4"]
+content_margin_right = 30.0
 
 [node name="ConnectionMenu" type="Control" unique_id=2079660651]
 layout_mode = 3
@@ -18,6 +33,7 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=1682030422]
+material = SubResource("ShaderMaterial_blueprint")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,6 +41,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1373, 0.1608, 0.2078, 1)
+
+[node name="InGameDim" type="ColorRect" parent="." unique_id=144281421]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0353, 0.0431, 0.0549, 0.62)
 
 [node name="Pages" type="Control" parent="." unique_id=1034772690]
 layout_mode = 1
@@ -39,7 +65,6 @@ visible = false
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
-texture = ExtResource("3_2rg7x")
 expand_mode = 2
 
 [node name="MainMenu" type="Control" parent="Pages" unique_id=818938686]
@@ -121,9 +146,7 @@ text = "PLAY"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-tooltip_text = "Settings screen not implemented yet"
 theme_type_variation = &"BlueButton"
-disabled = true
 text = "SETTINGS"
 
 [node name="ExitButton" type="Button" parent="Pages/MainMenu/Center/Stack/Buttons" unique_id=1003278052]
@@ -178,12 +201,17 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 28
 
-[node name="Icon" type="Control" parent="Pages/NameScreen/Card/V/Row" unique_id=741326423]
+[node name="NameRobot" type="Control" parent="Pages/NameScreen/Card/V/Row" unique_id=741326423]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 size_flags_vertical = 4
+tooltip_text = "Change your robot's color"
+mouse_default_cursor_shape = 2
 script = ExtResource("3_robot")
 icon_color = Color(0.302, 0.6353, 0.9961, 1)
+animate = true
+badge = true
 
 [node name="Field" type="VBoxContainer" parent="Pages/NameScreen/Card/V/Row" unique_id=1979463622]
 layout_mode = 2
@@ -209,7 +237,7 @@ max_length = 16
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
-text = "3 to 16 characters. Other players will see this above your robot."
+text = "3 to 16 characters, shown above your robot. Click the robot to paint it."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -286,9 +314,13 @@ text = "Set the rules and host a match for your friends."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Spacer" type="Control" parent="Pages/PlayChoice/V/Cards/CreateCard/V" unique_id=1711132323]
+[node name="Art" type="Control" parent="Pages/PlayChoice/V/Cards/CreateCard/V" unique_id=1711132323]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("8_art")
+kind = "create"
 
 [node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/CreateCard/V" unique_id=379827431]
 layout_mode = 2
@@ -321,13 +353,37 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_type_variation = &"CardDescLabel"
 theme_override_font_sizes/font_size = 21
-text = "Browse open rooms and jump into a match."
+text = "Browse open rooms or enter a lobby code."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Spacer" type="Control" parent="Pages/PlayChoice/V/Cards/JoinCard/V" unique_id=124567583]
+[node name="Art" type="Control" parent="Pages/PlayChoice/V/Cards/JoinCard/V" unique_id=124567583]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("8_art")
+kind = "join"
+
+[node name="CodeRow" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/JoinCard/V" unique_id=563688809]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="JoinCode" type="LineEdit" parent="Pages/PlayChoice/V/Cards/JoinCard/V/CodeRow" unique_id=758518453]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 48)
+layout_mode = 2
+placeholder_text = "CODE"
+alignment = 1
+max_length = 5
+
+[node name="JoinCodeButton" type="Button" parent="Pages/PlayChoice/V/Cards/JoinCard/V/CodeRow" unique_id=1901454427]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(108, 48)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "JOIN"
 
 [node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/JoinCard/V" unique_id=1289796413]
 layout_mode = 2
@@ -363,10 +419,12 @@ theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 32
+script = ExtResource("7_form")
 
 [node name="V" type="VBoxContainer" parent="Pages/CreateLobby" unique_id=1578530931]
 layout_mode = 2
 theme_override_constants/separation = 24
+alignment = 1
 
 [node name="Title" type="Label" parent="Pages/CreateLobby/V" unique_id=858435097]
 layout_mode = 2
@@ -377,137 +435,160 @@ horizontal_alignment = 1
 
 [node name="Card" type="PanelContainer" parent="Pages/CreateLobby/V" unique_id=1301625071]
 layout_mode = 2
-size_flags_vertical = 3
 theme_type_variation = &"CardPanel"
 
-[node name="Columns" type="HBoxContainer" parent="Pages/CreateLobby/V/Card" unique_id=320496754]
+[node name="CardV" type="VBoxContainer" parent="Pages/CreateLobby/V/Card" unique_id=1527784386]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 30
+alignment = 1
 
-[node name="Left" type="VBoxContainer" parent="Pages/CreateLobby/V/Card/Columns" unique_id=1021472303]
-custom_minimum_size = Vector2(400, 0)
+[node name="Columns" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/CardV" unique_id=320496754]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/separation = 56
+alignment = 1
+
+[node name="Left" type="VBoxContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns" unique_id=1021472303]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NameLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Left" unique_id=1725585472]
+[node name="NameLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=262566873]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "LOBBY NAME"
 horizontal_alignment = 1
 
-[node name="RoomName" type="LineEdit" parent="Pages/CreateLobby/V/Card/Columns/Left" unique_id=1157207203]
+[node name="RoomName" type="LineEdit" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=1157207203]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 placeholder_text = "My lobby"
 alignment = 1
 max_length = 24
 
-[node name="Gap" type="Control" parent="Pages/CreateLobby/V/Card/Columns/Left" unique_id=1397720781]
-custom_minimum_size = Vector2(0, 18)
+[node name="Gap" type="Control" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=1397720781]
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="PasswordLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Left" unique_id=1871368286]
+[node name="PasswordLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=791340424]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "PASSWORD (OPTIONAL)"
 horizontal_alignment = 1
 
-[node name="Password" type="LineEdit" parent="Pages/CreateLobby/V/Card/Columns/Left" unique_id=292840324]
+[node name="Password" type="LineEdit" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=292840324]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 placeholder_text = "No password"
 alignment = 1
 secret = true
 
-[node name="Right" type="VBoxContainer" parent="Pages/CreateLobby/V/Card/Columns" unique_id=1679644936]
-custom_minimum_size = Vector2(360, 0)
+[node name="Gap2" type="Control" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=1770253621]
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
-theme_override_constants/separation = 12
 
-[node name="PlayersLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right" unique_id=2086655608]
+[node name="VisibilityLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=1172208653]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "LOBBY VISIBILITY"
+horizontal_alignment = 1
+
+[node name="VisibilityButton" type="Button" parent="Pages/CreateLobby/V/Card/CardV/Columns/Left" unique_id=427307646]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+tooltip_text = "Private lobbies are hidden from the browser; share the code to invite players."
+theme_type_variation = &"BlueButton"
+text = "PUBLIC"
+
+[node name="Divider" type="ColorRect" parent="Pages/CreateLobby/V/Card/CardV/Columns" unique_id=1662214484]
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.0627, 0.0784, 0.1098, 1)
+
+[node name="Rules" type="GridContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns" unique_id=1679644936]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 14
+columns = 2
+
+[node name="PlayersLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=1933998605]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "MAX PLAYERS"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="PlayersRow" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/Columns/Right" unique_id=796389395]
-layout_mode = 2
-theme_override_constants/separation = 18
-alignment = 1
-
-[node name="PlayerMinus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow" unique_id=720222461]
+[node name="PlayersStepper" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=1827936993]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 46)
 layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"PrimaryButton"
-text = "-"
+script = ExtResource("6_stepper")
+value_width = 190.0
+font_size = 26
+button_size = Vector2(48, 44)
 
-[node name="PlayerCountValue" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow" unique_id=329084587]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-theme_override_font_sizes/font_size = 30
-text = "4"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PlayerPlus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/PlayersRow" unique_id=1010100712]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 46)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"PrimaryButton"
-text = "+"
-
-[node name="Gap" type="Control" parent="Pages/CreateLobby/V/Card/Columns/Right" unique_id=1569655912]
-custom_minimum_size = Vector2(0, 14)
-layout_mode = 2
-
-[node name="RoundsLabel" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right" unique_id=1696772236]
+[node name="RoundsLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=794458666]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
-text = "ROUNDS TO WIN THE MATCH"
+text = "ROUNDS TO WIN"
+horizontal_alignment = 2
+
+[node name="RoundsStepper" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=508966934]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_stepper")
+value_width = 190.0
+font_size = 26
+button_size = Vector2(48, 44)
+
+[node name="WinsLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=194859440]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "WINS PER ROUND"
+horizontal_alignment = 2
+
+[node name="WinsStepper" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=1831258910]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_stepper")
+value_width = 190.0
+font_size = 26
+button_size = Vector2(48, 44)
+
+[node name="MapLabel" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=730754560]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "STARTING MAP"
+horizontal_alignment = 2
+
+[node name="MapStepper" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/CardV/Columns/Rules" unique_id=652821361]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_stepper")
+value_width = 190.0
+font_size = 26
+button_size = Vector2(48, 44)
+
+[node name="Summary" type="PanelContainer" parent="Pages/CreateLobby/V/Card/CardV" unique_id=1124058431]
+layout_mode = 2
+theme_type_variation = &"ChipPanel"
+
+[node name="RulesSummary" type="Label" parent="Pages/CreateLobby/V/Card/CardV/Summary" unique_id=499043524]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "First to 3 rounds"
 horizontal_alignment = 1
-
-[node name="RoundsRow" type="HBoxContainer" parent="Pages/CreateLobby/V/Card/Columns/Right" unique_id=1003070059]
-layout_mode = 2
-theme_override_constants/separation = 18
-alignment = 1
-
-[node name="RoundsMinus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow" unique_id=1154864670]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 46)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"PrimaryButton"
-text = "-"
-
-[node name="RoundsCountValue" type="Label" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow" unique_id=1339757426]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-theme_override_font_sizes/font_size = 30
-text = "3"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RoundsPlus" type="Button" parent="Pages/CreateLobby/V/Card/Columns/Right/RoundsRow" unique_id=1870279387]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 46)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"PrimaryButton"
-text = "+"
 
 [node name="Buttons" type="HBoxContainer" parent="Pages/CreateLobby/V" unique_id=1733258803]
 layout_mode = 2
@@ -540,6 +621,7 @@ theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 28
+script = ExtResource("13_browse")
 
 [node name="V" type="VBoxContainer" parent="Pages/BrowseLobbies" unique_id=1149617839]
 layout_mode = 2
@@ -669,6 +751,7 @@ theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 28
+script = ExtResource("12_lobby")
 
 [node name="V" type="VBoxContainer" parent="Pages/Lobby" unique_id=676299877]
 layout_mode = 2
@@ -712,13 +795,13 @@ theme_override_constants/v_separation = 14
 columns = 2
 
 [node name="InfoCard" type="PanelContainer" parent="Pages/Lobby/V/Body" unique_id=1692067638]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(330, 0)
 layout_mode = 2
 theme_type_variation = &"CardPanel"
 
 [node name="V" type="VBoxContainer" parent="Pages/Lobby/V/Body/InfoCard" unique_id=13514671]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 18
 
 [node name="Title" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=736806670]
 layout_mode = 2
@@ -727,66 +810,122 @@ theme_override_font_sizes/font_size = 30
 text = "ROOM INFO"
 horizontal_alignment = 1
 
-[node name="NameKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=1468554187]
+[node name="Grid" type="GridContainer" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=429883792]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="NameKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1178624304]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Name"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="RoomTitle" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=1064553243]
+[node name="RoomTitle" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1064553243]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 23
 text = "Lobby"
-horizontal_alignment = 1
-autowrap_mode = 3
+text_overrun_behavior = 3
 
-[node name="HostKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=224739452]
+[node name="HostKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1959189166]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Host"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="HostLabel" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=1918835294]
+[node name="HostLabel" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1918835294]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 23
 text = "-"
-horizontal_alignment = 1
+text_overrun_behavior = 3
 
-[node name="RoundsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=1854500591]
+[node name="RoundsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=271161287]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Rounds to win"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="InfoRounds" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=347604084]
+[node name="InfoRounds" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=347604084]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 23
 text = "3"
-horizontal_alignment = 1
+text_overrun_behavior = 3
 
-[node name="MaxKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=1793486203]
+[node name="WinsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=623514870]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Wins per round"
+horizontal_alignment = 2
+
+[node name="InfoWins" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=489874676]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "2"
+text_overrun_behavior = 3
+
+[node name="MapKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=292376226]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Starting map"
+horizontal_alignment = 2
+
+[node name="InfoMap" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=496150564]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 23
+text = "RANDOM"
+text_overrun_behavior = 3
+
+[node name="MaxKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=388751000]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Max players"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="InfoMax" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=396936642]
+[node name="InfoMax" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=396936642]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 23
 text = "4"
+text_overrun_behavior = 3
+
+[node name="CodeKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=865396257]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 17
+text = "Lobby code (click to copy)"
 horizontal_alignment = 1
+
+[node name="LobbyCode" type="Button" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=738128379]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+theme_override_font_sizes/font_size = 30
+text = "-----"
 
 [node name="Buttons" type="HBoxContainer" parent="Pages/Lobby/V" unique_id=259875905]
 layout_mode = 2
@@ -843,9 +982,7 @@ text = "RESUME"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-tooltip_text = "Settings screen not implemented yet"
 theme_type_variation = &"BlueButton"
-disabled = true
 text = "SETTINGS"
 
 [node name="LeaveLobbyButton" type="Button" parent="Pages/InGameMenu/Card/V" unique_id=1066788592]
@@ -854,6 +991,127 @@ custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_type_variation = &"RedButton"
 text = "LEAVE LOBBY"
+
+[node name="Settings" type="CenterContainer" parent="Pages" unique_id=1257024970]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_settings")
+
+[node name="Card" type="PanelContainer" parent="Pages/Settings" unique_id=1362781082]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="V" type="VBoxContainer" parent="Pages/Settings/Card" unique_id=732718858]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Pages/Settings/Card/V" unique_id=980870736]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 46
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="Rows" type="GridContainer" parent="Pages/Settings/Card/V" unique_id=1932714786]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Pages/Settings/Card/V" unique_id=230540171]
+layout_mode = 2
+alignment = 1
+
+[node name="SettingsBackButton" type="Button" parent="Pages/Settings/Card/V/Buttons" unique_id=1585300959]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
+theme_type_variation = &"CreamButton"
+text = "BACK"
+
+[node name="ColorPicker" type="Control" parent="." unique_id=1501511831]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_picker")
+
+[node name="Dim" type="ColorRect" parent="ColorPicker" unique_id=783678208]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0353, 0.0431, 0.0549, 0.62)
+
+[node name="Center" type="CenterContainer" parent="ColorPicker" unique_id=804052208]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="ColorPicker/Center" unique_id=601532603]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="V" type="VBoxContainer" parent="ColorPicker/Center/Card" unique_id=1638929310]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Title" type="Label" parent="ColorPicker/Center/Card/V" unique_id=1706246443]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 40
+text = "PAINT YOUR ROBOT"
+horizontal_alignment = 1
+
+[node name="Preview" type="Control" parent="ColorPicker/Center/Card/V" unique_id=764683239]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+script = ExtResource("3_robot")
+animate = true
+
+[node name="Swatches" type="GridContainer" parent="ColorPicker/Center/Card/V" unique_id=415028274]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 5
+
+[node name="Hint" type="Label" parent="ColorPicker/Center/Card/V" unique_id=734742657]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 16
+text = "Paints your robot's body. Helmet and target stay as they are."
+horizontal_alignment = 1
+
+[node name="ColorDoneButton" type="Button" parent="ColorPicker/Center/Card/V" unique_id=495045061]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "DONE"
+
+[node name="MenuFx" type="Node" parent="." unique_id=1297796685]
+script = ExtResource("10_fx")
 
 [node name="StatusLabel" type="Label" parent="." unique_id=866288486]
 unique_name_in_owner = true
@@ -866,6 +1124,8 @@ offset_top = -52.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.7882, 0.2, 1)
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.9517134, 0.84168696, 1)
+theme_override_fonts/font = ExtResource("4_2rg7x")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxTexture_6m8d4")
+horizontal_alignment = 2

@@ -57,6 +57,9 @@ var default_input_actions : Dictionary
 
 var state : String
 
+# player preference from the settings menu, shared by every camera
+static var mouse_sensitivity : float = 1.0
+
 #references variables
 @onready var camera : Camera3D = $Camera
 @onready var play_char : PlayerCharacter = $".."
@@ -108,8 +111,8 @@ func _unhandled_input(event) -> void:
 		return
 	#manage camera rotation (360 on x axis, blocked at specified values on y axis, to not having the character do a complete head turn, which will be kinda weird)
 	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * (x_axis_sensibility / 10))
-		camera.rotate_x(-event.relative.y * (y_axis_sensibility / 10))
+		rotate_y(-event.relative.x * (x_axis_sensibility / 10) * mouse_sensitivity)
+		camera.rotate_x(-event.relative.y * (y_axis_sensibility / 10) * mouse_sensitivity)
 		#use of deg_to_rad, because we change the x axis rotation with rotation,x, which use radians instead of degrees
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(max_up_angle_view), deg_to_rad(max_down_angle_view))
 

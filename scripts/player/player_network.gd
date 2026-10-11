@@ -7,6 +7,12 @@ var net_nickname: String = "":
 		net_nickname = value
 		if is_node_ready() and nickname_label != null:
 			nickname_label.text = value
+# robot shell color as an html string ("" = the model's own gray)
+var net_color: String = "":
+	set(value):
+		net_color = value
+		if is_node_ready():
+			apply_robot_color()
 var net_fire_count: int = 0:
 	set(value):
 		var previous := net_fire_count
@@ -53,6 +59,10 @@ var net_hit_normal: Vector3 = Vector3.ZERO
 var net_wallrun_side: int = 0 # -1 left wall, 1 right wall, 0 not wallrunning
 var _wallrun_lean: float = 0.0
 
+func apply_robot_color() -> void:
+	if Color.html_is_valid(net_color):
+		RobotColor.apply(visual_root, Color.html(net_color))
+
 # Squash/stretch is applied only on remote players (local is first person);
 # it always decays back to one. Locomotion blends the animation tree in local
 # space so strafing/backpedal read correctly.
@@ -79,9 +89,10 @@ func network_view_sync(delta: float) -> void:
 		view_yaw = cam_holder.rotation.y
 		view_pitch = cam.rotation.x
 		_update_body_yaw(delta)
-	# the viewmodel camera rides the gameplay camera; the gun is its child, so
-	# the screen position stays fixed while lighting follows the aim
-	viewmodel_camera.global_transform = cam.global_transform
+	# the viewmodel camera rides the gameplay camera's *rendered* (interpolated)
+	# pose; the gun is its child, so it stays locked to the screen while
+	# lighting follows the aim. The camera itself is not interpolated.
+	viewmodel_camera.global_transform = cam.get_global_transform_interpolated()
 	# the visible model faces body_yaw; the head (LookAtModifier3D) covers the
 	# remaining angle up to the neck limit on every peer. Wallrunning rolls the
 	# model toward the wall, matching the camera's 16 degree lean.
@@ -312,6 +323,7 @@ func _enable_local_copy() -> void:
 	weapon.set_process(true)
 	weapon.set_process_unhandled_input(true)
 	hud.visible = true
+	viewmodel_camera.get_viewport().render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	visual_root.visible = true
 	_update_gun_visibility()
 	# first person: hide the head meshes from the local camera but keep their
@@ -348,6 +360,8 @@ func _disable_remote_copy() -> void:
 	weapon.set_process_input(false)
 	weapon.set_process_unhandled_input(false)
 	hud.visible = false
+	# nobody looks through a remote copy's viewmodel: skip its 3D pass
+	viewmodel_camera.get_viewport().render_target_update_mode = SubViewport.UPDATE_DISABLED
 	# remote copies render the full model for other players' cameras and show
 	# the nickname label above the head
 	visual_root.visible = true

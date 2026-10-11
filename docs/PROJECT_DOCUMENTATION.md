@@ -21,10 +21,14 @@ An online round-based FPS:
 - Full movement state machine: walk/run/bunny-hop, slide, dash, wallrun/walljump.
 - Modular hitscan weapons: one shared weapon scene + a `WeaponDefinition` resource per
   weapon (meshes, transforms, damage, sounds). Camera-center aim.
-- Match system: last player alive wins a match point, first to 2 wins the round,
+- Match system: last player alive wins a match point, first to N (lobby setting,
+  default 2) wins the round,
   eliminated players spectate, first to `rounds_total` rounds wins the game; top-3
   results and an automatic return to the waiting lobby after 5 s.
-- Map rotation: five maps, swapped with a fade every round win.
+- Map rotation: five maps; the game opens on the lobby's starting map (or a random
+  one) and every round win swaps to a random *different* map with a fade.
+- Robot colors: each player picks a body color on the name screen; it replicates
+  (`net_color`) and recolors only the robot shell (`scripts/player/robot_color.gd`).
 - Health/stamina bars with a delayed white catch-up bar; scoreboard, match banner,
   results screen, speed-based reticle.
 - Modifier framework (definitions, manager, caps) — **not reachable in game**: nothing
@@ -88,9 +92,12 @@ PlayerCharacter (CharacterBody3D)
 
 ```
 Weapon (Node3D, scripts/weapons/weapon.gd)
-├── ViewModel (Node3D)      definition.viewmodel_scene instanced here; render layer 4
+├── ViewModel (Node3D)      definition.viewmodel_scene; render layer 4; reparented (with
+│                           Muzzle) into a lean pivot under the viewmodel camera
 ├── WorldModel (Node3D)     definition.world_model_scene; reparented to the hand
-├── Muzzle (Marker3D)       definition.muzzle_transform; tracer origin
+├── Muzzle (Marker3D)       definition.muzzle_transform; local tracers start at its
+│                           projection into the gameplay camera, remote ones at the
+│                           world model's MuzzleFlash
 ├── ShootSound/ReloadSound  AudioStreamPlayer3D (unit_size 30)
 └── HitConfirm (CanvasLayer 20)  hit marker, kill banner, kill sound
 ```
@@ -99,21 +106,36 @@ Weapon (Node3D, scripts/weapons/weapon.gd)
 
 ## 3. Lobby, connection and spawn flow
 
-`scripts/ui/connection_ui.gd` + `scripts/worlds/world.gd` + `scripts/worlds/match_manager.gd`.
+`scripts/ui/connection_ui.gd` (flow + joining) with per-page scripts —
+`create_lobby_form.gd`, `browse_page.gd`, `lobby_page.gd`, `settings_menu.gd`,
+`robot_color_picker.gd` — plus `scripts/worlds/world.gd` + `scripts/worlds/match_manager.gd`.
+Shared menu pieces: `stepper.gd` (the `[-] value [+]` control), `robot_icon.gd`
+(mascot drawing, bob/blink, selection ring), `card_art.gd` (play-choice card
+drawings), `menu_fx.gd` (page entrances, button hover/press, main-menu intro) and the
+animated blueprint backdrop `scripts/ui/shader/blueprint_bg.gdshader`.
 
 1. **Menu pages** (ConnectionMenu, `MenuLayer` CanvasLayer 10): MainMenu → NameScreen →
    PlayChoice → CreateLobby / BrowseLobbies / PasswordPrompt → Lobby. The menu root
-   hides entirely during gameplay; ESC opens InGameMenu (Resume, Leave Lobby).
+   hides entirely during gameplay; ESC opens InGameMenu (Resume, Settings, Leave
+   Lobby) as a card over the dimmed game (`InGameDim`) instead of the backdrop.
 2. **Name**: saved to `user://user_config.cfg` and used as the **Photon user id**
    (`Fusion.connect_to_photon(nickname, Fusion.get_default_region())`). Changing the
    name while connected disconnects and reconnects (`_connected_name` tracks the
-   identity; `_reconnecting` suppresses the disconnect reload).
-3. **Create lobby**: room name, optional password, player count 2–4, rounds 1–10.
-   Custom properties `phase="waiting"`, `passworded`, `password`, `rounds`; only
-   `phase`/`passworded` are lobby properties (the password never reaches the browser).
-4. **Join lobby**: the browser lists rooms with `phase=="waiting"` that are open and
-   not full. Passworded rooms prompt; the password is checked **after joining** and a
-   mismatch leaves and returns to the prompt with "Wrong password" (client-side gate).
+   identity; `_reconnecting` suppresses the disconnect reload). Clicking the robot
+   icon opens the color picker; the color is saved as `[player] color` (random on
+   first run).
+3. **Create lobby**: room name, optional password, Public/Private, player count 2–4,
+   rounds 1–10, match wins per round 1–5 (`match_wins`), starting map (`start_map`,
+   -1 = random; Start resolves it into `map_index`). The Photon room name is a generated 5-character **code** (shown in
+   the waiting room, click to copy); the typed name is the `title` property. Custom
+   properties `title`, `private`, `phase="waiting"`, `passworded`, `password`,
+   `rounds`, `match_wins`, `start_map`; only `title`/`phase`/`passworded` are lobby properties (the password
+   never reaches the browser). Private rooms are created invisible and stay invisible
+   after a game.
+4. **Join lobby**: the browser lists visible rooms with `phase=="waiting"` that are open
+   and not full; the JoinCard also joins any room directly by code. Passworded rooms
+   prompt; the password is checked **after joining** and a mismatch leaves and returns
+   to the prompt with "Wrong password" (client-side gate).
 5. **Names**: on `room_joined` each client publishes `name_<player_id>` as a room
    property; the lobby roster polls it every second (fallback: Photon player name, then
    "Player N").
@@ -142,15 +164,16 @@ Master-authoritative; every client polls the room's custom properties every 0.25
 
 - **Match** = one elimination bout. The last player alive scores 1 match point
   (`round_scores`). A draw (nobody alive) scores nothing.
-- **Round** = first to 2 match wins; the winner's `rounds_won` is persisted and
+- **Round** = first to `match_wins_per_round` match wins (room `match_wins`, default
+  2); the winner's `rounds_won` is persisted and
   `round_scores` reset. `round_completed` fires on the host (future modifier draft).
 - **Game over** after `rounds_total` rounds: results screen, then `_return_to_lobby`
   after 5 s (`GAME_OVER_SECONDS`).
 - **Intermission**: 3 s normally, 5 s after a round win so the map transition fits.
 - **`_match_ready`**: the host waits until all expected players have been seen alive
   before evaluating, so a laggy respawn can't hand the match to the first client back.
-- **Map rotation**: `map_index` advances on every non-final round win; `map_changed`
-  fires on host and clients.
+- **Map rotation**: on every non-final round win the host picks a random map other
+  than the current one; `map_changed` fires on host and clients.
 - **Host migration**: the game-over countdown restarts if a new host takes over.
 
 Room properties written: `match_phase` ("fight"/"intermission"/"game_over"/""), `round`,
@@ -182,6 +205,7 @@ One client is the Photon master; each client owns its own player replica
   visuals/sounds on every peer)
 - `net_hit_position` / `net_hit_normal` (last shot impact, for tracers/impacts)
 - `net_nickname` (floating label)
+- `net_color` (robot shell color, html; `RobotColor.apply` on every peer)
 
 ### RPCs (`@rpc("any_peer")`, kept on the leaf `player.gd`)
 
@@ -311,11 +335,13 @@ only seen by the viewmodel camera.
 ### Firing (traditional FPS aim)
 
 `weapon.gd::_shoot`:
-1. Camera-center ray (`camera.global_position` along `-camera.basis.z`, mask 7, shooter
-   excluded) → the aim point under the reticle.
-2. Muzzle ray to that aim point → keeps cover in front of the gun honest.
-3. Damage, hit normal and the tracer use the resulting hit (muzzle hit if blocked, else
-   the camera hit).
+1. One ray through the screen center (mask 7, shooter excluded) from the camera's
+   **interpolated** pose (`get_global_transform_interpolated()`) — what the player
+   actually sees; the physics-tick pose runs up to a tick ahead while moving.
+2. Damage, hit normal and the tracer use that hit — exactly under the reticle (the
+   reticle draws around its container's center for the same reason).
+3. The tracer starts at the drawn barrel (viewmodel muzzle projected into the gameplay
+   camera; the world model's MuzzleFlash on remote copies) and stops at the hit.
 
 Replication: the owner bumps `net_fire_count` / `net_reload_count`; every peer replays
 `on_fire_event` (tracer, model muzzle flashes, shoot sound) and `reload_visual` (sound +
@@ -387,11 +413,11 @@ on `match_manager` is the intended future draft hook.
 | Piece | File | Notes |
 |---|---|---|
 | Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scripts/ui/robot_icon.gd`); lives in `MenuLayer` (CanvasLayer 10) |
-| Lobby roster | same | player chips (robot icon, name, Host badge) + empty "Waiting for player" slots; room info panel; host-only Start (disabled with <2 players) |
+| Lobby roster | `scripts/ui/lobby_page.gd` | player chips (robot icon, name, Host badge) + empty "Waiting for player" slots; room info panel; host-only Start (disabled with <2 players) |
 | HUD | `scripts/player/hud/hud_script.gd` | keeps bar max in sync, rebuilds the scoreboard, hides the gameplay HUD while a popup is up |
 | Health bar | `scenes/ui/healthbar/*` | red bar drops immediately; the white bar holds the gap and slides down after a 0.4 s delay (0.35 s slide) |
 | Stamina bar | `scenes/ui/staminabar/*` | same delayed style; binds to the HUD's own `play_char` (not a group lookup) |
-| Reticle | `scenes/player/reticle.gd` | center dot + 4 Line2D spread by planar speed (`get_real_velocity()`) |
+| Reticle | `scenes/player/reticle.gd` | center dot + 4 Line2D spread by planar speed (`get_real_velocity()`); drawn around `size / 2` so it sits exactly on the shot ray |
 | Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + A/D hint move to the top center |
 | Scoreboard | player HUD | `Player / Rounds / Match` + `Round X / N` |
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |
@@ -476,77 +502,15 @@ two-client manual runs.
 - **The viewmodel is local-only.** It renders in a transparent SubViewport that shares
   the game's `World3D` (so it stays lit), on render layer 4 with a fixed FOV; the
   gameplay camera never sees it and it does not depth-test against walls (it draws over
-  them by design).
+  them by design). The viewmodel camera has physics interpolation **off** and copies
+  the gameplay camera's *interpolated* pose each frame (otherwise the gun shakes when
+  turning); it has its own Environment (no sky/SSAO/glow) and remote copies disable
+  their SubViewport entirely.
+- **Settings** (`scripts/ui/settings_menu.gd`, Settings page): steppers for window
+  mode, vsync, max FPS, post effects; sliders (themed in `menu_theme.tres`) for render
+  scale (FSR), UI scale (`content_scale_factor`, 50–100%, applied on release), mouse
+  sensitivity (`CameraObject.mouse_sensitivity`) and master volume. Saved under
+  `[settings]` in `user://user_config.cfg`, applied on load.
 - **Health/stamina bars bind to the HUD's `play_char`**, never a group lookup — remote
   copies are in the `player` group too, and a group lookup would attach to the wrong
   copy on clients.
-
----
-
-## 13. Lineage and what is still missing vs `/fps`
-
-Ported from `/fps` ("3D-Rounds"): player controller + state machine, health, targets,
-tracer/hit confirm, modifier core, Fusion spawn/replication/RPC backbone, map.
-
-Built in this project: lobby flow (menu, browser, passwords, rounds, published names),
-match/round system with scoring + results + return to lobby, spectator mode, map
-rotation with fade, modular weapon system with camera-center aim, HUD scoreboard/banner,
-delayed health/stamina bars, speed reticle.
-
-Still missing (present in `/fps` or future work):
-
-- Draft manager/UI (offers, picks, rerolls, builds) and `set_build` wiring — hook:
-  `match_manager.round_completed`.
-- Behavioral modifier implementations (`vampire_bullets`, `berserker`, `sniper_focus`,
-  `second_wind`).
-- Spawn validation (floor raycast, capsule clearance, deterministic slots) and
-  respawn-at-farthest-from-enemy selection.
-- Input mode controller (mouse/input gating per UI mode), metrics logging, two-client
-  integration tests.
-- Weapon switching/inventory — the current design supports one equipped weapon via the
-  player's `weapon_definition` export.
-
-## Animation
-
-Where clips live: the AnimationPlayer in `player.tscn` owns GLB libraries (General,
-Movement, MovementAdvanced, CombatRanged, plus inline AimingFull). You reference clips as
-"Library/Clip" (e.g. `Movement/Walking_A`). The AnimationTree decides when they play
-through its graphs:
-
-- Root SM: Spawn → Alive → Death
-- Alive/Movement SM: Locomotion (BlendSpace2D), Crouch, Jump, Airborne, Dash, Land
-- Alive/Weapon SM: Idle, Fire, Reload
-- HitA/HitB: one-shot nodes
-
-Pick the recipe by intent:
-
-1. **One-shot event** (emote, reaction) — add an `AnimationNodeAnimation` +
-   `AnimationNodeOneShot` in the Alive blend tree wired like HitA/HitB, then trigger:
-   `animation_tree.set("parameters/Alive/MyShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)`
-2. **Networked one-shot** — use the counter pattern already in `player_network.gd`:
-   ```gdscript
-   var net_emote_count: int = 0:
-	   set(value):
-		   var previous := net_emote_count
-		   net_emote_count = value
-		   if is_node_ready() and value > previous:
-			   animation_tree.set("parameters/Alive/Emote/request",
-				   AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-   ```
-   Increment it where the event happens (`net_emote_count += 1`, like
-   `weapon.gd::_shoot` does with `net_fire_count`); Fusion replicates it and every peer
-   replays the animation.
-3. **Movement state** — add a state + transitions in the Movement SM. Transitions can
-   advance automatically via `advance_expression` (see `net_crouched` in `player.tscn`),
-   or drive from code with `movement_state_machine.travel("MyState")` (like Dash in
-   `player_network.gd`). Reset it in `reset_for_respawn` if needed.
-4. **Locomotion blend** — add an `AnimationNodeAnimation` and a `blend_point_N` to the
-   BlendSpace2D (see `Walking_A` in `player.tscn`). `_animate_locomotion` feeds
-   `parameters/Alive/Movement/Locomotion/blend_position` from horizontal velocity /
-   `run_speed`.
-
-Rules: keep `@rpc` entry points on the leaf `player.gd`, put setters/methods in the layer
-that owns them, and author graph edits in the editor's AnimationTree panel — hand-editing
-state machines in `.tscn` is how typos happen. New clips must target the same rig
-(Rig_Medium: `upperarm.r`, `wrist.r`, etc.) or need a `RetargetModifier3D`. Quick check
-after adding: `godot --headless --path . --quit`.

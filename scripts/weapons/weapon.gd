@@ -30,6 +30,8 @@ var custom_font = load("res://assets/fonts/lilita_one_regular.ttf")
 var _recoil_rest: Transform3D
 var _recoil_rest_set := false
 var _recoil_tween: Tween
+# carries the camera-roll lean; recoil animates view_model inside it
+var _view_pivot: Node3D
 
 
 func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
@@ -48,6 +50,14 @@ func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
 	muzzle.transform = definition.muzzle_transform
 	# the world model rides the character's hand so other players see it there
 	world_model.reparent(player.hand_attachment, false)
+	# The viewmodel (and its muzzle) live under the viewmodel camera that
+	# renders them, so the gun cannot drift from it when the view turns. The
+	# weapon itself stays under the gameplay camera: input never reaches nodes
+	# inside the SubViewport.
+	_view_pivot = Node3D.new()
+	player.viewmodel_camera.add_child(_view_pivot)
+	view_model.reparent(_view_pivot, false)
+	muzzle.reparent(_view_pivot, false)
 	_set_viewmodel_layers()
 
 	ammo = _effective_mag()
@@ -58,8 +68,8 @@ func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
 func _process(delta: float) -> void:
 	fire_cooldown = maxf(fire_cooldown - delta, 0.0)
 	# gun leans with the camera roll
-	if play_char != null:
-		rotation.x = get_parent().get_parent().rotation.z
+	if _view_pivot != null:
+		_view_pivot.rotation.x = play_char.cam_holder.rotation.z
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -82,19 +92,16 @@ func _shoot() -> void:
 	if ammo == 0:
 		_reload()
 
-	# Traditional FPS aim: the reticle is the camera center, so the aim point
-	# comes from a camera-center ray; a second ray from the muzzle to that point
-	# keeps cover in front of the gun honest.
-	var cam_origin := camera.global_position
-	var cam_dir := -camera.global_transform.basis.z
-	var cam_hit := _raycast(cam_origin, cam_origin + cam_dir * definition.range)
-	var aim_point: Vector3 = cam_origin + cam_dir * definition.range
-	if not cam_hit.is_empty():
-		aim_point = cam_hit["position"]
-	var muzzle_hit := _raycast(muzzle.global_position, aim_point)
-	var hit: Dictionary = muzzle_hit if not muzzle_hit.is_empty() else cam_hit
+	# Hitscan through the reticle (screen center) from the camera pose the
+	# player is actually looking through: with physics interpolation the
+	# rendered view trails the physics-tick transform, so aiming from
+	# global_transform drifts off the crosshair while moving or turning.
+	var view := camera.get_global_transform_interpolated()
+	var cam_origin := view.origin
+	var cam_dir := -view.basis.z
+	var hit := _raycast(cam_origin, cam_origin + cam_dir * definition.range)
 	var collider: Object = hit.get("collider")
-	var hit_pos: Vector3 = hit.get("position", aim_point)
+	var hit_pos: Vector3 = hit.get("position", cam_origin + cam_dir * definition.range)
 	play_char.net_hit_normal = hit.get("normal", Vector3.ZERO)
 	play_char.net_hit_position = hit_pos
 
@@ -113,9 +120,25 @@ func _raycast(from: Vector3, to: Vector3) -> Dictionary:
 
 # Replayed on every peer when the replicated fire counter increases.
 func on_fire_event(hit_position: Vector3) -> void:
-	_spawn_tracer(muzzle.global_position, hit_position)
+	_spawn_tracer(_tracer_origin(), hit_position)
 	_flash_models()
 	_play_shoot_sound()
+
+
+# Where the tracer should visibly leave the gun. Remote copies use the
+# world-model barrel in the hand. The local viewmodel is drawn by a fixed-FOV
+# camera while the gameplay FOV changes (run/dash/zoom), so project the drawn
+# muzzle back into the gameplay camera at the same depth.
+func _tracer_origin() -> Vector3:
+	if play_char.is_remote:
+		var flash := world_model.find_child("MuzzleFlash", true, false) as Node3D
+		return flash.global_position if flash != null else muzzle.global_position
+	var view_cam: Camera3D = play_char.viewmodel_camera
+	var screen := view_cam.unproject_position(muzzle.global_position)
+	screen *= camera.get_viewport().get_visible_rect().size \
+			/ view_cam.get_viewport().get_visible_rect().size
+	var depth := -(view_cam.global_transform.affine_inverse() * muzzle.global_position).z
+	return camera.project_position(screen, depth)
 
 
 func recoil() -> void:
@@ -158,7 +181,7 @@ func _apply_damage(collider: Object, hit_pos: Vector3) -> void:
 	var ctx := {"amount": amount, "attacker_id": -1, "distance": 0.0, "hit_player": hit_player}
 	if Engine.has_singleton("Fusion"):
 		ctx["attacker_id"] = Fusion.get_local_player_id()
-	ctx["distance"] = (hit_pos - muzzle.global_position).length()
+	ctx["distance"] = (hit_pos - camera.global_position).length()
 	if mods != null:
 		mods.on_damage_dealt(ctx)
 		var cap: Array = ModifierManager.STAT_CAPS[&"damage"]
@@ -189,6 +212,8 @@ func _spawn_damage_number(pos: Vector3, amount: int) -> void:
 	label.font_size = 40 + 0.5 * amount
 	label.outline_size = 10
 	label.font = custom_font
+	# moved by a frame tween, not physics: interpolation would only add lag
+	label.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	get_tree().current_scene.add_child(label)
 	label.global_position = pos
 	var tw := create_tween()
@@ -205,7 +230,14 @@ func _spawn_tracer(from: Vector3, to: Vector3) -> void:
 	bullet.collision_mask = 1
 	get_tree().current_scene.add_child(bullet)
 	bullet.global_position = from
-	bullet.global_transform = bullet.global_transform.looking_at(to, Vector3.UP)
+	var dir := to - from
+	if dir.length() > 0.01:
+		var up := Vector3.UP if absf(dir.normalized().y) < 0.99 else Vector3.FORWARD
+		bullet.global_transform = bullet.global_transform.looking_at(to, up)
+	# stop at the hit instead of flying on past the crosshair point
+	bullet.max_distance = dir.length()
+	# without this the first interpolated frame streaks in from the origin
+	bullet.reset_physics_interpolation()
 
 
 func _reload() -> void:

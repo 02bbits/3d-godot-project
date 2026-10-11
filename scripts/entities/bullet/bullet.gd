@@ -9,8 +9,16 @@ func _ready() -> void:
 	await get_tree().create_timer(LIFETIME).timeout
 	queue_free()
 
+# set by the weapon: distance to the shot's hit point
+var max_distance := INF
+var _travelled := 0.0
+
 func _physics_process(delta: float) -> void:
-	global_position += -global_transform.basis.z * SPEED * delta
+	var step := minf(SPEED * delta, max_distance - _travelled)
+	global_position += -global_transform.basis.z * step
+	_travelled += step
+	if _travelled >= max_distance:
+		queue_free()
 
 func _on_body_entered(_body: Node3D) -> void:
 	queue_free()
