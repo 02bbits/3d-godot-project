@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Modifier" format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/behaviors/medic_rain.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Medic Rain"
+description = "Healing falls on every player."
+type = 3
+rarity = 1
+max_level = 1
+percent = Dictionary[StringName, float]({})
+flat = Dictionary[StringName, float]({})
+per_second = 2.0

@@ -5,8 +5,9 @@
 [resource]
 script = ExtResource("1_script")
 display_name = "Plating"
-description = "Tougher chassis."
+description = "Chonky"
 max_level = 3
-flat = Dictionary[StringName, float]({
-&"max_health": 60.0
+percent = Dictionary[StringName, float]({
+&"max_health": 60.0,
+&"move_speed": -15.0
 })

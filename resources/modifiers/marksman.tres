@@ -1,0 +1,12 @@
+[gd_resource type="Resource" format=3 uid="uid://bi3ncihd77qur"]
+
+[ext_resource type="Script" uid="uid://cbt8p0o3nkc3p" path="res://scripts/modifiers/behaviors/range_damage.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+min_distance = 20.0
+max_distance = 9999.0
+bonus_percent = 50.0
+display_name = "Marksman"
+description = "Reward the long shots."
+max_level = 3

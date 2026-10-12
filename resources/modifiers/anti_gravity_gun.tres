@@ -1,0 +1,11 @@
+[gd_resource type="Resource" format=3 uid="uid://dc3654be138rk"]
+
+[ext_resource type="Script" uid="uid://dgw56surt7ymi" path="res://scripts/modifiers/behaviors/status_on_hit.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+status_id = &"lifted"
+display_name = "Anti-Gravity Gun"
+description = "Hits hook the target to the sky."
+type = 1
+rarity = 2

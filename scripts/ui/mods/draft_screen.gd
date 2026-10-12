@@ -1,7 +1,8 @@
 extends CanvasLayer
 
 ## Modifier draft (scenes/ui/mods/draft_screen.tscn), one per world. The
-## match manager's "draft" phase opens it on every peer; each player rolls
+## match manager's "draft" phase opens it on every peer (players are frozen
+## meanwhile, see world.gd); each player rolls
 ## their own offers, picks one (click or keys 1-3) and publishes it through
 ## their replicated build. Whoever hasn't picked when the timer runs out gets
 ## a random offer. Debug builds: F2 opens a local draft any time (balancing).
@@ -16,6 +17,7 @@ const STATUS_REFRESH := 0.25
 @onready var players_box: Container = %Players
 @onready var timer_label: Label = %Timer
 
+var _match_manager: Node
 var _player: Node
 var _offers: Array[Modifier] = []
 var _draft_round := -1 # -1 closed, 0 debug draft, else the round being drafted for
@@ -26,10 +28,16 @@ var _status_timer := 0.0
 
 func _ready() -> void:
 	visible = false
-	var match_manager := get_tree().get_first_node_in_group("match_manager")
-	match_manager.draft_opened.connect(open)
-	match_manager.draft_closed.connect(close)
-	match_manager.returned_to_lobby.connect(close)
+	_match_manager = get_tree().get_first_node_in_group("match_manager")
+	_match_manager.phase_changed.connect(_on_phase_changed)
+	_match_manager.returned_to_lobby.connect(close)
+
+
+func _on_phase_changed(phase: String, previous: String) -> void:
+	if phase == "draft":
+		open(_match_manager.draft_round)
+	elif previous == "draft":
+		close()
 
 
 func open(draft_round: int) -> void:
@@ -54,7 +62,8 @@ func open(draft_round: int) -> void:
 		card.set_offer(_offers[i], _player.mods.level_of(_offers[i].id))
 		if not card.chosen.is_connected(_pick):
 			card.chosen.connect(_pick)
-	hint.text = "Click a card or press 1–%d" % _offers.size()
+	hint.text = "Click a card or press 1–%d · the match countdown starts once everyone has picked" \
+			% _offers.size()
 	_time_left = ModRules.DRAFT_SECONDS
 	_status_timer = 0.0
 	visible = true
@@ -114,7 +123,8 @@ func _pick(mod: Modifier) -> void:
 		close()
 		return
 	_player.net_draft_round = _draft_round
-	hint.text = "Waiting for other players…"
+	hint.text = ("You picked %s · " % mod.display_name if mod != null else "") \
+			+ "waiting for the other players, then the countdown starts"
 
 
 # bottom bar: every other player's robot, name and Picked / Choosing

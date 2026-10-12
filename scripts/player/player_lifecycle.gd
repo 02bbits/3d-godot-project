@@ -1,5 +1,35 @@
 extends "res://scripts/player/player_network.gd"
 
+# true while the match flow holds players in place (modifier draft, countdown)
+var input_locked := false
+# seconds left of a stun (Zap Gun); counted down in player.gd
+var _stun_left := 0.0
+
+## Freezes movement, jumps, dashes and shooting; the camera can still look
+## around and gravity still runs (player.gd) so the player settles on the
+## spawn floor. Survives respawns; only the local copy is affected.
+func set_input_locked(locked: bool) -> void:
+	input_locked = locked
+	_sync_controls()
+
+## The same freeze for `seconds`, from a hit (statuses like Zapped). Never
+## shortens a running stun; ending it never lifts the match-flow lock.
+func stun(seconds: float) -> void:
+	_stun_left = maxf(_stun_left, seconds)
+	_sync_controls()
+
+func is_frozen() -> bool:
+	return input_locked or _stun_left > 0.0
+
+# one place decides whether the local player's controls run
+func _sync_controls() -> void:
+	if is_remote or dead:
+		return
+	var frozen := is_frozen()
+	state_machine.set_process(not frozen)
+	state_machine.set_physics_process(not frozen)
+	weapon.set_process_unhandled_input(not frozen)
+
 func take_damage(amount: float, attacker_id: int = -1) -> void:
 	if dead or amount <= 0.0:
 		return
@@ -10,6 +40,14 @@ func take_damage(amount: float, attacker_id: int = -1) -> void:
 	# Health node owns the number and emits died(attacker_id); that signal
 	# routes here for the death broadcast + visuals
 	$Health.apply(maxf(float(ctx["amount"]), 0.0), attacker_id)
+
+# Owner-side hit reaction: bumps the replicated counter so every peer replays
+# the flinch through the setter, and gives the victim a red edge flash and a
+# slight camera shake.
+func _on_damaged(amount: float, _attacker_id: int) -> void:
+	net_hit_count += 1
+	hud.hit_flash.flash(amount / maxf(max_health, 1.0))
+	cam_holder.shake()
 
 func _on_health_changed(current: float, previous: float) -> void:
 	if current <= 0.0 and previous > 0.0 and death_effect != null:
@@ -89,18 +127,17 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	_set_dead_visuals()
 	visual_root.scale = Vector3.ONE
 	net_is_grounded = false
+	_stun_left = 0.0
 	mods.on_respawn()
 	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
 		Fusion.rpc(Callable(self, "respawn_fx"))
 	set_physics_process(true)
-	state_machine.set_process(true)
-	state_machine.set_physics_process(true)
 	cam_holder.set_process(true)
 	cam_holder.set_process_input(true)
 	cam_holder.set_process_unhandled_input(true)
 	weapon.set_process(true)
 	weapon.set_process_input(true)
-	weapon.set_process_unhandled_input(true)
+	_sync_controls() # state machine + shooting, unless locked or stunned
 	cam.current = true
 	hud.visible = true
 	death_screen.visible = false

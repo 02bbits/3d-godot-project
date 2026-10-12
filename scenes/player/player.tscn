@@ -10,7 +10,6 @@
 [ext_resource type="Script" uid="uid://dx02l6p6behb8" path="res://scripts/player/hud/hud_script.gd" id="10_hud"]
 [ext_resource type="Animation" uid="uid://caupvvy4vhuku" path="res://assets/photon/animations/aiming.res" id="10_oekrc"]
 [ext_resource type="PackedScene" uid="uid://gliqaxpmufvj" path="res://scenes/player/hud/ammo_panel.tscn" id="11_sb"]
-[ext_resource type="PackedScene" path="res://scenes/player/hud/mod_tray.tscn" id="39_tray"]
 [ext_resource type="Script" uid="uid://b3t0evs8nso2" path="res://scripts/player/death_screen.gd" id="12_dth"]
 [ext_resource type="PackedScene" uid="uid://cgwjxynysey1j" path="res://scenes/player/hud/scoreboard_card.tscn" id="12_score"]
 [ext_resource type="PackedScene" uid="uid://bqq7ak7odcjyi" path="res://scenes/player/hud/scoreboard_full.tscn" id="13_tab"]
@@ -37,6 +36,9 @@
 [ext_resource type="AnimationLibrary" uid="uid://cxnjla3so1qx5" path="res://assets/photon/KayKit_Character_Animations_1.1/Animations/Rig_Medium/Rig_Medium_CombatRanged.glb" id="36_combat"]
 [ext_resource type="AnimationLibrary" uid="uid://cxoe4uc6wpsw8" path="res://assets/photon/KayKit_Character_Animations_1.1/Animations/Rig_Medium/Rig_Medium_MovementAdvanced.glb" id="37_advanced"]
 [ext_resource type="Resource" uid="uid://cmu36ofpnvfkp" path="res://resources/weapons/pistol.tres" id="38_def"]
+[ext_resource type="PackedScene" path="res://scenes/player/hud/mod_tray.tscn" id="39_tray"]
+[ext_resource type="PackedScene" path="res://scenes/player/hud/hit_flash.tscn" id="40_flash"]
+[ext_resource type="PackedScene" path="res://scenes/player/hud/status_chips.tscn" id="41_status"]
 
 [sub_resource type="Curve" id="Curve_s7fsc"]
 _limits = [10.0, 30.0, 0.0, 60.0]
@@ -1307,11 +1309,15 @@ fov = 90.0
 near = 0.01
 far = 100.0
 
+[node name="HitFlash" parent="HUD" unique_id=515301381 instance=ExtResource("40_flash")]
+
 [node name="Vitals" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
 
 [node name="AmmoPanel" parent="HUD" unique_id=614996660 instance=ExtResource("11_sb")]
 
-[node name="ModTray" parent="HUD" instance=ExtResource("39_tray")]
+[node name="ModTray" parent="HUD" unique_id=1667253410 instance=ExtResource("39_tray")]
+
+[node name="StatusChips" parent="HUD" unique_id=2125609087 instance=ExtResource("41_status")]
 
 [node name="DeathScreen" type="Control" parent="HUD" unique_id=1232994553]
 unique_name_in_owner = true
@@ -1363,7 +1369,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 11
-text = "Use A / D to switch player"
+text = "Mouse to look around · A / D to switch player"
 horizontal_alignment = 1
 
 [node name="Top" type="VBoxContainer" parent="HUD/DeathScreen" unique_id=1262482704]
@@ -1388,7 +1394,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 11
-text = "Use A / D to switch player"
+text = "Mouse to look around · A / D to switch player"
 horizontal_alignment = 1
 
 [node name="SpeedLinesContainer" type="ColorRect" parent="HUD" unique_id=1381122063]
@@ -1477,25 +1483,6 @@ theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 22
 text = "Returning to the lobby..."
 horizontal_alignment = 1
-
-[node name="MatchBanner" type="Label" parent="HUD" unique_id=2026448443]
-unique_name_in_owner = true
-visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -320.0
-offset_top = 84.0
-offset_right = 320.0
-offset_bottom = 140.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 0.92, 0.65, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 8
-theme_override_fonts/font = ExtResource("33_font")
-theme_override_font_sizes/font_size = 40
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [connection signal="change_fov" from="StateMachine" to="CameraHolder" method="change_fov"]
 

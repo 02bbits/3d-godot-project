@@ -124,3 +124,31 @@ func on_kill(_ctx: Dictionary, _me: Node) -> void:
 ## Owner (re)spawned: reset per-life state here.
 func on_respawn(_me: Node) -> void:
 	pass
+
+
+## Every physics tick of the owner's own copy, before it moves: override
+## `me.velocity` here (statuses like Lifted), heal over time, check areas.
+func on_physics(_delta: float, _me: Node) -> void:
+	pass
+
+
+## Owner starts a dash.
+func on_dash(_me: Node) -> void:
+	pass
+
+
+## Owner's shot landed (after every on_fire resolved it). shot = {origin,
+## direction, range, hit}; `hit` is empty on a miss. Area effects go here.
+func on_impact(_shot: Dictionary, _me: Node) -> void:
+	pass
+
+
+## Visuals of the owner's shot, on every peer (each copy of a player carries
+## its modifiers). hit = {position, normal}; normal is ZERO on a miss.
+func on_shot_fx(_hit: Dictionary, _me: Node) -> void:
+	pass
+
+
+## A status was just applied (or re-applied) to its owner.
+func on_applied(_me: Node) -> void:
+	pass

@@ -1,49 +1,14 @@
-extends Node
+extends "res://scripts/worlds/match_state.gd"
 
-## Master-authoritative match state, broadcast to every client through room
+## Master-authoritative match flow, broadcast to every client through room
 ## custom properties (polled, like the lobby phase — Fusion exposes no
 ## property-changed signal). A match is one elimination bout: the last player
 ## alive wins it and scores 1. First to `match_wins_per_round` match wins
 ## (lobby setting, default 2) takes the round; after the configured number of
 ## rounds the game stops and the client shows the top-3 ranking. Before round 1
-## and between rounds every player drafts a modifier ("draft" phase).
-
-signal game_started
-signal respawn_requested
-signal map_changed(index: int)
-signal returned_to_lobby
-# fire on every peer from the phase itself (scenes/ui/mods/draft_screen.tscn)
-signal draft_opened(draft_round: int)
-signal draft_closed
-
-const POLL_INTERVAL := 0.25
-const MATCH_WINS_PER_ROUND := 2
-const MATCH_START_GRACE := 2.0
-const INTERMISSION_SECONDS := 3.0
-# Longer when a round ends so the map transition (world.gd) fits: banner,
-# fade out, swap, fade in. Keep above world.gd's MAP_SWAP_DELAY + fades.
-const ROUND_INTERMISSION_SECONDS := 5.0
-# How long the game-over results stay up before everyone returns to the lobby.
-const GAME_OVER_SECONDS := 5.0
-# The host waits this long past ModRules.DRAFT_SECONDS for the last picks to
-# replicate (clients auto-pick when their own timer runs out).
-const DRAFT_GRACE_SECONDS := 2.0
-
-var match_phase := "" # "draft" | "fight" | "intermission" | "game_over"
-var round := 0
-var draft_round := 0 # the round the current draft picks for
-var rounds_total := 3
-var rounds_won: Dictionary = {} # player number (String) -> rounds won, whole game
-var round_scores: Dictionary = {} # player number (String) -> match wins, this round
-var last_result := "" # banner text published after every match
-var result_serial := 0
-var map_index := 0
-var map_count := 1
-# match wins that take a round; set per lobby (room property "match_wins")
-var match_wins_per_round := MATCH_WINS_PER_ROUND
-# bumped by the host on every Start: lets a stalled client notice the room was
-# reset and restarted even if it missed the whole waiting window
-var game_serial := 0
+## and between rounds every player drafts a modifier ("draft" phase); every
+## match opens with a short "countdown" (players placed and frozen) before
+## the "fight". State, settings and the property sync: match_state.gd.
 
 var _started := false
 var _match_ready := false # every expected player has been seen alive this match
@@ -53,7 +18,7 @@ var _intermission_left := 0.0
 var _game_over_left := 0.0
 var _round_over := false
 var _draft_left := 0.0
-var _seen_phase := ""
+var _countdown_left := 0.0
 
 
 func _ready() -> void:
@@ -63,10 +28,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not Fusion.is_in_room():
 		return
+	# match timers run on real time: the last elimination's slow motion
+	# (match_flow.gd) must not stretch the intermission
+	var real_delta := delta / maxf(Engine.time_scale, 0.01)
 	if Fusion.is_master_client():
-		_host_process(delta)
+		_host_process(real_delta)
 	else:
-		_client_process(delta)
+		_client_process(real_delta)
 	_emit_phase_signals()
 
 
@@ -82,6 +50,7 @@ func _host_process(delta: float) -> void:
 		round = int(props.get("round", 1))
 		match_phase = str(props.get("match_phase", "fight"))
 		draft_round = int(props.get("draft_round", round))
+		match_number = int(props.get("match_number", 0))
 		map_index = int(props.get("map_index", 0))
 		game_serial = int(props.get("game_serial", 0))
 		match_wins_per_round = int(props.get("match_wins", MATCH_WINS_PER_ROUND))
@@ -104,6 +73,16 @@ func _host_process(delta: float) -> void:
 					_begin_draft()
 				else:
 					_begin_next_match()
+		"countdown":
+			# fallback covers host migration: the new host restarts the countdown
+			if _countdown_left <= 0.0:
+				_countdown_left = COUNTDOWN_SECONDS
+			_countdown_left -= delta
+			if _countdown_left <= 0.0:
+				_countdown_left = 0.0
+				match_phase = "fight"
+				_evaluate_time = MATCH_START_GRACE
+				_write_state()
 		"draft":
 			# fallback covers host migration: the new host restarts the timer
 			if _draft_left <= 0.0:
@@ -152,6 +131,9 @@ func _evaluate_match() -> void:
 			map_changed.emit(map_index)
 
 	result_serial += 1
+	result_kind = "draw" if winner_key == "" else ("round" if _round_over else "match")
+	if _round_over and round >= rounds_total:
+		result_kind = "game"
 	if winner_key == "":
 		last_result = "Draw — nobody survives"
 	elif _round_over:
@@ -183,6 +165,7 @@ func _end_draft() -> void:
 	if draft_round > round:
 		round = draft_round
 		round_scores = {}
+		match_number = 0
 	_round_over = false
 	_begin_next_match()
 
@@ -199,16 +182,32 @@ func _everyone_picked() -> bool:
 	return picked >= room.get_players().size()
 
 
+# The next match opens with the countdown: everyone respawns now and stays
+# frozen until "fight".
 func _begin_next_match() -> void:
 	if _round_over:
 		_round_over = false
 		round += 1
 		round_scores = {}
-	match_phase = "fight"
-	_evaluate_time = MATCH_START_GRACE
+		match_number = 0
+	match_number += 1
+	match_phase = "countdown"
+	_countdown_left = COUNTDOWN_SECONDS
 	_match_ready = false
+	_assign_spawn_slots()
 	_write_state()
 	respawn_requested.emit()
+
+
+# One authority (the host) hands out distinct markers in a fresh random order,
+# so clients never have to agree on a player list to avoid sharing one.
+func _assign_spawn_slots() -> void:
+	var order: Array = range(maxi(get_tree().get_nodes_in_group("spawn_point").size(), 1))
+	order.shuffle()
+	spawn_slots = {}
+	var players := get_tree().get_nodes_in_group("player")
+	for i in players.size():
+		spawn_slots[str(_owner_id(players[i]))] = order[i % order.size()]
 
 
 # After the results screen: reset the room to its waiting state so the host can
@@ -217,7 +216,11 @@ func _return_to_lobby() -> void:
 	match_phase = ""
 	round = 0
 	draft_round = 0
+	match_number = 0
+	result_kind = ""
+	spawn_slots = {}
 	_draft_left = 0.0
+	_countdown_left = 0.0
 	rounds_won = {}
 	round_scores = {}
 	_round_over = false
@@ -231,12 +234,18 @@ func _return_to_lobby() -> void:
 			"match_phase": "",
 			"round": 0,
 			"draft_round": 0,
+			"match_number": 0,
+			"result_kind": "",
 			"last_result": "",
 		}
 		for player in get_tree().get_nodes_in_group("player"):
 			var key := str(_owner_id(player))
 			props["rounds_won_%s" % key] = 0
 			props["round_score_%s" % key] = 0
+			props["spawn_%s" % key] = -1
+		# everyone readies up again for the next game
+		for player in room.get_players():
+			props["ready_%d" % int(player.get_number())] = false
 		room.set_properties(props)
 		room.set_open(true)
 		# private lobbies stay out of the browser; joinable by code only
@@ -277,6 +286,8 @@ func _client_process(delta: float) -> void:
 	match_phase = str(props.get("match_phase", "fight"))
 	round = int(props.get("round", round))
 	draft_round = int(props.get("draft_round", draft_round))
+	match_number = int(props.get("match_number", match_number))
+	result_kind = str(props.get("result_kind", result_kind))
 	rounds_total = int(props.get("rounds", rounds_total))
 	map_index = int(props.get("map_index", map_index))
 	last_result = str(props.get("last_result", last_result))
@@ -291,72 +302,5 @@ func _client_process(delta: float) -> void:
 		return
 	if map_index != previous_map:
 		map_changed.emit(map_index)
-	if previous_phase in ["intermission", "draft"] and match_phase == "fight":
+	if match_phase == "countdown" and previous_phase != "countdown":
 		respawn_requested.emit()
-
-
-# HELPERS
-
-# draft_opened / draft_closed come from the phase itself, so the host and every
-# client share one path (returning to the lobby mid-draft closes it too)
-func _emit_phase_signals() -> void:
-	if match_phase == _seen_phase:
-		return
-	var previous := _seen_phase
-	_seen_phase = match_phase
-	if previous == "draft":
-		draft_closed.emit()
-	if match_phase == "draft":
-		draft_opened.emit(draft_round)
-
-
-func _room_props() -> Dictionary:
-	var room = Fusion.get_room()
-	if room == null:
-		return {}
-	return room.get_custom_properties()
-
-
-func _write_state() -> void:
-	var room = Fusion.get_room()
-	if room == null:
-		return
-	# flat per-player int properties: Photon handles them reliably, unlike
-	# nested dictionaries, and writing every player keeps keys from going stale
-	var props := {
-		"match_phase": match_phase,
-		"round": round,
-		"draft_round": draft_round,
-		"map_index": map_index,
-		"last_result": last_result,
-		"result_serial": result_serial,
-	}
-	for player in get_tree().get_nodes_in_group("player"):
-		var key := str(_owner_id(player))
-		props["rounds_won_%s" % key] = int(rounds_won.get(key, 0))
-		props["round_score_%s" % key] = int(round_scores.get(key, 0))
-	room.set_properties(props)
-
-
-func _read_scores(props: Dictionary) -> void:
-	for player in get_tree().get_nodes_in_group("player"):
-		var key := str(_owner_id(player))
-		rounds_won[key] = int(props.get("rounds_won_%s" % key, 0))
-		round_scores[key] = int(props.get("round_score_%s" % key, 0))
-
-
-func _nickname_for(key: String) -> String:
-	for player in get_tree().get_nodes_in_group("player"):
-		if str(_owner_id(player)) != key:
-			continue
-		var nickname := str(player.net_nickname)
-		if not nickname.is_empty():
-			return nickname
-	return "Player %s" % key
-
-
-func _owner_id(player: Node) -> int:
-	var rep: Node = player.find_child("FusionSharedReplicator", true, false)
-	if rep != null and rep.has_method("get_owner_id"):
-		return int(rep.get_owner_id())
-	return -1

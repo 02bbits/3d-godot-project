@@ -128,6 +128,8 @@ var walljump_lock_in_air_movement_time_ref : float
 
 @export_group("Health variables")
 @export var max_health: float = 100.0
+# falling below this height (world y) kills the player instantly
+@export var kill_height: float = -20.0
 var health: float:
 	get:
 		return $Health.health
@@ -216,7 +218,7 @@ var weapon: Node3D
 # this player's modifiers: stats, hooks, build (scripts/modifiers/)
 @onready var mods: ModifierManager = $ModifierManager
 @onready var death_screen: Control = %DeathScreen
-@onready var ceiling_check: RayCast3D = %CeilingCheck
+@onready var ceiling_check: RayCast3D = %CeilingCheck		
 @onready var floor_check: RayCast3D = %FloorCheck
 @onready var wallrun_floor_check : RayCast3D = %WallrunFloorCheck
 @onready var slide_floor_check: RayCast3D = %SlideFloorCheck

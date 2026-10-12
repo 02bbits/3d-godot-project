@@ -26,18 +26,24 @@ An online round-based FPS:
   eliminated players spectate, first to `rounds_total` rounds wins the game; top-3
   results and an automatic return to the waiting lobby after 5 s.
 - Map rotation: five maps; the game opens on the lobby's starting map (or a random
-  one) and every round win swaps to a random *different* map with a fade.
+  one) and every round win swaps to a random *different* map behind a wipe.
+- Match flow (`scenes/ui/match_flow.tscn`): slow motion from the last elimination until
+  the next screen (countdown, the wipe into the draft, the lobby), a
+  result card (who won, the score, what's next), a wipe that hides the respawn, then a
+  "GET READY" card (round · match · map) with a 3-2-1 countdown and FIGHT!. Players are
+  frozen (look only) during the draft and the countdown.
+- Waiting room ready-up: every non-host player readies; the host can start once all
+  are ready. A status line always says what the room is waiting for.
 - Robot colors: each player picks a body color on the name screen; it replicates
   (`net_color`) and recolors only the robot shell (`scripts/player/robot_color.gd`).
 - HUD from `docs/Modifier Arena — HUD.pdf`: segmented health with a ghost bar,
   stamina, ammo pips (≤24, ×N groups) with reload ring and dash cooldown, compact
-  scoreboard + TAB board (kills, match wins, ping), outlined reticle; match banner and
-  results screen. The gun has procedural sway/bob/sprint tilt, spring recoil and a
+  scoreboard + TAB board (kills, match wins, ping), outlined reticle; results screen. The gun has procedural sway/bob/sprint tilt, spring recoil and a
   reload animation.
 - Modifier draft (`docs/Modifier Arena — Modifier System-selection.pdf`): before round 1
   and after every non-final round each player picks 1 of 3 modifier cards (20 s, then
   auto-pick). Four types (Stats, Weapon, Ability, Environment), three rarities, level
-  limits; 19 starter modifiers; HUD tray + TAB list. Full guide:
+  limits; 33 modifiers; HUD tray + TAB list + status chips. Full guide:
   `docs/MODIFIER_GUIDE.md`, idea backlog: `docs/MODIFIER_CONCEPTS.md`.
 
 ---
@@ -55,11 +61,14 @@ world (Node3D)
 ├── PlayerSpawner                 FusionSpawner (spawn_path ".", player.tscn)
 ├── MatchManager                  match_manager.gd
 ├── DraftScreen (CanvasLayer 5)   ui/mods/draft_screen.tscn: the modifier draft overlay
+├── Spectator (Node3D)            worlds/spectator.tscn: third-person rig while eliminated
+├── MatchFlow (CanvasLayer 8)     ui/match_flow.tscn: wipe, result/countdown cards, slow-mo
 └── MenuLayer (CanvasLayer 10)    above the player HUD (CanvasLayer 1)
 	└── ConnectionMenu            connection_menu.tscn + connection_ui.gd
 ```
 
-`world.gd` also creates a fade `CanvasLayer` (layer 100) at runtime for map swaps.
+`world.gd` routes respawns and map swaps through `MatchFlow.cover()` / `reveal()` (the
+wipe) and freezes the local player in the `LOCKED_PHASES` ("draft", "countdown").
 
 ### `scenes/player/player.tscn` (spawnable; `player.gd` is the leaf script)
 
@@ -89,13 +98,13 @@ PlayerCharacter (CharacterBody3D)
 	├── Vitals              hud/vitals.tscn: health (10 HP segments, ghost) + stamina
 	├── AmmoPanel           hud/ammo_panel.tscn: pips, reload ring, RELOAD prompt, dash
 	├── ModTray             hud/mod_tray.tscn: modifier icons above the vitals + pick toast
+	├── StatusChips         hud/status_chips.tscn: active statuses (ZAPPED, LIFTED…) under the reticle
 	├── DeathScreen         spectator overlay (ELIMINATED + target + hint)
 	├── SpeedLinesContainer
 	├── ScoreCard           hud/scoreboard_card.tscn: compact top-right card (top 3 + you)
 	├── TabBoard            hud/scoreboard_full.tscn: shown while TAB is held, with the
 	│                       modifier list (hud/mod_list.tscn) beside the board
 	├── ResultsPanel        GAME OVER + top-3 + "Returning to the lobby..."
-	└── MatchBanner         transient match/round winner banner
 ```
 
 ### `scenes/weapons/weapon.tscn` (shared by every weapon)
@@ -159,22 +168,29 @@ rotated piece (score diamonds) sits inside an unrotated holder.
    prompt; the password is checked **after joining** and a mismatch leaves and returns
    to the prompt with "Wrong password" (client-side gate).
 5. **Names**: on `room_joined` each client publishes `name_<player_id>` as a room
-   property; the lobby roster polls it every second (fallback: Photon player name, then
+   property; the lobby roster polls it every 0.5 s (fallback: Photon player name, then
    "Player N").
-6. **Start** (host, requires ≥2 players): writes `phase="playing"`, `match_phase="fight"`,
+6. **Ready**: each non-host player toggles `ready_<player_id>` (room property) with READY
+   UP / CANCEL READY; chips show Ready / Not ready. The host's START MATCH stays disabled
+   until ≥2 players are in and every other player is ready; the status line names who
+   the room is waiting for. Returning to the lobby after a game clears every ready flag.
+7. **Start** (host): writes `phase="playing"`, `match_phase="draft"`, `draft_round=1`,
    `round=1`, then closes/unlists the room.
-7. **Spawn**: `match_manager` emits `game_started` when it sees `phase=="playing"`.
+8. **Spawn**: `match_manager` emits `game_started` when it sees `phase=="playing"`.
    `world.gd::_start_game` spawns the local player through the `FusionSpawner`; the
    master calls `Fusion.register_current_scene()`. `_spawn_local_player` immediately
    calls `player.claim_local_role()` — the node returned by the spawner is this client's
    own copy, so a client can't get stuck as a remote copy waiting on authority.
-8. **Respawn**: `match_manager.respawn_requested` → `world.respawn_player` hands the
-   player a unique `spawn_point` marker (sorted player numbers index the sorted marker
-   list, so two players can't share one) and calls `player.reset_for_respawn()`.
-9. **Return to lobby**: after the game-over results (5 s), the host resets the room to
+9. **Respawn**: `match_manager.respawn_requested` → `world.respawn_player` puts the
+   player on its host-assigned marker: at every countdown the host shuffles distinct
+   `spawn_point` slots for all players (`spawn_<owner id>` room properties,
+   `match_manager.spawn_slot_of`), then `player.reset_for_respawn()`. Before the first
+   assignment (the game-start spawn behind the draft) each client indexes the sorted
+   markers by its place among the sorted room player numbers.
+10. **Return to lobby**: after the game-over results (5 s), the host resets the room to
    `phase="waiting"`, clears match/score state, reopens and re-lists the room; every
    client despawns its player and the menu returns to the Lobby page.
-10. **Disconnect**: `STATUS_DISCONNECTED` reloads the scene unless it was an expected
+11. **Disconnect**: `STATUS_DISCONNECTED` reloads the scene unless it was an expected
 	leave (`_room_leave_handled`) or a deliberate reconnect (`_reconnecting`).
 
 ---
@@ -194,8 +210,15 @@ Master-authoritative; every client polls the room's custom properties every 0.25
   `draft_round` is the round being drafted for. Each client rolls its own offers and
   publishes its pick through its player's replicated `net_mods` / `net_draft_round`;
   the host ends the draft once every room player has `net_draft_round >= draft_round`,
-  or after `ModRules.DRAFT_SECONDS` + 2 s. `draft_opened(draft_round)` /
-  `draft_closed` fire on every peer from the phase change itself.
+  or after `ModRules.DRAFT_SECONDS` + 2 s.
+- **Countdown** (`match_phase = "countdown"`, `COUNTDOWN_SECONDS` = 4): every match
+  opens with it (after a draft or a normal intermission). `respawn_requested` fires on
+  entry; world.gd respawns the local player behind the wipe, and the player stays
+  frozen (`set_input_locked`: no move/jump/dash/shoot, mouse look allowed, gravity
+  runs) until "fight". `match_number` counts matches within the round.
+- **Phase changes** emit `phase_changed(phase, previous)` on every peer (from the phase
+  itself, so host and clients share one path). The draft screen, the match-flow overlay
+  and the input lock all key off it.
 - **Game over** after `rounds_total` rounds: results screen, then `_return_to_lobby`
   after 5 s (`GAME_OVER_SECONDS`).
 - **Intermission**: 3 s normally, 5 s after a round win so the map transition fits.
@@ -207,7 +230,7 @@ Master-authoritative; every client polls the room's custom properties every 0.25
   over; a draft still advances the round (derived from `draft_round`).
 
 Room properties written: `match_phase` ("draft"/"fight"/"intermission"/"game_over"/""),
-`round`, `draft_round`,
+`round`, `draft_round`, `match_number`, `result_kind` ("draw"/"match"/"round"/"game"),
 `map_index`, `last_result`, `result_serial`, `rounds_won_<id>`, `round_score_<id>`.
 Flat per-player int properties are deliberate — Photon handles them reliably and writing
 every player keeps keys from going stale. The host also bumps `game_serial` on every
@@ -217,7 +240,7 @@ from a changed `game_serial` — either way it despawns its previous player befo
 next game.
 
 Signals: `game_started`, `respawn_requested`, `map_changed(index)`,
-`returned_to_lobby`, `draft_opened(draft_round)`, `draft_closed`.
+`returned_to_lobby`, `phase_changed(phase, previous)`.
 
 ---
 
@@ -249,6 +272,7 @@ One client is the Photon master; each client owns its own player replica
 | `died_fx(attacker_id)` | victim → all peers | remote copies go dead, emit `Health.died`, the attacker's client flashes the kill banner |
 | `respawn_fx()` | victim → all peers | remote copies restore alive visuals |
 | `rpc_apply_status(id)` | shooter → victim owner | applies a timed status modifier (e.g. Frost Rounds' `chilled`); ids that aren't statuses are ignored |
+| `rpc_knockback(x, y, z)` | modifier → victim owner | adds the shove to the victim's velocity (Charge) |
 
 `Fusion.rpc(Callable(node, "method"), args…)` invokes the method on every peer's replica
 of that node (sender included). `Fusion.rpc_to(Fusion.TARGET_OWNER, …)` routes to the
@@ -275,10 +299,19 @@ a behaviour has the final say. The pistol does 34 (3 hits kill at 100 HP).
   centered "ELIMINATED" block fades away and the spectating line + hint fade in at the
   top center (see §9).
 - There is **no auto-respawn**: eliminated players spectate until the match ends.
-- `world.gd` runs the spectator camera: while the local player is dead, a runtime
-  `Camera3D` follows a living player in third person; the local player's movement
-  bindings cycle targets (A/D by default, arrows included; targets are stored as
-  instance IDs so a freed replica can't crash the list).
+- **Kill height**: a local player below `kill_height` (export, −20) dies at once via
+  `Health.apply` (no damage pipeline, no Second Wind, no kill credit).
+- **Hit feedback** (victim only, `player_lifecycle.gd::_on_damaged`): a red edge flash
+  (`scenes/player/hud/hit_flash.tscn`, stronger for bigger hits) and a short view shake
+  (`camera_script.gd::shake()`, projection offsets only, so aim never moves).
+- Spectating (`scenes/worlds/spectator.tscn` + `scripts/worlds/spectator.gd`, driven by
+  `world.gd::_update_spectator`): while the local player is dead the rig sits on a living
+  player's head and a `SpringArm3D` (map-only mask, sphere probe) holds the camera 3.5 m
+  behind it without clipping walls. The mouse orbits (same sensitivity as first person,
+  read in `_input` because the death screen covers the view); the player's own A/D
+  cycles targets (stored as instance IDs so a freed replica can't crash the list). The
+  rig has physics interpolation **off**: it moves every frame, and an interpolated
+  camera moved in `_process` renders stale tick poses and judders.
 - `match_manager` respawns everyone between matches (`respawn_fx` syncs remote copies).
 
 ### Remote copy behavior (`_disable_remote_copy`)
@@ -287,6 +320,15 @@ Physics/state machine/camera/weapon/input off, HUD hidden, `cam.current = false`
 `physics_interpolation_mode = OFF` (so Godot's interpolation doesn't fight Fusion's root
 smoothing), model visible to others. `_enable_local_copy` restores interpolation when a
 copy flips remote→local.
+
+**Opponent outline** (`scripts/player/player_outline.gd`, `PlayerOutline.set_enabled`):
+remote copies get an inverted-hull `material_overlay` on every robot mesh
+(`resources/ui/player_outline.tres`, shader `scripts/player/shader/outline.gdshader`:
+`color`, `width_px` in screen pixels); your own copy never does. The robot is
+flat-shaded, so each mesh is swapped once for a cached copy whose `TANGENT` holds the
+smoothed normal (no normal maps use the tangents; skinning moves them like normals) and
+the hull grows along that, which keeps it continuous. The hit flash borrows the overlay
+slot and `_clear_hit_flash` hands the outline back.
 
 ---
 
@@ -363,7 +405,7 @@ only seen by the viewmodel camera.
   (`start_reload()`: tilt over, mag out/in jolts, rack) and the respawn raise. Rotations
   pivot on the grip (`viewmodel_transform.origin`). Local player only.
 - `scripts/weapons/weapon_definition.gd` (`WeaponDefinition`) — per-weapon resource:
-  `display_name`, `damage`, `mag_size`, `reserve_max`, `fire_interval`, `reload_time`,
+  `display_name`, `damage`, `mag_size`, `fire_interval`, `reload_time`,
   `range`, `viewmodel_scene`/`viewmodel_transform`, `world_model_scene`/
   `world_model_transform`, `muzzle_transform`, `shoot_sounds`, `reload_sounds`.
 - `resources/weapons/pistol.tres` — the equipped weapon. The player exports
@@ -405,16 +447,19 @@ Full developer guide: **`docs/MODIFIER_GUIDE.md`** (architecture, recipes, balan
 ```
 scripts/modifiers/
   modifier.gd           Modifier Resource: data (type, rarity, max_level, percent/flat
-                        per level, weapon, exclusive_group, duration) + hooks + describe()
+						per level, weapon, exclusive_group, duration) + hooks + describe()
   mod_rules.gd          ModRules: offer count, draft timer, rarities (colour, weight),
-                        types (name, icon), STATS table (labels, caps, player bindings)
+						types (name, icon), STATS table (labels, caps, player bindings)
   modifier_db.gd        ModifierDB: discovers resources/modifiers/*.tres (+ status/),
-                        validates them, roll_offers()
+						validates them, roll_offers()
   modifier_manager.gd   per player (`player.mods`): build sync, get_stat, stat/weapon
-                        application, statuses, hook dispatch
-  behaviors/*.gd        Modifier subclasses (frost_rounds, homing_rounds, second_wind)
+						application, statuses, hook dispatch
+  behaviors/*.gd        Modifier subclasses: status_on_hit (any on-hit status),
+						range_damage, homing_rounds, explosive_rounds, executioner,
+						second_wind, regenerator, bloodthirst, ghost_dash, charge,
+						medic_rain; status behaviours lifted, zapped
 resources/modifiers/    one .tres per draftable modifier (file name = id)
-resources/modifiers/status/  timed statuses applied by hits (chilled)
+resources/modifiers/status/  timed statuses applied by hits (chilled, marked, lifted, zapped)
 scenes/ui/mods/         draft_screen, mod_card, mod_icon
 tools/check_modifiers.gd  validation: godot --headless --path . --script res://tools/check_modifiers.gd
 ```
@@ -427,8 +472,13 @@ tools/check_modifiers.gd  validation: godot --headless --path . --script res://t
   traction, gravity, air jumps, dash charges/cooldown) are written onto the controller
   by the local copy; `max_health` also heals the difference; weapon stats are read in
   `weapon.gd`.
-- 19 starter modifiers (6 Common, 7 Rare, 6 Epic) across the four types; the table is in
-  the guide.
+- 33 modifiers (9 Common, 15 Rare, 9 Epic) across the four types; the table is in the
+  guide.
+- Hooks: `on_fire`, `on_impact`, `on_damage_dealt`, `on_damage_taken`, `on_kill`,
+  `on_respawn`, `on_physics`, `on_dash`, `on_shot_fx` (every peer), `on_applied`
+  (statuses). Shared APIs for behaviours: `weapon.deal_damage(target, amount, at)`,
+  `rpc_knockback`, `player.stun(seconds)` (freezes controls like the match-flow lock,
+  via one `_sync_controls()`).
 
 ---
 
@@ -437,8 +487,8 @@ tools/check_modifiers.gd  validation: godot --headless --path . --script res://t
 | Piece | File | Notes |
 |---|---|---|
 | Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scenes/ui/robot_icon.tscn`); lives in `MenuLayer` (CanvasLayer 10) |
-| Lobby roster | `scripts/ui/lobby_page.gd` | `player_chip.tscn` per player (robot icon, name, Host badge) + `empty_slot.tscn` "Waiting for player"; room info panel; host-only Start (disabled with <2 players) |
-| HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured; the compact card hides meanwhile), feeds the modifier tray/list from `build_changed`, hides the gameplay HUD while a popup is up |
+| Lobby roster | `scripts/ui/lobby_page.gd` | `player_chip.tscn` per player (robot icon, name, Host or Ready / Not ready badge) + `empty_slot.tscn` "Waiting for player"; room info panel; status line (who the room waits for); READY UP / CANCEL READY for guests; host-only START MATCH (enabled once ≥2 players and everyone else is ready) |
+| HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured; the compact card hides meanwhile), feeds the modifier tray/list from `build_changed`. Every frame `_refresh_hud_visibility` shows your own widgets (gun, reticle, vitals, ammo, modifiers, statuses) only while alive and playing — hidden while spectating, drafting and on the results; the compact scoreboard stays while spectating; the spectator overlay hides behind the draft |
 | HUD theme | `resources/ui/hud_theme.tres` | HUD palette and Lilita/Rubik (400–700 `FontVariation`s) as type variations: `HudCard`, `HudSlot`, bar fills, `HudDot(On)`, `HudDiamond(On)`, label styles, and the `Mod*` modifier styles (white header/tile/pip styles tinted per rarity with `self_modulate`); sizes are the mockup's px × 0.79 (HUD) and pt × 0.96 (draft) |
 | Modifier draft | `scenes/ui/mods/draft_screen.tscn` + `scripts/ui/mods/draft_screen.gd` | dimmed overlay: round pill, CHOOSE A MODIFIER, `mod_card.tscn` offers (rarity header, type chip, icon, per-pick stat lines, level pips, NEW / MAX LEVEL / SINGLE USE tag), other players' Picked/Choosing, auto-pick timer; click or 1–3; debug builds: F2 opens a local draft |
 | Modifier tray | `scenes/player/hud/mod_tray.tscn` + `mod_tray.gd` | own modifiers + active environment ones as `mod_icon.tscn` (rarity tile, type glyph, level badge yellow at max), 8 then "+N"; a fresh pick pops its icon and shows a 3 s toast when gameplay resumes |
@@ -446,11 +496,12 @@ tools/check_modifiers.gd  validation: godot --headless --path . --script res://t
 | Vitals | `scenes/player/hud/vitals.tscn` + `vitals.gd` | health: red ProgressBar, a tick every 10 HP, pale ghost ProgressBar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue ProgressBar |
 | Ammo panel | `scenes/player/hud/ammo_panel.tscn` + `ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N chip, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring (radial `TextureProgressBar`) + pips refill with `reload_progress()`; dash icon is a bottom-to-top ProgressBar while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
 | Reticle | `scenes/player/hud/reticle.tscn` + `scenes/player/reticle.gd` | 4 outlined bar Panels spread by planar speed and kicked open per shot, placed around the control's center so they sit exactly on the shot ray |
-| Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + A/D hint move to the top center |
+| Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + "Mouse to look around · A / D to switch player" move to the top center |
 | Scoreboard | `scoreboard_card.tscn` / `scoreboard_full.tscn` + `scoreboard.gd`, rows `score_row(_full).tscn` + `score_row.gd` | yellow dots = this round's match wins ("kills", `match_wins_per_round`), blue diamonds = rounds won, out of a majority of `rounds_total`; sorted by wins, then kills |
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |
-| Match banner | player HUD | "X wins the match!/round N!" or a draw |
+| Match flow | `scenes/ui/match_flow.tscn` + `scripts/ui/match_flow.gd` | slow motion from the last elimination until the next screen (`SLOW_MO_SCALE` 0.3, 1.0 disables; match timers run on real time so it never stretches an intermission); result card: round · match, winner, score, what's next; wipe (`cover()`/`reveal()`, AnimationPlayer); countdown card: round/total · match · map, "GET READY", what you can do, 3-2-1, FIGHT! |
 | Hit confirm | `scripts/player/hit_confirm.gd` | hit marker, kill banner, kill sound |
+| Hit flash | `scenes/player/hud/hit_flash.tscn` + `hit_flash.gd` | red radial edge vignette (GradientTexture2D) flashed by an AnimationPlayer when the local player is hit; alpha scales with the damage |
 | Speed lines | `scripts/player/shader/speed_lines_shader.gdshader` | shown by DashState |
 
 The UI is a view only: it reads player/network/match state and never owns gameplay state.
@@ -470,9 +521,9 @@ Five maps, rotated every round win:
   because `PackedScene.pack()` drops programmatically added groups.
 
 `world.gd` holds `MAP_PATHS`; `MapRoot` holds the active map. On `map_changed` the world
-waits 3 s (so the round-win banner plays), fades out (0.35 s, CanvasLayer 100), swaps the
+waits 3 s (so the round-win card plays), wipes in (`MatchFlow.cover()`), swaps the
 `MapRoot` child, waits 1 s (`MAP_SETTLE_SECONDS`) for the new map to finish building,
-re-collects spawn points, and fades back in. Respawns that arrive mid-swap wait for it
+re-collects spawn points, and wipes back out. Respawns that arrive mid-swap wait for it
 to finish. Map geometry is local-only; every client swaps on the shared `map_index`, so
 no networked scene objects are needed.
 
@@ -517,12 +568,12 @@ two-client manual runs.
   bypass it. Server enforcement needs Photon plugins/auth.
 - **TTK knob:** pistol damage 34 in `resources/weapons/pistol.tres` (3 hits at 100 HP).
   Until the modifier pass the damage-taken clamp scaled every hit to ≥40.
-- **`reserve_max = 999`** in `pistol.tres` is "infinite ammo for debugging"; it is still
-  consumed by reloads.
-- **Unvalidated spawns.** `world.gd::respawn_player` deterministically assigns a distinct
-  `spawn_point` marker per player with a fixed lift; there is no floor/capsule/ceiling
-  check.
-- **Map swap timing** assumes the round intermission (5 s) outlasts the 3 s banner delay,
+- **Ammo is infinite:** there is no reserve; a reload always swaps in a full magazine
+  (`mag_size()`, after modifiers).
+- **Unvalidated spawns.** Markers are distinct per player (host-assigned) and lifted by a
+  fixed amount; there is no floor/capsule/ceiling check. More players than markers
+  wrap around and share.
+- **Map swap timing** assumes the round intermission (5 s) outlasts the 3 s result-card delay,
   the fades and the 1 s map settle; keep `MAP_SWAP_DELAY`, `MAP_SETTLE_SECONDS` and
   `ROUND_INTERMISSION_SECONDS` in sync.
 - **Physics tuning is baked in**: gravity 24 (not 9.8), Jolt, interpolation on, jitter

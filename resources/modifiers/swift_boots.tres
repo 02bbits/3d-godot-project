@@ -8,5 +8,5 @@ display_name = "Swift Boots"
 description = "Run faster between fights."
 max_level = 3
 percent = Dictionary[StringName, float]({
-&"move_speed": 30.0
+&"move_speed": 40.0
 })

@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://b50e5gf1ri032" path="res://scenes/player/reticle.gd" id="2_script"]
 
-[node name="Reticle" type="Control"]
+[node name="Reticle" type="Control" unique_id=577416690]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -20,28 +20,28 @@ mouse_filter = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
-[node name="Up" type="Panel" parent="."]
+[node name="Up" type="Panel" parent="." unique_id=1511190149]
 layout_mode = 0
 offset_right = 5.0
 offset_bottom = 10.0
 mouse_filter = 2
 theme_type_variation = &"HudReticle"
 
-[node name="Down" type="Panel" parent="."]
+[node name="Down" type="Panel" parent="." unique_id=1160346224]
 layout_mode = 0
 offset_right = 5.0
 offset_bottom = 10.0
 mouse_filter = 2
 theme_type_variation = &"HudReticle"
 
-[node name="Left" type="Panel" parent="."]
+[node name="Left" type="Panel" parent="." unique_id=1434748921]
 layout_mode = 0
 offset_right = 10.0
 offset_bottom = 5.0
 mouse_filter = 2
 theme_type_variation = &"HudReticle"
 
-[node name="Right" type="Panel" parent="."]
+[node name="Right" type="Panel" parent="." unique_id=1518343337]
 layout_mode = 0
 offset_right = 10.0
 offset_bottom = 5.0

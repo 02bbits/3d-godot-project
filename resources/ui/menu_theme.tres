@@ -276,6 +276,17 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
+[sub_resource type="StyleBoxFlat" id="SB_badge_ready"]
+content_margin_left = 12.0
+content_margin_top = 3.0
+content_margin_right = 12.0
+content_margin_bottom = 3.0
+bg_color = Color(0.4784, 0.8745, 0.4863, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="SB_red_n"]
 content_margin_left = 20.0
 content_margin_top = 10.0
@@ -330,6 +341,22 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SB_badge_waiting"]
+content_margin_left = 10.0
+content_margin_top = 1.0
+content_margin_right = 10.0
+content_margin_bottom = 1.0
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2275, 0.2549, 0.3137, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="SB_card_yellow"]
 content_margin_left = 36.0
@@ -402,6 +429,8 @@ PrimaryButton/styles/focus = SubResource("SB_pri_n")
 PrimaryButton/styles/hover = SubResource("SB_pri_h")
 PrimaryButton/styles/normal = SubResource("SB_pri_n")
 PrimaryButton/styles/pressed = SubResource("SB_pri_p")
+ReadyBadge/base_type = &"PanelContainer"
+ReadyBadge/styles/panel = SubResource("SB_badge_ready")
 RedButton/base_type = &"Button"
 RedButton/styles/disabled = SubResource("SB_disabled")
 RedButton/styles/focus = SubResource("SB_red_n")
@@ -413,5 +442,7 @@ SlotPanel/styles/panel = SubResource("SB_slot")
 TitleLabel/base_type = &"Label"
 TitleLabel/colors/font_color = Color(0.9569, 0.9333, 0.8863, 1)
 TitleLabel/fonts/font = ExtResource("1_lilita")
+WaitingBadge/base_type = &"PanelContainer"
+WaitingBadge/styles/panel = SubResource("SB_badge_waiting")
 YellowCard/base_type = &"PanelContainer"
 YellowCard/styles/panel = SubResource("SB_card_yellow")

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://6jjfh76gvye"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Thick Skin"
+description = "Shrug off a little of every hit."
+max_level = 3
+percent = Dictionary[StringName, float]({
+&"damage_taken": -15.0
+})

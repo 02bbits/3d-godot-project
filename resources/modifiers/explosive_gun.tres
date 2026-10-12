@@ -1,0 +1,12 @@
+[gd_resource type="Resource" format=3 uid="uid://cslhgg0wiwi21"]
+
+[ext_resource type="Script" uid="uid://d1h4xh7w717wt" path="res://scripts/modifiers/behaviors/explosive_rounds.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/photon/scenes/vfx_explosion.tscn" id="2_res"]
+
+[resource]
+script = ExtResource("1_script")
+effect = ExtResource("2_res")
+display_name = "Explosive Bullet"
+description = "Every shot that lands explodes."
+type = 1
+rarity = 2

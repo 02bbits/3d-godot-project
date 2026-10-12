@@ -192,11 +192,6 @@ func _show_land() -> void:
 		visual_root.scale = Vector3(1.25, 0.75, 1.25)
 	land_sound.play()
 
-# Owner-side hit reaction: bumps the replicated counter so every peer replays
-# the flinch through the setter.
-func _on_damaged(_amount: float, _attacker_id: int) -> void:
-	net_hit_count += 1
-
 func _show_hit() -> void:
 	if dead:
 		return
@@ -228,6 +223,8 @@ func _flash_hit_white() -> void:
 func _clear_hit_flash() -> void:
 	for node in visual_root.find_children("*", "MeshInstance3D", true, false):
 		(node as MeshInstance3D).material_overlay = null
+	# the flash borrowed the overlay slot: give opponents their outline back
+	PlayerOutline.set_enabled(model, is_remote)
 
 func animate_reload() -> void:
 	weapon_state_machine.travel("Reload")
@@ -351,6 +348,8 @@ func _enable_local_copy() -> void:
 	viewmodel_camera.get_viewport().render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	visual_root.visible = true
 	_update_gun_visibility()
+	# no outline on your own body (it's for spotting opponents)
+	PlayerOutline.set_enabled(model, false)
 	# first person: hide the head and arm meshes from the local camera but keep
 	# their shadows, and hide the floating nickname (only other players see it)
 	nickname_label.visible = false
@@ -387,8 +386,9 @@ func _disable_remote_copy() -> void:
 	hud.visible = false
 	# nobody looks through a remote copy's viewmodel: skip its 3D pass
 	viewmodel_camera.get_viewport().render_target_update_mode = SubViewport.UPDATE_DISABLED
-	# remote copies render the full model for other players' cameras and show
-	# the nickname label above the head
+	# remote copies render the full model for other players' cameras, outlined
+	# so opponents stand out, and show the nickname label above the head
+	PlayerOutline.set_enabled(model, true)
 	visual_root.visible = true
 	_update_gun_visibility()
 	nickname_label.visible = true

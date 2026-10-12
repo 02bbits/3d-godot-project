@@ -83,10 +83,28 @@ func _process(delta: float) -> void:
 
 	_animate_locomotion(delta)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	modify_physics_properties()
 
+	if _stun_left > 0.0:
+		_stun_left -= delta
+		if _stun_left <= 0.0:
+			_sync_controls()
+	if is_frozen():
+		# held in place (match flow lock or a stun): no input, but still fall
+		velocity.x = 0.0
+		velocity.z = 0.0
+		gravity_apply(delta)
+
+	# modifiers may steer this tick (Lifted pulls up, Charge checks its area)
+	mods.on_physics(delta)
+
 	move_and_slide()
+
+	# fell out of the arena: an instant death, past the damage pipeline (no
+	# Second Wind) and credited to nobody
+	if global_position.y < kill_height and not dead:
+		$Health.apply($Health.health)
 
 	_track_ground_state()
 
@@ -97,6 +115,13 @@ func rpc_take_damage(amount: int, attacker_id: int = -1) -> void:
 	if is_remote:
 		return
 	take_damage(clampf(float(amount), 0.0, max_health), attacker_id)
+
+@rpc("any_peer")
+func rpc_knockback(x: float, y: float, z: float) -> void:
+	# an ability shove (Charge): the victim's owner moves itself
+	if is_remote:
+		return
+	velocity += Vector3(x, y, z)
 
 @rpc("any_peer")
 func rpc_apply_status(id: String) -> void:

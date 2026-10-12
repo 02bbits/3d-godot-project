@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3 uid="uid://i8da0ld5xn6q"]
+
+[ext_resource type="Script" uid="uid://cbt8p0o3nkc3p" path="res://scripts/modifiers/behaviors/range_damage.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+bonus_percent = 30.0
+display_name = "Close Quarters"
+description = "Up close and personal."
+max_level = 3

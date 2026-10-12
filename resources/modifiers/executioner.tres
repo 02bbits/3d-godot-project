@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Modifier" format=3]
+
+[ext_resource type="Script" path="res://scripts/modifiers/behaviors/executioner.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Executioner"
+description = "Finish what you started."
+type = 1
+rarity = 1
+max_level = 2
+percent = Dictionary[StringName, float]({})
+flat = Dictionary[StringName, float]({})
+threshold = 0.3
+bonus_percent = 30.0

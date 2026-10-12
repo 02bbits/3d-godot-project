@@ -117,7 +117,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"ModName"
 text = "SWIFT BOOTS"
-text_overrun_behavior = 3
+autowrap_mode = 3
 
 [node name="Desc" type="Label" parent="Button/Card/V/Body/V"]
 unique_name_in_owner = true

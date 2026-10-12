@@ -174,7 +174,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 16
-text = "v0.2"
+text = "v0.6.1"
 horizontal_alignment = 1
 
 [node name="NameScreen" type="CenterContainer" parent="Pages" unique_id=1192946770]
@@ -921,6 +921,14 @@ theme_type_variation = &"CreamButton"
 theme_override_font_sizes/font_size = 30
 text = "-----"
 
+[node name="LobbyStatus" type="Label" parent="Pages/Lobby/V" unique_id=760861189]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 20
+text = "Waiting for players"
+horizontal_alignment = 1
+
 [node name="Buttons" type="HBoxContainer" parent="Pages/Lobby/V" unique_id=259875905]
 layout_mode = 2
 theme_override_constants/separation = 24
@@ -932,6 +940,14 @@ custom_minimum_size = Vector2(190, 54)
 layout_mode = 2
 theme_type_variation = &"RedButton"
 text = "LEAVE"
+
+[node name="LobbyReadyButton" type="Button" parent="Pages/Lobby/V/Buttons" unique_id=1028231906]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(280, 54)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "READY UP"
 
 [node name="LobbyStartButton" type="Button" parent="Pages/Lobby/V/Buttons" unique_id=734185702]
 unique_name_in_owner = true

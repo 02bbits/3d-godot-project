@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://0kbot1804344"]
 
-[ext_resource type="MeshLibrary" path="res://assets/KayKit_Prototype/kaykit_prototype.meshlib.tres" id="1_3qcq0"]
+[ext_resource type="MeshLibrary" uid="uid://e0p3x8ld8f37" path="res://assets/KayKit_Prototype/kaykit_prototype.meshlib.tres" id="1_3qcq0"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1t0wl"]
 
@@ -28,21 +28,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 26)
 
 [node name="SpawnPoint04" type="Marker3D" parent="SpawnPoints" unique_id=1460407599 groups=["spawn_point"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 26)
-
-[node name="SpawnPoint05" type="Marker3D" parent="SpawnPoints" unique_id=1930302587 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26)
-
-[node name="SpawnPoint06" type="Marker3D" parent="SpawnPoints" unique_id=551144463 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 26)
-
-[node name="SpawnPoint07" type="Marker3D" parent="SpawnPoints" unique_id=923202422 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 0)
-
-[node name="SpawnPoint08" type="Marker3D" parent="SpawnPoints" unique_id=950369905 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
-
-[node name="SpawnPoint09" type="Marker3D" parent="SpawnPoints" unique_id=1802006772 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -13)
-
-[node name="SpawnPoint10" type="Marker3D" parent="SpawnPoints" unique_id=68538308 groups=["spawn_point"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 13)

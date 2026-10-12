@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Extended Mag"
+display_name = "Machine Gun"
 description = "More rounds before the reload."
 type = 1
 max_level = 2

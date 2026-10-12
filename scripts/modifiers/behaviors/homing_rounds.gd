@@ -3,7 +3,7 @@ extends Modifier
 ## Weapon: a shot that misses bends onto the enemy closest to the crosshair,
 ## if one is within `cone_degrees`, in range and in line of sight.
 
-@export var cone_degrees := 6.0
+@export var cone_degrees := 3.0
 
 
 func on_fire(shot: Dictionary, me: Node) -> void:

@@ -13,9 +13,12 @@ class_name HUD
 @onready var tab_board: Control = $TabBoard
 @onready var results_panel: Control = %ResultsPanel
 @onready var results_list: VBoxContainer = %ResultsList
-@onready var match_banner: Label = %MatchBanner
 @onready var crosshair: Control = $Reticle
 @onready var mod_tray: Control = $ModTray
+@onready var hit_flash: Control = $HitFlash
+@onready var status_chips: Control = $StatusChips
+@onready var view_model: Control = $ViewModel
+@onready var death_screen: Control = %DeathScreen
 @onready var mod_list: Control = $TabBoard.get_node("%ModList")
 
 const ROWS_REFRESH := 0.25
@@ -24,7 +27,6 @@ const FALLBACK_COLOR := Color("#9AA3B1")
 
 var _match_manager: Node
 var _last_state := ""
-var _last_result_serial := -1
 var _rows_timer := 0.0
 
 func _ready() -> void:
@@ -40,6 +42,7 @@ func _on_build_changed(mods: ModifierManager) -> void:
 	var active := mods.active()
 	mod_tray.show_mods(active)
 	mod_list.show_mods(active)
+	status_chips.show_statuses(mods.statuses())
 
 func _process(delta : float) -> void:
 	_update_match_ui()
@@ -51,8 +54,7 @@ func _process(delta : float) -> void:
 		_push_scoreboard()
 	tab_board.visible = visible and Input.is_physical_key_pressed(KEY_TAB) \
 			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _popup_up()
-	# the full board (and the modifier list beside it) covers the compact card
-	score_card.visible = not tab_board.visible and not _popup_up()
+	_refresh_hud_visibility()
 
 func display_speed_lines(value : bool) -> void:
 	speed_lines_container.visible = value
@@ -78,9 +80,6 @@ func _update_match_ui() -> void:
 	if state == _last_state:
 		return
 	_last_state = state
-	if int(_match_manager.result_serial) != _last_result_serial:
-		_last_result_serial = int(_match_manager.result_serial)
-		_show_match_banner(str(_match_manager.last_result))
 	_push_scoreboard()
 	_update_results()
 
@@ -133,7 +132,6 @@ func _player_rows() -> Array:
 func _update_results() -> void:
 	var over: bool = _match_manager.match_phase == "game_over"
 	results_panel.visible = over
-	_refresh_hud_visibility()
 	if not over:
 		return
 	# the podium: one label per place, authored in the scene
@@ -145,30 +143,23 @@ func _update_results() -> void:
 			label.text = "%d.  %s — %d rounds" % [i + 1, top[i].name, top[i].wins]
 
 
-func _show_match_banner(text: String) -> void:
-	if text.is_empty():
-		return
-	match_banner.text = text
-	match_banner.modulate.a = 1.0
-	match_banner.visible = true
-	_refresh_hud_visibility()
-	var tween := create_tween()
-	tween.tween_interval(2.5)
-	tween.tween_property(match_banner, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(_hide_match_banner)
-
-
-func _hide_match_banner() -> void:
-	match_banner.visible = false
-	_refresh_hud_visibility()
-
-
+# match announcements live in the world's MatchFlow overlay (scenes/ui/match_flow.tscn)
 func _popup_up() -> bool:
-	return match_banner.visible or results_panel.visible
+	return results_panel.visible
 
 
-# the persistent gameplay HUD steps aside while an important popup is up
+# Every frame: what the gameplay HUD shows depends on what the player is doing.
+# - your own widgets (gun, reticle, vitals, ammo, modifiers, statuses) only
+#   while you're alive and playing: not while spectating, drafting or on the
+#   results screen;
+# - the compact scoreboard stays while spectating (who's still in), and steps
+#   aside for the draft, the results and the TAB board;
+# - the spectator overlay hides behind the modifier draft.
 func _refresh_hud_visibility() -> void:
-	var popup := _popup_up()
-	for widget in [vitals, ammo_panel, crosshair, mod_tray]:
-		widget.visible = not popup
+	var drafting: bool = _match_manager != null and _match_manager.match_phase == "draft"
+	var away := _popup_up() or drafting
+	var playing := not away and not play_char.dead
+	for widget in [view_model, vitals, ammo_panel, crosshair, mod_tray, status_chips]:
+		widget.visible = playing
+	score_card.visible = not away and not tab_board.visible
+	death_screen.modulate.a = 0.0 if drafting else 1.0

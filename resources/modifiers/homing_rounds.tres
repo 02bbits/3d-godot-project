@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="Modifier" format=3]
+[gd_resource type="Resource" format=3 uid="uid://cn4x688wpxwb"]
 
-[ext_resource type="Script" path="res://scripts/modifiers/behaviors/homing_rounds.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bj83kmjwojq8i" path="res://scripts/modifiers/behaviors/homing_rounds.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -8,6 +8,3 @@ display_name = "Homing Rounds"
 description = "Near misses find their mark."
 type = 1
 rarity = 2
-max_level = 1
-percent = Dictionary[StringName, float]({})
-flat = Dictionary[StringName, float]({})

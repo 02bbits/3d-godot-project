@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/player/hud/hit_flash.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="Gradient_edge"]
+offsets = PackedFloat32Array(0.6, 1)
+colors = PackedColorArray(1, 0.1608, 0.1255, 0, 1, 0.1608, 0.1255, 0.6)
+
+[sub_resource type="GradientTexture2D" id="Texture_edge"]
+gradient = SubResource("Gradient_edge")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Animation" id="Anim_flash"]
+resource_name = "flash"
+length = 0.45
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.45),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="Lib_flash"]
+_data = {
+&"flash": SubResource("Anim_flash")
+}
+
+[node name="HitFlash" type="TextureRect"]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("Texture_edge")
+expand_mode = 1
+script = ExtResource("1_script")
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("Lib_flash")
+}

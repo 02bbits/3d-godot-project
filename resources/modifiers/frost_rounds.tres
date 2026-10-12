@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="Modifier" format=3]
+[gd_resource type="Resource" format=3 uid="uid://ct0p0ux4l6yxe"]
 
-[ext_resource type="Script" path="res://scripts/modifiers/behaviors/frost_rounds.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dgw56surt7ymi" path="res://scripts/modifiers/behaviors/status_on_hit.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -8,6 +8,3 @@ display_name = "Frost Rounds"
 description = "Hits chill the target."
 type = 1
 rarity = 1
-max_level = 1
-percent = Dictionary[StringName, float]({})
-flat = Dictionary[StringName, float]({})

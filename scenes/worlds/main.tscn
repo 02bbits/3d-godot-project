@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://cuvjegawj3f6h" path="res://scenes/ui/connection_menu.tscn" id="4_menu"]
 [ext_resource type="Script" uid="uid://b4i33oe7pu8x5" path="res://scripts/worlds/match_manager.gd" id="5_match"]
 [ext_resource type="PackedScene" path="res://scenes/ui/mods/draft_screen.tscn" id="6_draft"]
+[ext_resource type="PackedScene" path="res://scenes/ui/match_flow.tscn" id="7_flow"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/spectator.tscn" id="8_spectator"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qwx2d"]
 sky_top_color = Color(0.5921009, 0.6607336, 0.9253923, 1)
@@ -50,6 +52,10 @@ script = ExtResource("5_match")
 
 [node name="DraftScreen" parent="." node_paths=PackedStringArray("world") instance=ExtResource("6_draft")]
 world = NodePath("..")
+
+[node name="Spectator" parent="." instance=ExtResource("8_spectator")]
+
+[node name="MatchFlow" parent="." instance=ExtResource("7_flow")]
 
 [node name="MenuLayer" type="CanvasLayer" parent="." unique_id=1822758334]
 layer = 10

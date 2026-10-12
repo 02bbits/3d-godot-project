@@ -10,9 +10,8 @@ extends Resource
 @export_group("Stats")
 @export var damage: int = 30
 @export var mag_size: int = 5
-@export var reserve_max: int = 999
 @export var fire_interval: float = 0.3
-@export var reload_time: float = 1.2
+@export var reload_time: float = 2.0
 @export var range: float = 60.0
 
 @export_group("Visuals")

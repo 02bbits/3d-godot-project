@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="Modifier" format=3]
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://g4i3veaphtgm"]
 
-[ext_resource type="Script" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
 display_name = "Chilled"
 description = "Slowed by Frost Rounds."
+max_level = 2
 percent = Dictionary[StringName, float]({
-&"move_speed": -30.0
+&"move_speed": -50.0
 })
-duration = 1.5
+duration = 2.5

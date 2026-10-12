@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3 uid="uid://c2v767c5sl73a"]
+
+[ext_resource type="Script" uid="uid://3b38jup0n551" path="res://scripts/modifiers/behaviors/ghost_dash.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Reinforced Helmet"
+description = "Dash straight through the bullets."
+type = 2
+rarity = 1

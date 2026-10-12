@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Fast Hands"
+display_name = "Auto Reload"
 description = "Reload faster than HoTuan with 5x Quick Reload"
 type = 1
 max_level = 2

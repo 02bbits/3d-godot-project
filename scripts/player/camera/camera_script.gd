@@ -49,6 +49,11 @@ var last_input_y : float
 	"Wallrun" : Vector2(16.0, 4.0)
 }
 
+@export_group("Hit shake variables")
+@export_range(0.0, 0.2, 0.001) var hit_shake_offset : float = 0.03 #view offset at the start of a shake
+@export_range(0.0, 1.0, 0.01) var hit_shake_duration : float = 0.18
+var _shake_left : float = 0.0
+
 @export_group("Keybind variables")
 @export var zoom_action : StringName = "play_char_zoom_action"
 @onready var input_actions_list : Array[StringName] = [zoom_action]
@@ -122,6 +127,21 @@ func _process(delta : float) -> void:
 	tilt(delta)
 
 	zoom()
+
+	_update_shake(delta)
+
+## A short, decaying jitter of the view (not the aim): projection offsets move
+## what you see without moving the camera, so shots stay on the crosshair.
+func shake() -> void:
+	_shake_left = hit_shake_duration
+
+func _update_shake(delta : float) -> void:
+	if _shake_left <= 0.0:
+		return
+	_shake_left = maxf(_shake_left - delta, 0.0)
+	var strength := hit_shake_offset * _shake_left / hit_shake_duration
+	camera.h_offset = randf_range(-strength, strength)
+	camera.v_offset = randf_range(-strength, strength)
 
 func tilt(delta : float) -> void:
 	if state != "Slide" and state != "Wallrun":

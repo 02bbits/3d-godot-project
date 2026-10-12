@@ -86,6 +86,15 @@ func active() -> Array[Modifier]:
 	return mods
 
 
+## active timed statuses (HUD status chips)
+func statuses() -> Array[Modifier]:
+	var mods: Array[Modifier] = []
+	for mod in _active:
+		if mod.duration > 0.0:
+			mods.append(mod)
+	return mods
+
+
 func level_of(id: StringName) -> int:
 	for mod in _own:
 		if mod.id == id:
@@ -175,6 +184,7 @@ func apply_status(id: StringName) -> void:
 	var token := Time.get_ticks_usec()
 	_status_tokens[id] = token
 	refresh()
+	_instance(id).on_applied(player)
 	await get_tree().create_timer(def.duration).timeout
 	if _status_tokens.get(id) == token:
 		_status_tokens.erase(id)
@@ -201,6 +211,26 @@ func on_damage_taken(ctx: Dictionary) -> void:
 func on_kill(ctx: Dictionary) -> void:
 	for mod in _active:
 		mod.on_kill(ctx, player)
+
+
+func on_physics(delta: float) -> void:
+	for mod in _active:
+		mod.on_physics(delta, player)
+
+
+func on_dash() -> void:
+	for mod in _active:
+		mod.on_dash(player)
+
+
+func on_impact(shot: Dictionary) -> void:
+	for mod in _active:
+		mod.on_impact(shot, player)
+
+
+func on_shot_fx(hit: Dictionary) -> void:
+	for mod in _active:
+		mod.on_shot_fx(hit, player)
 
 
 func on_respawn() -> void:

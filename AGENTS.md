@@ -25,7 +25,7 @@ Full guide: `docs/MODIFIER_GUIDE.md`. Ideas backlog: `docs/MODIFIER_CONCEPTS.md`
 - Stat-only = data only (`percent` / `flat` per level, by `ModRules.STATS` key). Behavioural = subclass `Modifier` in `scripts/modifiers/behaviors/` and override hooks (`on_fire`, `on_damage_dealt`, `on_damage_taken`, `on_kill`, `on_respawn`); hooks mutate the ctx Dictionary.
 - `scripts/modifiers/mod_rules.gd` (`ModRules`) is the one tuning file: offer count, draft timer, rarity colours/weights, type icons, and the STATS table (labels, caps, player-property bindings). A new stat is one row there.
 - All stat math goes through `player.mods.get_stat()` (caps enforced there, nowhere else). Stacking is additive.
-- The build replicates as the player's `net_mods`; environment modifiers apply to every player. The draft is `match_phase = "draft"` (before round 1 and between rounds).
+- The build replicates as the player's `net_mods`; environment modifiers apply to every player. The draft is `match_phase = "draft"` (before round 1 and between rounds); every match then opens with `"countdown"` (players respawned behind a wipe and frozen via `set_input_locked`). Listen to `match_manager.phase_changed` for anything that depends on the phase.
 - Validate after any modifier change: `godot --headless --path . --script res://tools/check_modifiers.gd` → `MODIFIERS OK`.
 
 ## Player state machine
@@ -46,5 +46,6 @@ Keep the code easy to pick up and extend without rewriting what exists:
 - **Extend by adding files.** New modifiers, weapons and statuses are new `.tres` / subclasses that plug into existing APIs (hooks, `get_stat`, `equip_weapon`). If a feature needs an edit to shared code, add a general extension point (a hook, a stat row) once, not a special case.
 - **Nodes and scenes for UI.** Build UI in `.tscn` files styled by theme type variations (`hud_theme.tres`, `menu_theme.tres`); scripts only set values, visibility and variations. Repeated items duplicate a template child with `NodeUtil.fit_children`. No `_draw()`.
 - **Signals up, calls down.** Children emit signals; owners call methods on children. Don't reach across the tree; pass references with exports or the owner.
+- **UI answers four questions** at every moment: where am I (round, match, map, page), what can I do (controls, enabled actions, why a button is disabled), what happens next (countdowns, "waiting for…"), and what have I done / what happened (picks, ready state, results).
 - **One responsibility per script**, under ~400 lines; doc comment at the top saying what it owns.
 - **Verify before handing off:** `godot --headless --path . --quit` (clean) and the modifier check above.

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WeaponDefinition" format=3]
+[gd_resource type="Resource" script_class="WeaponDefinition" format=3 uid="uid://bun51cdhk6cyx"]
 
 [ext_resource type="Script" uid="uid://ckmq35lonlcab" path="res://scripts/weapons/weapon_definition.gd" id="1_def"]
 [ext_resource type="PackedScene" uid="uid://cswiapk4jkjys" path="res://scenes/player/pistol.tscn" id="2_pistol"]
@@ -11,7 +11,6 @@
 script = ExtResource("1_def")
 display_name = "Hand Cannon"
 damage = 70
-mag_size = 5
 fire_interval = 0.6
 reload_time = 1.8
 viewmodel_scene = ExtResource("2_pistol")

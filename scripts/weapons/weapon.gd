@@ -105,6 +105,8 @@ func _shoot() -> void:
 	play_char.net_hit_position = hit_pos
 
 	_apply_damage(collider, hit_pos)
+	# area effects of the landed shot (Explosive Gun)
+	play_char.mods.on_impact(shot)
 	# bump the replicated counter last: every peer (this one included) replays
 	# the shot visuals
 	play_char.net_fire_count += 1
@@ -122,6 +124,7 @@ func on_fire_event(hit_position: Vector3) -> void:
 	_spawn_tracer(_tracer_origin(), hit_position)
 	_flash_models()
 	_play_shoot_sound()
+	play_char.mods.on_shot_fx({"position": hit_position, "normal": play_char.net_hit_normal})
 
 
 # Where the tracer should visibly leave the gun. Remote copies use the
@@ -179,20 +182,29 @@ func _apply_damage(collider: Object, hit_pos: Vector3) -> void:
 	}
 	mods.on_damage_dealt(ctx)
 	var final_amount := maxi(roundi(float(ctx["amount"])), 0)
+	deal_damage(node, final_amount, hit_pos)
 	if hit_player:
-		Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(collider, "rpc_take_damage"),
-				final_amount, int(ctx["attacker_id"]))
 		for status in ctx["statuses"]:
 			Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(collider, "rpc_apply_status"), String(status))
 		var lifesteal := final_amount * mods.get_stat(&"lifesteal", 0.0) / 100.0
 		if lifesteal > 0.0:
 			play_char.get_node("Health").heal(lifesteal)
-		_feedback_hit(hit_pos, final_amount)
+
+
+## Sends `amount` damage to a player or practice target (its owner applies it)
+## and shows the hit feedback here. Shots use it, and so do modifier area and
+## ability damage (Explosive Gun, Charge), which skip the shot's hooks.
+func deal_damage(target: Node, amount: int, at: Vector3) -> void:
+	if amount <= 0:
+		return
+	if target.is_in_group("player"):
+		var attacker_id: int = Fusion.get_local_player_id() if Engine.has_singleton("Fusion") else -1
+		Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(target, "rpc_take_damage"), amount, attacker_id)
 	else:
 		# Targets are authoritative on the master client; route the damage so
 		# every client sees the same target state.
-		Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(node, "rpc_take_damage"), final_amount)
-		_feedback_hit(hit_pos, final_amount)
+		Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(target, "rpc_take_damage"), amount)
+	_feedback_hit(at, amount)
 
 
 func _feedback_hit(pos: Vector3, amount: int) -> void:
@@ -250,7 +262,9 @@ func _reload() -> void:
 	await get_tree().create_timer(_reload_duration).timeout
 	if generation != _reload_generation or not is_inside_tree():
 		return
-	ammo += mag_size()
+	# bullets are infinite: a reload swaps in a full magazine (leftover rounds
+	# don't carry over on top of it)
+	ammo = mag_size()
 	reloading = false
 
 

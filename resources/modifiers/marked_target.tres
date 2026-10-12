@@ -1,0 +1,11 @@
+[gd_resource type="Resource" format=3 uid="uid://dahp6uxj1r43o"]
+
+[ext_resource type="Script" uid="uid://dgw56surt7ymi" path="res://scripts/modifiers/behaviors/status_on_hit.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+status_id = &"marked"
+display_name = "Marked Target"
+description = "Hits paint a target on the enemy."
+type = 1
+rarity = 1

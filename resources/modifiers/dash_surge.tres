@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Dash Surge"
+display_name = "Battery Surge"
 description = "Dash recharges faster."
 type = 2
 rarity = 1

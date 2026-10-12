@@ -1,0 +1,11 @@
+[gd_resource type="Resource" format=3 uid="uid://cl2uck80cicnq"]
+
+[ext_resource type="Script" uid="uid://c2lnwixlpn5v0" path="res://scripts/modifiers/behaviors/charge.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+push = 8.0
+display_name = "Steel Helmet"
+description = "Your dash rams anyone in the way."
+type = 2
+rarity = 2

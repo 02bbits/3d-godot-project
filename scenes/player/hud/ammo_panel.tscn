@@ -2,11 +2,11 @@
 
 [ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://cimsrvsl85lds" path="res://scripts/player/hud/ammo_panel.gd" id="2_script"]
-[ext_resource type="DPITexture" uid="uid://bm8bhm4f6f5yi" path="res://assets/ui/hud/ring.svg" id="3_ring"]
-[ext_resource type="DPITexture" uid="uid://2no5od1pkfsy" path="res://assets/ui/hud/reload.svg" id="4_reload"]
-[ext_resource type="DPITexture" uid="uid://disv7g6xsa1c6" path="res://assets/ui/hud/chevrons.svg" id="5_chevrons"]
+[ext_resource type="Texture2D" uid="uid://bm8bhm4f6f5yi" path="res://assets/ui/hud/ring.svg" id="3_ring"]
+[ext_resource type="Texture2D" uid="uid://2no5od1pkfsy" path="res://assets/ui/hud/reload.svg" id="4_reload"]
+[ext_resource type="Texture2D" uid="uid://disv7g6xsa1c6" path="res://assets/ui/hud/chevrons.svg" id="5_chevrons"]
 
-[node name="AmmoPanel" type="PanelContainer"]
+[node name="AmmoPanel" type="PanelContainer" unique_id=471649357]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -21,7 +21,7 @@ theme = ExtResource("1_theme")
 theme_type_variation = &"HudCard"
 script = ExtResource("2_script")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1583507448]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 15
@@ -29,18 +29,18 @@ theme_override_constants/margin_top = 9
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 9
 
-[node name="H" type="HBoxContainer" parent="Margin"]
+[node name="H" type="HBoxContainer" parent="Margin" unique_id=823068705]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 13
 
-[node name="Slot" type="Control" parent="Margin/H"]
+[node name="Slot" type="Control" parent="Margin/H" unique_id=1818571689]
 custom_minimum_size = Vector2(37, 37)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="Bullet" type="Panel" parent="Margin/H/Slot"]
+[node name="Bullet" type="Panel" parent="Margin/H/Slot" unique_id=396468819]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -51,7 +51,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"HudSlot"
 
-[node name="Round" type="Panel" parent="Margin/H/Slot/Bullet"]
+[node name="Round" type="Panel" parent="Margin/H/Slot/Bullet" unique_id=1633560940]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -62,10 +62,12 @@ offset_left = -4.5
 offset_top = -8.5
 offset_right = 4.5
 offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"HudBullet"
 
-[node name="ReloadRing" type="Control" parent="Margin/H/Slot"]
+[node name="ReloadRing" type="Control" parent="Margin/H/Slot" unique_id=379593803]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -76,7 +78,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="RingBg" type="Panel" parent="Margin/H/Slot/ReloadRing"]
+[node name="RingBg" type="Panel" parent="Margin/H/Slot/ReloadRing" unique_id=1539732172]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,7 +88,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"HudRingBg"
 
-[node name="RingBar" type="TextureProgressBar" parent="Margin/H/Slot/ReloadRing"]
+[node name="RingBar" type="TextureProgressBar" parent="Margin/H/Slot/ReloadRing" unique_id=245266933]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -103,7 +105,7 @@ texture_progress = ExtResource("3_ring")
 tint_under = Color(0.1725, 0.1922, 0.2353, 1)
 tint_progress = Color(0.302, 0.6353, 0.9961, 1)
 
-[node name="Spinner" type="TextureRect" parent="Margin/H/Slot/ReloadRing"]
+[node name="Spinner" type="TextureRect" parent="Margin/H/Slot/ReloadRing" unique_id=932988485]
 unique_name_in_owner = true
 self_modulate = Color(0.9569, 0.9333, 0.8863, 1)
 layout_mode = 1
@@ -116,20 +118,22 @@ offset_left = -8.0
 offset_top = -8.0
 offset_right = 8.0
 offset_bottom = 8.0
-mouse_filter = 2
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
 texture = ExtResource("4_reload")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PipArea" type="Control" parent="Margin/H"]
+[node name="PipArea" type="Control" parent="Margin/H" unique_id=1076905806]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(204, 17)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="Pips" type="HBoxContainer" parent="Margin/H/PipArea"]
+[node name="Pips" type="HBoxContainer" parent="Margin/H/PipArea" unique_id=1427360896]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -140,24 +144,25 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="Pip" type="ColorRect" parent="Margin/H/PipArea/Pips"]
+[node name="Pip" type="ColorRect" parent="Margin/H/PipArea/Pips" unique_id=345051511]
 custom_minimum_size = Vector2(4, 17)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.1725, 0.1922, 0.2353, 1)
 
-[node name="Fill" type="ColorRect" parent="Margin/H/PipArea/Pips/Pip"]
+[node name="Fill" type="ColorRect" parent="Margin/H/PipArea/Pips/Pip" unique_id=251121019]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 pivot_offset_ratio = Vector2(0.5, 1)
+mouse_filter = 2
 color = Color(1, 0.7882, 0.2, 1)
 
-[node name="ReloadLabel" type="Label" parent="Margin/H/PipArea"]
+[node name="ReloadLabel" type="Label" parent="Margin/H/PipArea" unique_id=2009242543]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -172,7 +177,7 @@ text = "RELOAD · R"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Chip" type="PanelContainer" parent="Margin/H"]
+[node name="Chip" type="PanelContainer" parent="Margin/H" unique_id=1802063042]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(35, 17)
@@ -181,7 +186,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"HudChip"
 
-[node name="ChipLabel" type="Label" parent="Margin/H/Chip"]
+[node name="ChipLabel" type="Label" parent="Margin/H/Chip" unique_id=396476433]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HudNameBold"
@@ -190,15 +195,14 @@ text = "×2"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Dash" type="Control" parent="Margin/H"]
+[node name="Dash" type="Control" parent="Margin/H" unique_id=52412659]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(38, 38)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="Frame" type="Panel" parent="Margin/H/Dash"]
+[node name="Frame" type="Panel" parent="Margin/H/Dash" unique_id=247198781]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -208,7 +212,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"HudDashFrame"
 
-[node name="DashCooling" type="Control" parent="Margin/H/Dash"]
+[node name="DashCooling" type="Control" parent="Margin/H/Dash" unique_id=1883254006]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -223,7 +227,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="DashBar" type="ProgressBar" parent="Margin/H/Dash/DashCooling"]
+[node name="DashBar" type="ProgressBar" parent="Margin/H/Dash/DashCooling" unique_id=289168492]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -238,7 +242,7 @@ step = 0.0
 fill_mode = 3
 show_percentage = false
 
-[node name="Chevrons" type="TextureRect" parent="Margin/H/Dash/DashCooling"]
+[node name="Chevrons" type="TextureRect" parent="Margin/H/Dash/DashCooling" unique_id=153634047]
 self_modulate = Color(0.6039, 0.6392, 0.6941, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -250,12 +254,14 @@ offset_left = -10.0
 offset_top = -10.0
 offset_right = 10.0
 offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5_chevrons")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DashReady" type="Panel" parent="Margin/H/Dash"]
+[node name="DashReady" type="Panel" parent="Margin/H/Dash" unique_id=102425708]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -270,7 +276,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"HudDashReady"
 
-[node name="Chevrons" type="TextureRect" parent="Margin/H/Dash/DashReady"]
+[node name="Chevrons" type="TextureRect" parent="Margin/H/Dash/DashReady" unique_id=462079841]
 self_modulate = Color(0.302, 0.6353, 0.9961, 1)
 layout_mode = 1
 anchors_preset = 8
@@ -280,8 +286,10 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -10.0
 offset_top = -10.0
-offset_right = 10.0
+offset_right = 14.5
 offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5_chevrons")
 expand_mode = 1

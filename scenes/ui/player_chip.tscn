@@ -32,3 +32,14 @@ theme_type_variation = &"HostBadge"
 layout_mode = 2
 theme_type_variation = &"CardTitleLabel"
 text = "Host"
+
+[node name="ReadyBadge" type="PanelContainer" parent="H"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"WaitingBadge"
+
+[node name="Label" type="Label" parent="H/ReadyBadge"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Not ready"

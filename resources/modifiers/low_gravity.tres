@@ -9,5 +9,5 @@ description = "Gravity drops for every player this match."
 type = 3
 rarity = 2
 percent = Dictionary[StringName, float]({
-&"gravity": -100.0
+&"gravity": -70.0
 })

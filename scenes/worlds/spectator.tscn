@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/worlds/spectator.gd" id="1_script"]
+
+[sub_resource type="SphereShape3D" id="Shape_probe"]
+radius = 0.25
+
+[node name="Spectator" type="Node3D"]
+physics_interpolation_mode = 2
+script = ExtResource("1_script")
+
+[node name="Arm" type="SpringArm3D" parent="."]
+collision_mask = 1
+shape = SubResource("Shape_probe")
+spring_length = 3.5
+margin = 0.1
+
+[node name="Camera" type="Camera3D" parent="Arm"]
+fov = 90.0
