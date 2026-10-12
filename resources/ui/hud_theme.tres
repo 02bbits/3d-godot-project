@@ -216,10 +216,6 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="SB_reticle"]
-bg_color = Color(0.9569, 0.9333, 0.8863, 1)
-anti_aliasing = false
-
 [sub_resource type="StyleBoxFlat" id="SB_ring_bg"]
 bg_color = Color(0.0745, 0.0863, 0.1098, 1)
 border_width_left = 2
@@ -587,8 +583,6 @@ HudPill/styles/panel = SubResource("SB_pill")
 HudPillLabel/base_type = &"Label"
 HudPillLabel/colors/font_color = Color(0.0549, 0.0627, 0.0824, 1)
 HudPillLabel/fonts/font = SubResource("Rubik700")
-HudReticle/base_type = &"Panel"
-HudReticle/styles/panel = SubResource("SB_reticle")
 HudRingBg/base_type = &"Panel"
 HudRingBg/styles/panel = SubResource("SB_ring_bg")
 HudRow/base_type = &"PanelContainer"

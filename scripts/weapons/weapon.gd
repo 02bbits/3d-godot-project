@@ -143,14 +143,15 @@ func _tracer_origin() -> Vector3:
 	return camera.project_position(screen, depth)
 
 
-# Replayed on every peer with the shot; only the local viewmodel (and its
-# crosshair) react.
+# Replayed on every peer with the shot; only the local viewmodel and camera
+# react.
 func recoil() -> void:
 	if not view_model.visible:
 		return
 	_motion.kick()
-	if play_char.hud.crosshair != null:
-		play_char.hud.crosshair.kick()
+	# a slight view kick; weapons without one leave it at 0 in their definition
+	play_char.cam_holder.add_recoil(definition.recoil_pitch_degrees,
+			definition.recoil_yaw_degrees, definition.recoil_recovery)
 
 
 func update_visibility() -> void:

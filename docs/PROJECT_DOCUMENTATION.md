@@ -94,7 +94,7 @@ PlayerCharacter (CharacterBody3D)
 ├── AnimationTree/AnimationPlayer
 └── HUD (CanvasLayer)
 	├── ViewModel           SubViewportContainer > transparent SubViewport (layer-4 camera)
-	├── Reticle             hud/reticle.tscn: 4 outlined bars, speed spread + shot kick
+	├── Reticle             hud/reticle.tscn: dot + 4 lines spread by speed
 	├── Vitals              hud/vitals.tscn: health (10 HP segments, ghost) + stamina
 	├── AmmoPanel           hud/ammo_panel.tscn: pips, reload ring, RELOAD prompt, dash
 	├── ModTray             hud/mod_tray.tscn: modifier icons above the vitals + pick toast
@@ -404,6 +404,10 @@ only seen by the viewmodel camera.
   air/slide/dash poses, landing dip, spring recoil (`kick()`), the reload animation
   (`start_reload()`: tilt over, mag out/in jolts, rack) and the respawn raise. Rotations
   pivot on the grip (`viewmodel_transform.origin`). Local player only.
+- Camera recoil: each `WeaponDefinition` has `recoil_pitch_degrees`, `recoil_yaw_degrees`
+  (random ±) and `recoil_recovery`; `weapon.recoil()` passes them to
+  `camera_script.gd::add_recoil` (kicks the real camera, so aim moves; settles back).
+  0 = no recoil (the default for new weapons); pistol 1.2°/0.4°, hand cannon 3.5°/1.0°.
 - `scripts/weapons/weapon_definition.gd` (`WeaponDefinition`) — per-weapon resource:
   `display_name`, `damage`, `mag_size`, `fire_interval`, `reload_time`,
   `range`, `viewmodel_scene`/`viewmodel_transform`, `world_model_scene`/
@@ -495,7 +499,7 @@ tools/check_modifiers.gd  validation: godot --headless --path . --script res://t
 | Modifier list | `scenes/player/hud/mod_list.tscn` + `mod_list.gd` | beside the TAB board: icon, name, summary at level, level pips |
 | Vitals | `scenes/player/hud/vitals.tscn` + `vitals.gd` | health: red ProgressBar, a tick every 10 HP, pale ghost ProgressBar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue ProgressBar |
 | Ammo panel | `scenes/player/hud/ammo_panel.tscn` + `ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N chip, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring (radial `TextureProgressBar`) + pips refill with `reload_progress()`; dash icon is a bottom-to-top ProgressBar while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
-| Reticle | `scenes/player/hud/reticle.tscn` + `scenes/player/reticle.gd` | 4 outlined bar Panels spread by planar speed and kicked open per shot, placed around the control's center so they sit exactly on the shot ray |
+| Reticle | `scenes/player/hud/reticle.tscn` + `scenes/player/reticle.gd` | the original crosshair: center dot + 4 `Line2D` ticks lerped out by planar speed (`RETICLE_DISTANCE` px per m/s, `RETICLE_SPEED` per-frame lerp), around the control's center so it sits on the shot ray |
 | Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + "Mouse to look around · A / D to switch player" move to the top center |
 | Scoreboard | `scoreboard_card.tscn` / `scoreboard_full.tscn` + `scoreboard.gd`, rows `score_row(_full).tscn` + `score_row.gd` | yellow dots = this round's match wins ("kills", `match_wins_per_round`), blue diamonds = rounds won, out of a majority of `rounds_total`; sorted by wins, then kills |
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |

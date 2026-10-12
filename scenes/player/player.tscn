@@ -1369,7 +1369,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 11
-text = "Mouse to look around · A / D to switch player"
+text = "A / D to switch player"
 horizontal_alignment = 1
 
 [node name="Top" type="VBoxContainer" parent="HUD/DeathScreen" unique_id=1262482704]
@@ -1394,7 +1394,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.86, 1)
 theme_override_font_sizes/font_size = 11
-text = "Mouse to look around · A / D to switch player"
+text = "A / D to switch player"
 horizontal_alignment = 1
 
 [node name="SpeedLinesContainer" type="ColorRect" parent="HUD" unique_id=1381122063]

@@ -14,6 +14,14 @@ extends Resource
 @export var reload_time: float = 2.0
 @export var range: float = 60.0
 
+@export_group("Camera recoil")
+## view kick per shot, upward; 0 = no camera recoil
+@export_range(0.0, 10.0, 0.05) var recoil_pitch_degrees: float = 0.0
+## random sideways kick per shot, up to this many degrees either way
+@export_range(0.0, 5.0, 0.05) var recoil_yaw_degrees: float = 0.0
+## how fast the view settles back after a kick (higher = snappier)
+@export_range(1.0, 30.0, 0.5) var recoil_recovery: float = 10.0
+
 @export_group("Visuals")
 @export var viewmodel_scene: PackedScene
 @export var viewmodel_transform: Transform3D = Transform3D.IDENTITY

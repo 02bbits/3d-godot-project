@@ -59,6 +59,10 @@ func _die(attacker_id: int = -1) -> void:
 	if dead:
 		return
 	dead = true
+	# back to idle right away: a death mid-run (or mid-jump/wallrun) must not
+	# leave a stamina-draining state behind for the respawn
+	if not is_remote:
+		_enter_idle()
 	if _shot_turn_tween != null and _shot_turn_tween.is_valid():
 		_shot_turn_tween.kill()
 	head_look.influence = 0.0 # keep the death animation's head pose
@@ -110,13 +114,7 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	time_bef_can_wallrun_again = time_bef_can_wallrun_again_ref
 	last_wallrunned_wall_out_of_time = 0
 	dead = false
-	if state_machine.curr_state != null:
-		state_machine.curr_state.exit()
-	var idle: State = state_machine.states.get("idle")
-	if idle != null:
-		idle.enter(self)
-		state_machine.curr_state = idle
-		state_machine.curr_state_name = idle.state_name
+	_enter_idle()
 	if weapon.has_method("reset_for_respawn"):
 		weapon.reset_for_respawn()
 	movement_state_machine.start("Locomotion")
@@ -144,6 +142,12 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	var im: Node = get_tree().get_first_node_in_group("input_mode")
 	if im != null and im.has_method("set_mode"):
 		im.set_mode(im.Mode.GAMEPLAY)
+
+# Switches to IdleState through the state machine's own transition (exit,
+# enter, FOV reset). States are keyed by lowercased node name ("idlestate").
+func _enter_idle() -> void:
+	if state_machine.curr_state != null and state_machine.curr_state_name != "Idle":
+		state_machine.on_state_child_transition(state_machine.curr_state, "IdleState")
 
 func _set_dead_visuals() -> void:
 	# remote copies keep the body visible so peers see the death animation;

@@ -54,6 +54,12 @@ var last_input_y : float
 @export_range(0.0, 1.0, 0.01) var hit_shake_duration : float = 0.18
 var _shake_left : float = 0.0
 
+@export_group("Recoil variables")
+@export_range(1.0, 60.0, 0.5) var recoil_kick_speed : float = 30.0 #how fast the view snaps into a shot's kick
+var _recoil : Vector2 = Vector2.ZERO #kick currently applied (pitch, yaw), radians
+var _recoil_target : Vector2 = Vector2.ZERO
+var _recoil_recovery : float = 10.0
+
 @export_group("Keybind variables")
 @export var zoom_action : StringName = "play_char_zoom_action"
 @onready var input_actions_list : Array[StringName] = [zoom_action]
@@ -129,6 +135,25 @@ func _process(delta : float) -> void:
 	zoom()
 
 	_update_shake(delta)
+
+	_update_recoil(delta)
+
+## A shot's view kick (amounts from the WeaponDefinition): pitch up, a random
+## sideways nudge, then the view settles back at `recovery`. It turns the real
+## camera, so the aim kicks too; mouse input keeps working on top of it.
+func add_recoil(pitch_degrees : float, yaw_degrees : float, recovery : float) -> void:
+	_recoil_target += Vector2(deg_to_rad(pitch_degrees), deg_to_rad(randf_range(-yaw_degrees, yaw_degrees)))
+	_recoil_recovery = recovery
+
+func _update_recoil(delta : float) -> void:
+	if _recoil.is_zero_approx() and _recoil_target.is_zero_approx():
+		return
+	_recoil_target = _recoil_target.lerp(Vector2.ZERO, 1.0 - exp(-_recoil_recovery * delta))
+	var next : Vector2 = _recoil.lerp(_recoil_target, 1.0 - exp(-recoil_kick_speed * delta))
+	var step : Vector2 = next - _recoil
+	_recoil = next
+	camera.rotation.x = clamp(camera.rotation.x + step.x, deg_to_rad(max_up_angle_view), deg_to_rad(max_down_angle_view))
+	rotate_y(step.y)
 
 ## A short, decaying jitter of the view (not the aim): projection offsets move
 ## what you see without moving the camera, so shots stay on the crosshair.

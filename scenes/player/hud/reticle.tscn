@@ -1,49 +1,50 @@
 [gd_scene format=3 uid="uid://cbrthmahmk417"]
 
-[ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://b50e5gf1ri032" path="res://scenes/player/reticle.gd" id="2_script"]
 
-[node name="Reticle" type="Control" unique_id=577416690]
+[sub_resource type="StyleBoxFlat" id="SB_dot"]
+bg_color = Color(1, 1, 1, 1)
+anti_aliasing = false
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[node name="Reticle" type="Control"]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
-[node name="Up" type="Panel" parent="." unique_id=1511190149]
+[node name="Dot" type="Panel" parent="."]
 layout_mode = 0
-offset_right = 5.0
-offset_bottom = 10.0
+offset_right = 2.0
+offset_bottom = 2.0
 mouse_filter = 2
-theme_type_variation = &"HudReticle"
+theme_override_styles/panel = SubResource("SB_dot")
 
-[node name="Down" type="Panel" parent="." unique_id=1160346224]
-layout_mode = 0
-offset_right = 5.0
-offset_bottom = 10.0
-mouse_filter = 2
-theme_type_variation = &"HudReticle"
+[node name="Top" type="Line2D" parent="."]
+points = PackedVector2Array(0, -5, 0, -15)
+width = 2.0
 
-[node name="Left" type="Panel" parent="." unique_id=1434748921]
-layout_mode = 0
-offset_right = 10.0
-offset_bottom = 5.0
-mouse_filter = 2
-theme_type_variation = &"HudReticle"
+[node name="Right" type="Line2D" parent="."]
+points = PackedVector2Array(5, 0, 15, 0)
+width = 2.0
 
-[node name="Right" type="Panel" parent="." unique_id=1518343337]
-layout_mode = 0
-offset_right = 10.0
-offset_bottom = 5.0
-mouse_filter = 2
-theme_type_variation = &"HudReticle"
+[node name="Bottom" type="Line2D" parent="."]
+points = PackedVector2Array(0, 5, 0, 15)
+width = 2.0
+
+[node name="Left" type="Line2D" parent="."]
+points = PackedVector2Array(-5, 0, -15, 0)
+width = 2.0
