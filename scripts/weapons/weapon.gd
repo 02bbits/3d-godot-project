@@ -8,6 +8,7 @@ extends Node3D
 const BULLET_SCENE = preload("res://scenes/entities/bullet.tscn")
 const HIT_MASK := 7 # map + players + raycast helpers
 const VIEWMODEL_LAYER := 4
+const VIEWMODEL_MOTION := preload("res://scripts/weapons/viewmodel_motion.gd")
 
 @onready var view_model: Node3D = $ViewModel
 @onready var world_model: Node3D = $WorldModel
@@ -27,11 +28,10 @@ var fire_cooldown: float = 0.0
 var _reload_generation := 0
 var custom_font = load("res://assets/fonts/lilita_one_regular.ttf")
 
-var _recoil_rest: Transform3D
-var _recoil_rest_set := false
-var _recoil_tween: Tween
-# carries the camera-roll lean; recoil animates view_model inside it
-var _view_pivot: Node3D
+var _reload_started_ms := 0
+var _reload_duration := 1.0
+# pivot holding the viewmodel + muzzle; animates sway, tilt, recoil, reload
+var _motion: Node3D
 
 
 func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
@@ -54,22 +54,20 @@ func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
 	# renders them, so the gun cannot drift from it when the view turns. The
 	# weapon itself stays under the gameplay camera: input never reaches nodes
 	# inside the SubViewport.
-	_view_pivot = Node3D.new()
-	player.viewmodel_camera.add_child(_view_pivot)
-	view_model.reparent(_view_pivot, false)
-	muzzle.reparent(_view_pivot, false)
+	_motion = VIEWMODEL_MOTION.new()
+	_motion.setup(player, self, definition.viewmodel_transform.origin)
+	player.viewmodel_camera.add_child(_motion)
+	view_model.reparent(_motion, false)
+	muzzle.reparent(_motion, false)
 	_set_viewmodel_layers()
 
-	ammo = _effective_mag()
+	ammo = mag_size()
 	reserve = definition.reserve_max
 	update_visibility()
 
 
 func _process(delta: float) -> void:
 	fire_cooldown = maxf(fire_cooldown - delta, 0.0)
-	# gun leans with the camera roll
-	if _view_pivot != null:
-		_view_pivot.rotation.x = play_char.cam_holder.rotation.z
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -141,21 +139,14 @@ func _tracer_origin() -> Vector3:
 	return camera.project_position(screen, depth)
 
 
+# Replayed on every peer with the shot; only the local viewmodel (and its
+# crosshair) react.
 func recoil() -> void:
 	if not view_model.visible:
 		return
-	if not _recoil_rest_set:
-		_recoil_rest = view_model.transform
-		_recoil_rest_set = true
-	if _recoil_tween != null and _recoil_tween.is_valid():
-		_recoil_tween.kill()
-	var kick := _recoil_rest
-	kick.origin += Vector3(0.0, 0.012, 0.055)
-	kick.basis = _recoil_rest.basis.rotated(Vector3(1.0, 0.0, 0.0), deg_to_rad(8.0))
-	view_model.transform = kick
-	_recoil_tween = create_tween()
-	_recoil_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_recoil_tween.tween_property(view_model, "transform", _recoil_rest, 0.12)
+	_motion.kick()
+	if play_char.hud.crosshair != null:
+		play_char.hud.crosshair.kick()
 
 
 func update_visibility() -> void:
@@ -241,7 +232,7 @@ func _spawn_tracer(from: Vector3, to: Vector3) -> void:
 
 
 func _reload() -> void:
-	if play_char.is_remote or reloading or ammo >= _effective_mag() or reserve <= 0:
+	if play_char.is_remote or reloading or ammo >= mag_size() or reserve <= 0:
 		return
 	reloading = true
 	_reload_generation += 1
@@ -249,17 +240,28 @@ func _reload() -> void:
 	# replicated counter: every peer replays the reload visual + sound
 	play_char.net_reload_count += 1
 	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
-	await get_tree().create_timer(
-			definition.reload_time * mods.get_stat(&"reload_time", 1.0)).timeout
+	_reload_duration = definition.reload_time * mods.get_stat(&"reload_time", 1.0)
+	_reload_started_ms = Time.get_ticks_msec()
+	_motion.start_reload(_reload_duration)
+	await get_tree().create_timer(_reload_duration).timeout
 	if generation != _reload_generation or not is_inside_tree():
 		return
-	var taken := mini(_effective_mag() - ammo, reserve)
+	var taken := mini(mag_size() - ammo, reserve)
 	ammo += taken
 	reserve -= taken
 	reloading = false
 
 
-func _effective_mag() -> int:
+## 0..1 through the current reload (HUD ring and pip refill)
+func reload_progress() -> float:
+	if not reloading:
+		return 0.0
+	return clampf((Time.get_ticks_msec() - _reload_started_ms) / (_reload_duration * 1000.0),
+			0.0, 1.0)
+
+
+## magazine size after modifiers
+func mag_size() -> int:
 	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
 	return maxi(int(roundf(definition.mag_size * mods.get_stat(&"mag_size", 1.0))), 1)
 
@@ -267,11 +269,12 @@ func _effective_mag() -> int:
 func reset_for_respawn() -> void:
 	_reload_generation += 1
 	reloading = false
-	ammo = _effective_mag()
+	ammo = mag_size()
 	reserve = definition.reserve_max
 	fire_cooldown = 0.0
 	shoot_sound.stop()
 	reload_sound.stop()
+	_motion.raise()
 
 
 func show_kill() -> void:

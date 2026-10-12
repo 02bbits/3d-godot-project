@@ -1,41 +1,44 @@
-extends CenterContainer
+extends Control
 
-@export var DOT_RADIUS: float = 1.0
-@export var DOT_COLOR: Color = Color.WHITE
-@export var RETICLE_LINES: Array[Line2D]
+## Crosshair from the HUD mockup: four white bars with a dark outline around
+## the screen center (where the shot ray goes). The bars spread with planar
+## speed and kick open on every shot.
+
+@export var COLOR: Color = Color("#F4EEE2")
+@export var OUTLINE_COLOR: Color = Color("#0E1015")
+@export var GAP: float = 5.0
+@export var LENGTH: float = 8.0
+@export var WIDTH: float = 2.5
+@export var OUTLINE: float = 1.2
 @export var RETICLE_SPEED: float = 0.25
-@export var RETICLE_DISTANCE: float = 2.0
+@export var RETICLE_DISTANCE: float = 0.6
+@export var SHOT_KICK: float = 5.0
 @export var PLAYER_CHARACTER: CharacterBody3D
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	queue_redraw()
+var _spread := 0.0
+var _kick := 0.0
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	adjust_reticle_lines()
 
-# Everything is drawn around the container's center: its origin is the
-# top-left corner, which would put the reticle off the screen center (where
-# the shot ray goes).
-func _draw() -> void:
-	draw_circle(size * 0.5, DOT_RADIUS, DOT_COLOR)
+func kick() -> void:
+	_kick = SHOT_KICK
 
-func adjust_reticle_lines() -> void:
-	if PLAYER_CHARACTER == null or RETICLE_LINES.size() < 4:
+
+func _process(delta: float) -> void:
+	if PLAYER_CHARACTER == null:
 		return
 	# planar speed: get_real_velocity() includes falling, which would push the
-	# lines out while airborne for no reason
+	# bars out while airborne for no reason
 	var vel := PLAYER_CHARACTER.get_real_velocity()
-	var speed := Vector2(vel.x, vel.z).length()
-	var pos := size * 0.5
+	_spread = lerpf(_spread, Vector2(vel.x, vel.z).length() * RETICLE_DISTANCE, RETICLE_SPEED)
+	_kick = move_toward(_kick, 0.0, delta * SHOT_KICK * 8.0)
+	queue_redraw()
 
-	# Adjust lines' position (top, right, bottom, left)
-	RETICLE_LINES[0].position = RETICLE_LINES[0].position.lerp(
-			pos + Vector2(0, -speed * RETICLE_DISTANCE), RETICLE_SPEED)
-	RETICLE_LINES[1].position = RETICLE_LINES[1].position.lerp(
-			pos + Vector2(speed * RETICLE_DISTANCE, 0), RETICLE_SPEED)
-	RETICLE_LINES[2].position = RETICLE_LINES[2].position.lerp(
-			pos + Vector2(0, speed * RETICLE_DISTANCE), RETICLE_SPEED)
-	RETICLE_LINES[3].position = RETICLE_LINES[3].position.lerp(
-			pos + Vector2(-speed * RETICLE_DISTANCE, 0), RETICLE_SPEED)
+
+# Drawn around the control's center: its origin is the top-left corner, which
+# would put the reticle off the screen center.
+func _draw() -> void:
+	var center := size * 0.5
+	for dir: Vector2 in [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]:
+		var start := center + dir * (GAP + _spread + _kick)
+		var end := start + dir * LENGTH
+		draw_line(start, end, COLOR, WIDTH)

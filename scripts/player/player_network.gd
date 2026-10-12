@@ -13,6 +13,9 @@ var net_color: String = "":
 		net_color = value
 		if is_node_ready():
 			apply_robot_color()
+# owner's round-trip time in ms, for the scoreboard (0 = unknown)
+var net_ping: int = 0
+var _ping_timer := 0.0
 var net_fire_count: int = 0:
 	set(value):
 		var previous := net_fire_count
@@ -58,6 +61,19 @@ var net_hit_position: Vector3 = Vector3.ZERO
 var net_hit_normal: Vector3 = Vector3.ZERO
 var net_wallrun_side: int = 0 # -1 left wall, 1 right wall, 0 not wallrunning
 var _wallrun_lean: float = 0.0
+
+# Owner only: publish this client's Photon round-trip time once a second.
+func update_ping(delta: float) -> void:
+	if is_remote or not Engine.has_singleton("Fusion") or not Fusion.is_in_room():
+		return
+	_ping_timer -= delta
+	if _ping_timer > 0.0:
+		return
+	_ping_timer = 1.0
+	var rtt := Fusion.get_rtt()
+	# ponytail: Fusion documents no unit for get_rtt(); Fusion times are
+	# seconds, and a real round trip is never above 2 s, so bigger means ms.
+	net_ping = int(round(rtt * 1000.0 if rtt < 2.0 else rtt))
 
 func apply_robot_color() -> void:
 	if Color.html_is_valid(net_color):
@@ -326,8 +342,8 @@ func _enable_local_copy() -> void:
 	viewmodel_camera.get_viewport().render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	visual_root.visible = true
 	_update_gun_visibility()
-	# first person: hide the head meshes from the local camera but keep their
-	# shadows, and hide the floating nickname (only other players see it)
+	# first person: hide the head and arm meshes from the local camera but keep
+	# their shadows, and hide the floating nickname (only other players see it)
 	nickname_label.visible = false
 	for mesh in head_meshes:
 		if mesh != null:

@@ -65,6 +65,8 @@ func _process(delta: float) -> void:
 
 	network_view_sync(delta)
 
+	update_ping(delta)
+
 	_animate_locomotion(delta)
 
 func _physics_process(_delta: float) -> void:

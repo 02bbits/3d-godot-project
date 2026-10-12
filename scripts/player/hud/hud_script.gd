@@ -7,31 +7,36 @@ class_name HUD
 
 #label references variables
 @onready var speed_lines_container: ColorRect = %SpeedLinesContainer
-@onready var health_bar: ProgressBar = $Healthbar
-@onready var stamina_bar: ProgressBar = $Staminabar
-@onready var round_label: Label = %RoundLabel
-@onready var score_grid: GridContainer = %ScoreGrid
+@onready var vitals: Control = $Vitals
+@onready var ammo_panel: Control = $AmmoPanel
+@onready var score_card: Control = $ScoreCard
+@onready var tab_board: Control = $TabBoard
 @onready var results_panel: Control = %ResultsPanel
 @onready var results_list: VBoxContainer = %ResultsList
 @onready var match_banner: Label = %MatchBanner
-@onready var scoreboard: PanelContainer = $Scoreboard
-@onready var crosshair: CenterContainer = $Reticle
+@onready var crosshair: Control = $Reticle
+
+const ROWS_REFRESH := 0.25
 
 var _match_manager: Node
 var _last_state := ""
 var _last_result_serial := -1
+var _rows_timer := 0.0
 
 func _ready() -> void:
 	if play_char == null:
 		assert(false, "Player character reference for the hud is mandatory")
 
-func _process(_delta : float) -> void:
-	# keep the bar range in sync when modifiers change max health
-	if health_bar.max_value != play_char.max_health:
-		health_bar.max_value = play_char.max_health
-	if stamina_bar.max_value != play_char.stamina_max:
-		stamina_bar.max_value = play_char.stamina_max
+func _process(delta : float) -> void:
 	_update_match_ui()
+	# names, colors and pings change outside the match state: refresh the
+	# scoreboards on a short timer
+	_rows_timer -= delta
+	if _rows_timer <= 0.0 and _match_manager != null:
+		_rows_timer = ROWS_REFRESH
+		_push_scoreboard()
+	tab_board.visible = visible and Input.is_physical_key_pressed(KEY_TAB) \
+			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _popup_up()
 
 func display_speed_lines(value : bool) -> void:
 	speed_lines_container.visible = value
@@ -60,23 +65,25 @@ func _update_match_ui() -> void:
 	if int(_match_manager.result_serial) != _last_result_serial:
 		_last_result_serial = int(_match_manager.result_serial)
 		_show_match_banner(str(_match_manager.last_result))
-	_rebuild_scoreboard()
-
-
-func _rebuild_scoreboard() -> void:
-	for child in score_grid.get_children():
-		child.free()
-	round_label.text = "Round %d / %d" % [_match_manager.round, _match_manager.rounds_total]
-	score_grid.add_child(_make_cell("Player"))
-	score_grid.add_child(_make_cell("Rounds"))
-	score_grid.add_child(_make_cell("Match"))
-	for row in _player_rows():
-		score_grid.add_child(_make_cell(str(row[0])))
-		score_grid.add_child(_make_cell(str(row[1])))
-		score_grid.add_child(_make_cell(str(row[2])))
+	_push_scoreboard()
 	_update_results()
 
 
+func _push_scoreboard() -> void:
+	var total: int = maxi(int(_match_manager.rounds_total), 1)
+	var info := {
+		"round": maxi(int(_match_manager.round), 1),
+		"rounds_total": total,
+		"kills_needed": int(_match_manager.match_wins_per_round),
+		# a majority of the rounds clinches the match
+		"wins_needed": floori(total / 2.0) + 1,
+	}
+	var rows := _player_rows()
+	score_card.set_rows(rows, info)
+	tab_board.set_rows(rows, info)
+
+
+# sorted by match (round) wins, then this round's kills, then name
 func _player_rows() -> Array:
 	var rows: Array = []
 	for p in get_tree().get_nodes_in_group("player"):
@@ -89,17 +96,21 @@ func _player_rows() -> Array:
 		var display_name := str(p.net_nickname)
 		if display_name.is_empty():
 			display_name = "Player %d" % id
-		rows.append([
-			display_name,
-			int(_match_manager.rounds_won.get(str(id), 0)),
-			int(_match_manager.round_scores.get(str(id), 0)),
-		])
-	rows.sort_custom(func(a: Array, b: Array) -> bool:
-		if a[1] != b[1]:
-			return a[1] > b[1]
-		if a[2] != b[2]:
-			return a[2] > b[2]
-		return a[0] < b[0])
+		rows.append({
+			"name": display_name,
+			"color": Color.html(p.net_color) if Color.html_is_valid(p.net_color) \
+					else HudStyle.MUTED,
+			"wins": int(_match_manager.rounds_won.get(str(id), 0)),
+			"kills": int(_match_manager.round_scores.get(str(id), 0)),
+			"ping": int(p.net_ping),
+			"local": p == play_char,
+		})
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a.wins != b.wins:
+			return a.wins > b.wins
+		if a.kills != b.kills:
+			return a.kills > b.kills
+		return a.name < b.name)
 	return rows
 
 
@@ -114,8 +125,8 @@ func _update_results() -> void:
 	var rank := 1
 	for row in _player_rows().slice(0, 3):
 		var label := Label.new()
-		label.text = "%d.  %s — %d rounds" % [rank, row[0], row[1]]
-		label.add_theme_font_override("font", round_label.get_theme_font("font"))
+		label.text = "%d.  %s — %d rounds" % [rank, row.name, row.wins]
+		label.add_theme_font_override("font", HudStyle.LILITA)
 		label.add_theme_font_size_override("font_size", 32)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		results_list.add_child(label)
@@ -140,18 +151,12 @@ func _hide_match_banner() -> void:
 	_refresh_hud_visibility()
 
 
+func _popup_up() -> bool:
+	return match_banner.visible or results_panel.visible
+
+
 # the persistent gameplay HUD steps aside while an important popup is up
 func _refresh_hud_visibility() -> void:
-	var popup := match_banner.visible or results_panel.visible
-	health_bar.visible = not popup
-	stamina_bar.visible = not popup
-	scoreboard.visible = not popup
-	crosshair.visible = not popup
-
-
-func _make_cell(text: String) -> Label:
-	var label := Label.new()
-	label.text = text
-	label.add_theme_font_override("font", round_label.get_theme_font("font"))
-	label.add_theme_font_size_override("font_size", 24)
-	return label
+	var popup := _popup_up()
+	for widget in [vitals, ammo_panel, score_card, crosshair]:
+		widget.visible = not popup

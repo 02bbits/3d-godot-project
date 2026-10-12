@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://yr6i1ueijlh6" path="res://scripts/ui/connection_ui.gd" id="1_menu"]
 [ext_resource type="Theme" uid="uid://dddyjvwbt6svc" path="res://resources/ui/menu_theme.tres" id="2_theme"]
 [ext_resource type="Script" uid="uid://bagafyebha3kr" path="res://scripts/ui/robot_icon.gd" id="3_robot"]
+[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="4_2rg7x"]
 [ext_resource type="Script" uid="uid://bcnnwmbrbcd65" path="res://scripts/ui/settings_menu.gd" id="5_settings"]
 [ext_resource type="Script" uid="uid://cn2d5d3fx8nwi" path="res://scripts/ui/stepper.gd" id="6_stepper"]
 [ext_resource type="Script" uid="uid://djdj7xs50m30b" path="res://scripts/ui/create_lobby_form.gd" id="7_form"]
@@ -12,12 +13,21 @@
 [ext_resource type="Shader" uid="uid://bxa6m55ut41wc" path="res://scripts/ui/shader/blueprint_bg.gdshader" id="11_bg"]
 [ext_resource type="Script" uid="uid://b3g6enkee12go" path="res://scripts/ui/lobby_page.gd" id="12_lobby"]
 [ext_resource type="Script" uid="uid://bsh0dlqba6p58" path="res://scripts/ui/browse_page.gd" id="13_browse"]
-[ext_resource type="FontFile" uid="uid://t6p474j2sxs8" path="res://assets/fonts/lilita_one_regular.ttf" id="4_2rg7x"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bx4y2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blueprint"]
 shader = ExtResource("11_bg")
+shader_parameter/base_top = Color(0.118, 0.161, 0.247, 1)
+shader_parameter/base_bottom = Color(0.086, 0.106, 0.157, 1)
+shader_parameter/line_color = Color(0.302, 0.635, 0.996, 1)
+shader_parameter/accent_color = Color(1, 0.788, 0.2, 1)
+shader_parameter/cells = 26.0
+shader_parameter/major_every = 5.0
+shader_parameter/scroll = Vector2(0.3, 0.18)
+shader_parameter/minor_alpha = 0.07
+shader_parameter/major_alpha = 0.17
+shader_parameter/robot_alpha = 0.22
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bx4y2"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6m8d4"]
 content_margin_right = 30.0
@@ -169,7 +179,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 16
-text = "v0.1"
+text = "v0.2"
 horizontal_alignment = 1
 
 [node name="NameScreen" type="CenterContainer" parent="Pages" unique_id=1192946770]
@@ -320,7 +330,6 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("8_art")
-kind = "create"
 
 [node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/CreateCard/V" unique_id=379827431]
 layout_mode = 2

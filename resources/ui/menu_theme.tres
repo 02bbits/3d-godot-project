@@ -136,6 +136,64 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
+[sub_resource type="Gradient" id="Gradient_grabber"]
+offsets = PackedFloat32Array(0, 0.6, 0.66, 0.9, 0.97)
+colors = PackedColorArray(0.9569, 0.9333, 0.8863, 1, 0.9569, 0.9333, 0.8863, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_grabber"]
+gradient = SubResource("Gradient_grabber")
+width = 28
+height = 28
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_grabber_h"]
+offsets = PackedFloat32Array(0, 0.6, 0.66, 0.9, 0.97)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_grabber_h"]
+gradient = SubResource("Gradient_grabber_h")
+width = 28
+height = 28
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StyleBoxEmpty" id="SB_empty"]
+
+[sub_resource type="StyleBoxFlat" id="SB_slider_fill"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 0.7882, 0.2, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="SB_slider_fill_h"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 0.8431, 0.3608, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="SB_slider_track"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.0902, 0.1059, 0.1412, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0627, 0.0784, 0.1098, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
 [sub_resource type="StyleBoxFlat" id="SB_badge_host"]
 content_margin_left = 12.0
 content_margin_top = 3.0
@@ -287,64 +345,6 @@ shadow_color = Color(0.0353, 0.0431, 0.0549, 1)
 shadow_size = 2
 shadow_offset = Vector2(0, 7)
 
-[sub_resource type="StyleBoxFlat" id="SB_slider_track"]
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(0.0902, 0.1059, 0.1412, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.0627, 0.0784, 0.1098, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
-
-[sub_resource type="StyleBoxFlat" id="SB_slider_fill"]
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(1, 0.7882, 0.2, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
-
-[sub_resource type="StyleBoxFlat" id="SB_slider_fill_h"]
-content_margin_top = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(1, 0.8431, 0.3608, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
-
-[sub_resource type="StyleBoxEmpty" id="SB_empty"]
-
-[sub_resource type="Gradient" id="Gradient_grabber"]
-offsets = PackedFloat32Array(0, 0.6, 0.66, 0.9, 0.97)
-colors = PackedColorArray(0.9569, 0.9333, 0.8863, 1, 0.9569, 0.9333, 0.8863, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 0)
-
-[sub_resource type="GradientTexture2D" id="Tex_grabber"]
-gradient = SubResource("Gradient_grabber")
-width = 28
-height = 28
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.5)
-
-[sub_resource type="Gradient" id="Gradient_grabber_h"]
-offsets = PackedFloat32Array(0, 0.6, 0.66, 0.9, 0.97)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 1, 0.1059, 0.1255, 0.1608, 0)
-
-[sub_resource type="GradientTexture2D" id="Tex_grabber_h"]
-gradient = SubResource("Gradient_grabber_h")
-width = 28
-height = 28
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.5)
-
 [resource]
 default_font = ExtResource("2_rubik")
 default_font_size = 18
@@ -378,8 +378,6 @@ CreamButton/styles/focus = SubResource("SB_cream_n")
 CreamButton/styles/hover = SubResource("SB_cream_h")
 CreamButton/styles/normal = SubResource("SB_cream_n")
 CreamButton/styles/pressed = SubResource("SB_cream_p")
-HostBadge/base_type = &"PanelContainer"
-HostBadge/styles/panel = SubResource("SB_badge_host")
 HSlider/icons/grabber = SubResource("Tex_grabber")
 HSlider/icons/grabber_disabled = SubResource("Tex_grabber")
 HSlider/icons/grabber_highlight = SubResource("Tex_grabber_h")
@@ -387,6 +385,8 @@ HSlider/styles/focus = SubResource("SB_empty")
 HSlider/styles/grabber_area = SubResource("SB_slider_fill")
 HSlider/styles/grabber_area_highlight = SubResource("SB_slider_fill_h")
 HSlider/styles/slider = SubResource("SB_slider_track")
+HostBadge/base_type = &"PanelContainer"
+HostBadge/styles/panel = SubResource("SB_badge_host")
 LineEdit/colors/caret_color = Color(1, 0.7882, 0.2, 1)
 LineEdit/colors/font_color = Color(0.9569, 0.9333, 0.8863, 1)
 LineEdit/colors/font_placeholder_color = Color(0.45, 0.49, 0.55, 1)

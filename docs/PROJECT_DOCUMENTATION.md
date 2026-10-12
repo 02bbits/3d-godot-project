@@ -29,8 +29,11 @@ An online round-based FPS:
   one) and every round win swaps to a random *different* map with a fade.
 - Robot colors: each player picks a body color on the name screen; it replicates
   (`net_color`) and recolors only the robot shell (`scripts/player/robot_color.gd`).
-- Health/stamina bars with a delayed white catch-up bar; scoreboard, match banner,
-  results screen, speed-based reticle.
+- HUD from `docs/Modifier Arena — HUD.pdf`: segmented health with a ghost bar,
+  stamina, ammo pips (≤24, ×N groups) with reload ring and dash cooldown, compact
+  scoreboard + TAB board (kills, match wins, ping), outlined reticle; match banner and
+  results screen. The gun has procedural sway/bob/sprint tilt, spring recoil and a
+  reload animation.
 - Modifier framework (definitions, manager, caps) — **not reachable in game**: nothing
   calls `ModifierManager.set_build()`. `match_manager.round_completed` is the future
   draft hook.
@@ -79,11 +82,13 @@ PlayerCharacter (CharacterBody3D)
 ├── AnimationTree/AnimationPlayer
 └── HUD (CanvasLayer)
 	├── ViewModel           SubViewportContainer > transparent SubViewport (layer-4 camera)
-	├── Reticle             reticle.gd: dot + 4 Line2D spread by speed
-	├── Healthbar/Staminabar
+	├── Reticle             reticle.gd: 4 outlined bars, speed spread + shot kick
+	├── Vitals              hud/vitals.gd: health (10 HP segments, ghost) + stamina
+	├── AmmoPanel           hud/ammo_panel.gd: pips, reload ring, RELOAD prompt, dash
 	├── DeathScreen         spectator overlay (ELIMINATED + target + hint)
 	├── SpeedLinesContainer
-	├── Scoreboard          RoundLabel + ScoreGrid
+	├── ScoreCard           hud/scoreboard.gd: compact top-right card (top 3 + you)
+	├── TabBoard            hud/scoreboard.gd (full = true): shown while TAB is held
 	├── ResultsPanel        GAME OVER + top-3 + "Returning to the lobby..."
 	└── MatchBanner         transient match/round winner banner
 ```
@@ -93,7 +98,8 @@ PlayerCharacter (CharacterBody3D)
 ```
 Weapon (Node3D, scripts/weapons/weapon.gd)
 ├── ViewModel (Node3D)      definition.viewmodel_scene; render layer 4; reparented (with
-│                           Muzzle) into a lean pivot under the viewmodel camera
+│                           Muzzle) into the motion pivot (viewmodel_motion.gd) under
+│                           the viewmodel camera
 ├── WorldModel (Node3D)     definition.world_model_scene; reparented to the hand
 ├── Muzzle (Marker3D)       definition.muzzle_transform; local tracers start at its
 │                           projection into the gameplay camera, remote ones at the
@@ -206,6 +212,7 @@ One client is the Photon master; each client owns its own player replica
 - `net_hit_position` / `net_hit_normal` (last shot impact, for tracers/impacts)
 - `net_nickname` (floating label)
 - `net_color` (robot shell color, html; `RobotColor.apply` on every peer)
+- `net_ping` (owner's `Fusion.get_rtt()` in ms, refreshed every second; TAB board)
 
 ### RPCs (`@rpc("any_peer")`, kept on the leaf `player.gd`)
 
@@ -320,7 +327,13 @@ only seen by the viewmodel camera.
 - `scenes/weapons/weapon.tscn` — the shared weapon scene: controller, `ViewModel` and
   `WorldModel` mounts, `Muzzle`, shoot/reload sounds, `HitConfirm`.
 - `scripts/weapons/weapon.gd` — all shared logic: input, fire cooldown, ammo/reload,
-  modifier stats, damage routing, tracer/feedback, recoil, visibility.
+  modifier stats, damage routing, tracer/feedback, visibility; `mag_size()` and
+  `reload_progress()` feed the HUD.
+- `scripts/weapons/viewmodel_motion.gd` — the viewmodel pivot. Composes idle breathing,
+  step bob, sprint tilt (drops while shooting/reloading), strafe roll, look sway,
+  air/slide/dash poses, landing dip, spring recoil (`kick()`), the reload animation
+  (`start_reload()`: tilt over, mag out/in jolts, rack) and the respawn raise. Rotations
+  pivot on the grip (`viewmodel_transform.origin`). Local player only.
 - `scripts/weapons/weapon_definition.gd` (`WeaponDefinition`) — per-weapon resource:
   `display_name`, `damage`, `mag_size`, `reserve_max`, `fire_interval`, `reload_time`,
   `range`, `viewmodel_scene`/`viewmodel_transform`, `world_model_scene`/
@@ -414,12 +427,13 @@ on `match_manager` is the intended future draft hook.
 |---|---|---|
 | Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scripts/ui/robot_icon.gd`); lives in `MenuLayer` (CanvasLayer 10) |
 | Lobby roster | `scripts/ui/lobby_page.gd` | player chips (robot icon, name, Host badge) + empty "Waiting for player" slots; room info panel; host-only Start (disabled with <2 players) |
-| HUD | `scripts/player/hud/hud_script.gd` | keeps bar max in sync, rebuilds the scoreboard, hides the gameplay HUD while a popup is up |
-| Health bar | `scenes/ui/healthbar/*` | red bar drops immediately; the white bar holds the gap and slides down after a 0.4 s delay (0.35 s slide) |
-| Stamina bar | `scenes/ui/staminabar/*` | same delayed style; binds to the HUD's own `play_char` (not a group lookup) |
-| Reticle | `scenes/player/reticle.gd` | center dot + 4 Line2D spread by planar speed (`get_real_velocity()`); drawn around `size / 2` so it sits exactly on the shot ray |
+| HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured), hides the gameplay HUD while a popup is up |
+| HUD style | `scripts/player/hud/hud_style.gd` | palette, Lilita/Rubik fonts, card/dot/diamond drawing; metrics are mockup px × `K` (0.79) |
+| Vitals | `scripts/player/hud/vitals.gd` | health: red bar, 10 HP segments, pale ghost bar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue bar |
+| Ammo panel | `scripts/player/hud/ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N tag, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring + pips refill with `reload_progress()`; dash icon fills while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
+| Reticle | `scenes/player/reticle.gd` | 4 outlined bars spread by planar speed and kicked open per shot; drawn around `size / 2` so it sits exactly on the shot ray |
 | Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + A/D hint move to the top center |
-| Scoreboard | player HUD | `Player / Rounds / Match` + `Round X / N` |
+| Scoreboard | `scripts/player/hud/scoreboard.gd` | yellow dots = this round's match wins ("kills", `match_wins_per_round`), blue diamonds = rounds won, out of a majority of `rounds_total`; sorted by wins, then kills |
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |
 | Match banner | player HUD | "X wins the match!/round N!" or a draw |
 | Hit confirm | `scripts/player/hit_confirm.gd` | hit marker, kill banner, kill sound |
@@ -511,6 +525,6 @@ two-client manual runs.
   scale (FSR), UI scale (`content_scale_factor`, 50–100%, applied on release), mouse
   sensitivity (`CameraObject.mouse_sensitivity`) and master volume. Saved under
   `[settings]` in `user://user_config.cfg`, applied on load.
-- **Health/stamina bars bind to the HUD's `play_char`**, never a group lookup — remote
+- **HUD widgets bind to the HUD's `play_char`**, never a group lookup — remote
   copies are in the `player` group too, and a group lookup would attach to the wrong
   copy on clients.

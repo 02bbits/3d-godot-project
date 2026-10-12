@@ -6,10 +6,11 @@
 [ext_resource type="Script" uid="uid://cdhjrqg5pjrno" path="res://scripts/player/state_machine/dash_state_script.gd" id="4_dash"]
 [ext_resource type="Script" uid="uid://bhguewy1thcsj" path="res://scripts/player/state_machine/wallrun_state_script.gd" id="5_wallrun"]
 [ext_resource type="Shader" uid="uid://jl76baah73hr" path="res://scripts/player/shader/speed_lines_shader.gdshader" id="8_shader"]
-[ext_resource type="PackedScene" uid="uid://foi4copqpjox" path="res://scenes/ui/healthbar/healthbar.tscn" id="9_hb"]
+[ext_resource type="Script" uid="uid://n36shd1notat" path="res://scripts/player/hud/vitals.gd" id="9_hb"]
 [ext_resource type="Script" uid="uid://dx02l6p6behb8" path="res://scripts/player/hud/hud_script.gd" id="10_hud"]
 [ext_resource type="Animation" uid="uid://caupvvy4vhuku" path="res://assets/photon/animations/aiming.res" id="10_oekrc"]
-[ext_resource type="PackedScene" uid="uid://ddm5oggbuyiw5" path="res://scenes/ui/staminabar/staminabar.tscn" id="11_sb"]
+[ext_resource type="Script" uid="uid://cimsrvsl85lds" path="res://scripts/player/hud/ammo_panel.gd" id="11_sb"]
+[ext_resource type="Script" uid="uid://dieoa6gjqkpmt" path="res://scripts/player/hud/scoreboard.gd" id="12_score"]
 [ext_resource type="Script" uid="uid://b3t0evs8nso2" path="res://scripts/player/death_screen.gd" id="12_dth"]
 [ext_resource type="Script" uid="uid://x3epmarfawf4" path="res://scripts/player/state_machine/state_machine_script.gd" id="14_sm"]
 [ext_resource type="PackedScene" uid="uid://cotgwlr60fiq7" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Character/Dummy.glb" id="14_yj68g"]
@@ -46,7 +47,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 18
+property_count = 19
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -155,6 +156,12 @@ properties/17/interface_tag = ""
 properties/17/interpolate = 0
 properties/17/element_type = 0
 properties/17/element_class_name = ""
+properties/18/path = NodePath(":net_ping")
+properties/18/max_array_capacity = 0
+properties/18/interface_tag = ""
+properties/18/interpolate = 0
+properties/18/element_type = 0
+properties/18/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -1040,7 +1047,7 @@ desired_move_speed_curve = SubResource("Curve_s7fsc")
 in_air_move_speed_curve = SubResource("Curve_gfbru")
 impact_effect = ExtResource("26_impact")
 death_effect = ExtResource("27_death")
-head_meshes = [NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/head/Dummy_Helmet"), NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/Dummy_Head")]
+head_meshes = [NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/head/Dummy_Helmet"), NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/Dummy_Head"), NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/Dummy_ArmLeft"), NodePath("VisualRoot/ScalingRoot/PlayerModel/Rig_Medium/Skeleton3D/Dummy_ArmRight")]
 weapon_definition = ExtResource("38_def")
 
 [node name="StateMachine" type="Node" parent="." unique_id=948360827 node_paths=PackedStringArray("initial_state")]
@@ -1259,7 +1266,8 @@ script = ExtResource("10_hud")
 play_char = NodePath("..")
 metadata/_edit_use_anchors_ = true
 
-[node name="Reticle" type="CenterContainer" parent="HUD" unique_id=609938631 node_paths=PackedStringArray("RETICLE_LINES", "PLAYER_CHARACTER")]
+[node name="Reticle" type="Control" parent="HUD" unique_id=609938631 node_paths=PackedStringArray("PLAYER_CHARACTER")]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1271,25 +1279,9 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("32_kxw46")
-RETICLE_LINES = [NodePath("Top"), NodePath("Right"), NodePath("Bottom"), NodePath("Left")]
 PLAYER_CHARACTER = NodePath("../..")
-
-[node name="Top" type="Line2D" parent="HUD/Reticle" unique_id=269835423]
-points = PackedVector2Array(0, -5, 0, -15)
-width = 2.0
-
-[node name="Right" type="Line2D" parent="HUD/Reticle" unique_id=133271435]
-points = PackedVector2Array(5, 0, 15, 0)
-width = 2.0
-
-[node name="Bottom" type="Line2D" parent="HUD/Reticle" unique_id=840376985]
-points = PackedVector2Array(0, 5, 0, 15)
-width = 2.0
-
-[node name="Left" type="Line2D" parent="HUD/Reticle" unique_id=739388275]
-points = PackedVector2Array(-5, 0, -15, 0)
-width = 2.0
 
 [node name="ViewModel" type="SubViewportContainer" parent="HUD" unique_id=1714327811]
 anchors_preset = 15
@@ -1315,17 +1307,34 @@ fov = 90.0
 near = 0.01
 far = 100.0
 
-[node name="Healthbar" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
-offset_left = 22.0
-offset_top = 24.0
-offset_right = 262.0
-offset_bottom = 39.0
+[node name="Vitals" type="Control" parent="HUD" unique_id=260973575]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -84.0
+offset_right = 289.0
+offset_bottom = -30.0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_hb")
 
-[node name="Staminabar" parent="HUD" unique_id=614996660 instance=ExtResource("11_sb")]
-offset_left = 22.0
-offset_top = 44.0
-offset_right = 262.0
-offset_bottom = 59.0
+[node name="AmmoPanel" type="Control" parent="HUD" unique_id=614996660]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -191.0
+offset_top = -92.0
+offset_right = 191.0
+offset_bottom = -29.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_sb")
 
 [node name="DeathScreen" type="Control" parent="HUD" unique_id=1232994553]
 unique_name_in_owner = true
@@ -1416,36 +1425,30 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Scoreboard" type="PanelContainer" parent="HUD" unique_id=1073410746]
+[node name="ScoreCard" type="Control" parent="HUD" unique_id=1073410746]
+layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -340.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 150.0
+offset_left = -260.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 184.0
 grow_horizontal = 0
 mouse_filter = 2
+script = ExtResource("12_score")
 
-[node name="V" type="VBoxContainer" parent="HUD/Scoreboard" unique_id=1836774013]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="RoundLabel" type="Label" parent="HUD/Scoreboard/V" unique_id=854229304]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
-theme_override_fonts/font = ExtResource("33_font")
-theme_override_font_sizes/font_size = 30
-text = "Round 1 / 3"
-horizontal_alignment = 1
-
-[node name="ScoreGrid" type="GridContainer" parent="HUD/Scoreboard/V" unique_id=1799165551]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/h_separation = 24
-theme_override_constants/v_separation = 2
-columns = 3
+[node name="TabBoard" type="Control" parent="HUD" unique_id=101339831]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("12_score")
+full = true
 
 [node name="ResultsPanel" type="Control" parent="HUD" unique_id=92363811]
 unique_name_in_owner = true

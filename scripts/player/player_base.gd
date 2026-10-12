@@ -174,6 +174,8 @@ var default_input_actions : Dictionary
 @export_group("Visuals")
 @export var impact_effect: PackedScene
 @export var death_effect: PackedScene
+# body parts the owner's own camera must not see (shadow only for the local
+# copy): the head, and the arms, which swing past the camera when animating
 @export var head_meshes: Array[MeshInstance3D] = []
 
 @export_group("Head tracking")
