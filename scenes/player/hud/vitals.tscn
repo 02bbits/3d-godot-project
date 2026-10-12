@@ -2,37 +2,36 @@
 
 [ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://n36shd1notat" path="res://scripts/player/hud/vitals.gd" id="2_script"]
-[ext_resource type="DPITexture" uid="uid://bgwl4vjj463rv" path="res://assets/ui/hud/bolt.svg" id="3_bolt"]
+[ext_resource type="Texture2D" uid="uid://bgwl4vjj463rv" path="res://assets/ui/hud/bolt.svg" id="3_bolt"]
 
-[node name="Vitals" type="VBoxContainer"]
+[node name="Vitals" type="VBoxContainer" unique_id=2086033709]
 custom_minimum_size = Vector2(258, 0)
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 29.0
-offset_top = -30.0
+offset_top = -86.0
 offset_right = 287.0
 offset_bottom = -30.0
 grow_vertical = 0
 mouse_filter = 2
 theme = ExtResource("1_theme")
-theme_override_constants/separation = 10
+theme_override_constants/separation = 3
 script = ExtResource("2_script")
 
-[node name="HealthRow" type="HBoxContainer" parent="."]
+[node name="HealthRow" type="HBoxContainer" parent="." unique_id=1530354552]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="HealthIcon" type="Panel" parent="HealthRow"]
+[node name="HealthIcon" type="Panel" parent="HealthRow" unique_id=1453688635]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"HudHealthIcon"
-pivot_offset_ratio = Vector2(0.5, 0.5)
 
-[node name="PlusH" type="ColorRect" parent="HealthRow/HealthIcon"]
+[node name="PlusH" type="ColorRect" parent="HealthRow/HealthIcon" unique_id=2007673418]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -43,10 +42,12 @@ offset_left = -7.0
 offset_top = -2.0
 offset_right = 7.0
 offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 color = Color(0.0549, 0.0627, 0.0824, 1)
 
-[node name="PlusV" type="ColorRect" parent="HealthRow/HealthIcon"]
+[node name="PlusV" type="ColorRect" parent="HealthRow/HealthIcon" unique_id=971506470]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -57,10 +58,12 @@ offset_left = -2.0
 offset_top = -7.0
 offset_right = 2.0
 offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 color = Color(0.0549, 0.0627, 0.0824, 1)
 
-[node name="HealthSlot" type="PanelContainer" parent="HealthRow"]
+[node name="HealthSlot" type="PanelContainer" parent="HealthRow" unique_id=873614041]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -68,7 +71,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"HudBarSlot"
 
-[node name="GhostBar" type="ProgressBar" parent="HealthRow/HealthSlot"]
+[node name="GhostBar" type="ProgressBar" parent="HealthRow/HealthSlot" unique_id=289768976]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -79,7 +82,7 @@ step = 0.0
 value = 1.0
 show_percentage = false
 
-[node name="HealthBar" type="ProgressBar" parent="HealthRow/HealthSlot"]
+[node name="HealthBar" type="ProgressBar" parent="HealthRow/HealthSlot" unique_id=41124812]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -90,18 +93,18 @@ step = 0.0
 value = 1.0
 show_percentage = false
 
-[node name="Ticks" type="HBoxContainer" parent="HealthRow/HealthSlot"]
+[node name="Ticks" type="HBoxContainer" parent="HealthRow/HealthSlot" unique_id=1882908575]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="Segment" type="Control" parent="HealthRow/HealthSlot/Ticks"]
+[node name="Segment" type="Control" parent="HealthRow/HealthSlot/Ticks" unique_id=1263273326]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="Tick" type="ColorRect" parent="HealthRow/HealthSlot/Ticks/Segment"]
+[node name="Tick" type="ColorRect" parent="HealthRow/HealthSlot/Ticks/Segment" unique_id=1202699052]
 visible = false
 layout_mode = 1
 anchors_preset = 11
@@ -111,15 +114,16 @@ anchor_bottom = 1.0
 offset_left = -1.0
 offset_right = 1.0
 grow_horizontal = 0
+grow_vertical = 2
 mouse_filter = 2
 color = Color(0.0549, 0.0627, 0.0824, 0.45)
 
-[node name="StaminaRow" type="HBoxContainer" parent="."]
+[node name="StaminaRow" type="HBoxContainer" parent="." unique_id=194732289]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 0
 
-[node name="Bolt" type="TextureRect" parent="StaminaRow"]
+[node name="Bolt" type="TextureRect" parent="StaminaRow" unique_id=226335397]
 custom_minimum_size = Vector2(28, 18)
 layout_mode = 2
 mouse_filter = 2
@@ -127,7 +131,7 @@ texture = ExtResource("3_bolt")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StaminaSlot" type="PanelContainer" parent="StaminaRow"]
+[node name="StaminaSlot" type="PanelContainer" parent="StaminaRow" unique_id=1675964645]
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -135,7 +139,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"HudBarSlot"
 
-[node name="StaminaBar" type="ProgressBar" parent="StaminaRow/StaminaSlot"]
+[node name="StaminaBar" type="ProgressBar" parent="StaminaRow/StaminaSlot" unique_id=1273165590]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

@@ -19,10 +19,14 @@ Godot 4.7.2 FPS, GDScript only (no C#/.NET). No tests, no CI, no build step.
 
 ## Modifier system (the core of this game)
 
-- Stat-only modifier = a `.tres` dropped in `scripts/modifiers/defs/` **plus one line** in `modifier_db.gd::_build_defs()`. Missing the registry line = modifier doesn't exist.
-- Behavioral modifier = subclass `Modifier` (`scripts/modifiers/modifier.gd`) and override hooks (`on_damage_dealt`, `on_damage_taken`, `on_kill`). Hooks mutate the ctx Dictionary.
-- All final stat math goes through `ModifierManager.get_stat()` — caps per stat are enforced in `STAT_CAPS` there, nowhere else.
-- **No acquisition path yet:** nothing in-game calls `ModifierManager.set_build()` (no draft/pickups), and `rpc_draft_pick` / `input_mode` group lookups are inert leftovers from `/fps`. Exercise mods from a debug script. Full map: `docs/PROJECT_DOCUMENTATION.md`.
+Full guide: `docs/MODIFIER_GUIDE.md`. Ideas backlog: `docs/MODIFIER_CONCEPTS.md`.
+
+- A modifier is a `.tres` in `resources/modifiers/` (file name = id). It's **auto-discovered**: no registry line. Statuses (timed, applied by hits) live in `resources/modifiers/status/`.
+- Stat-only = data only (`percent` / `flat` per level, by `ModRules.STATS` key). Behavioural = subclass `Modifier` in `scripts/modifiers/behaviors/` and override hooks (`on_fire`, `on_damage_dealt`, `on_damage_taken`, `on_kill`, `on_respawn`); hooks mutate the ctx Dictionary.
+- `scripts/modifiers/mod_rules.gd` (`ModRules`) is the one tuning file: offer count, draft timer, rarity colours/weights, type icons, and the STATS table (labels, caps, player-property bindings). A new stat is one row there.
+- All stat math goes through `player.mods.get_stat()` (caps enforced there, nowhere else). Stacking is additive.
+- The build replicates as the player's `net_mods`; environment modifiers apply to every player. The draft is `match_phase = "draft"` (before round 1 and between rounds).
+- Validate after any modifier change: `godot --headless --path . --script res://tools/check_modifiers.gd` → `MODIFIERS OK`.
 
 ## Player state machine
 
@@ -33,3 +37,14 @@ Godot 4.7.2 FPS, GDScript only (no C#/.NET). No tests, no CI, no build step.
 
 - `player.gd` is the leaf of an inheritance chain: `player_base.gd` (exports, shared state, node refs) → `player_movement.gd` (keybinds, timers, stamina, gravity, tweens) → `player_network.gd` (replicated state, view/animation sync, ownership role) → `player_lifecycle.gd` (damage, death, respawn) → `player.gd` (`class_name PlayerCharacter`, `_ready`/`_process`/`_physics_process`, `@rpc` entry points). A layer can only call methods defined in itself or its parents, so keep `@rpc` methods on the leaf.
 - Keep scripts under ~400 lines; split by responsibility the same way when one grows past it.
+
+## Development requirements
+
+Keep the code easy to pick up and extend without rewriting what exists:
+
+- **Data, not code.** Tunable numbers live in resources (`.tres`) or the one rules table of their system (`ModRules`, `WeaponDefinition`); no magic numbers in logic.
+- **Extend by adding files.** New modifiers, weapons and statuses are new `.tres` / subclasses that plug into existing APIs (hooks, `get_stat`, `equip_weapon`). If a feature needs an edit to shared code, add a general extension point (a hook, a stat row) once, not a special case.
+- **Nodes and scenes for UI.** Build UI in `.tscn` files styled by theme type variations (`hud_theme.tres`, `menu_theme.tres`); scripts only set values, visibility and variations. Repeated items duplicate a template child with `NodeUtil.fit_children`. No `_draw()`.
+- **Signals up, calls down.** Children emit signals; owners call methods on children. Don't reach across the tree; pass references with exports or the owner.
+- **One responsibility per script**, under ~400 lines; doc comment at the top saying what it owns.
+- **Verify before handing off:** `godot --headless --path . --quit` (clean) and the modifier check above.

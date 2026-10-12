@@ -34,9 +34,11 @@ An online round-based FPS:
   scoreboard + TAB board (kills, match wins, ping), outlined reticle; match banner and
   results screen. The gun has procedural sway/bob/sprint tilt, spring recoil and a
   reload animation.
-- Modifier framework (definitions, manager, caps) — **not reachable in game**: nothing
-  calls `ModifierManager.set_build()`. `match_manager.round_completed` is the future
-  draft hook.
+- Modifier draft (`docs/Modifier Arena — Modifier System-selection.pdf`): before round 1
+  and after every non-final round each player picks 1 of 3 modifier cards (20 s, then
+  auto-pick). Four types (Stats, Weapon, Ability, Environment), three rarities, level
+  limits; 19 starter modifiers; HUD tray + TAB list. Full guide:
+  `docs/MODIFIER_GUIDE.md`, idea backlog: `docs/MODIFIER_CONCEPTS.md`.
 
 ---
 
@@ -52,6 +54,7 @@ world (Node3D)
 │   └── TestingArea               testing_area.tscn
 ├── PlayerSpawner                 FusionSpawner (spawn_path ".", player.tscn)
 ├── MatchManager                  match_manager.gd
+├── DraftScreen (CanvasLayer 5)   ui/mods/draft_screen.tscn: the modifier draft overlay
 └── MenuLayer (CanvasLayer 10)    above the player HUD (CanvasLayer 1)
 	└── ConnectionMenu            connection_menu.tscn + connection_ui.gd
 ```
@@ -67,8 +70,8 @@ PlayerCharacter (CharacterBody3D)
 ├── StateMachine            initial_state = IdleState
 │   └── Idle/Walk/Run/Jump/Inair/Crouch/Slide/Dash/Wallrun (one script each)
 ├── Health                  net_health is the single source of truth
-├── FusionSharedReplicator  owner_mode = PlayerAttached; 17 replicated properties (§5)
-├── ModifierManager
+├── FusionSharedReplicator  owner_mode = PlayerAttached; 21 replicated properties (§5)
+├── ModifierManager         `player.mods`: build, stats, hooks, statuses (§8)
 ├── CameraHolder            camera_script.gd (yaw, tilt, FOV, zoom)
 │   └── Camera (unique %)   cull_mask 1, FOV 90; the weapon is instanced here at runtime
 │       ├── HeadLookTarget
@@ -85,10 +88,12 @@ PlayerCharacter (CharacterBody3D)
 	├── Reticle             hud/reticle.tscn: 4 outlined bars, speed spread + shot kick
 	├── Vitals              hud/vitals.tscn: health (10 HP segments, ghost) + stamina
 	├── AmmoPanel           hud/ammo_panel.tscn: pips, reload ring, RELOAD prompt, dash
+	├── ModTray             hud/mod_tray.tscn: modifier icons above the vitals + pick toast
 	├── DeathScreen         spectator overlay (ELIMINATED + target + hint)
 	├── SpeedLinesContainer
 	├── ScoreCard           hud/scoreboard_card.tscn: compact top-right card (top 3 + you)
-	├── TabBoard            hud/scoreboard_full.tscn: shown while TAB is held
+	├── TabBoard            hud/scoreboard_full.tscn: shown while TAB is held, with the
+	│                       modifier list (hud/mod_list.tscn) beside the board
 	├── ResultsPanel        GAME OVER + top-3 + "Returning to the lobby..."
 	└── MatchBanner         transient match/round winner banner
 ```
@@ -183,7 +188,14 @@ Master-authoritative; every client polls the room's custom properties every 0.25
   (`round_scores`). A draw (nobody alive) scores nothing.
 - **Round** = first to `match_wins_per_round` match wins (room `match_wins`, default
   2); the winner's `rounds_won` is persisted and
-  `round_scores` reset. `round_completed` fires on the host (future modifier draft).
+  `round_scores` reset.
+- **Draft** (`match_phase = "draft"`): the game starts in a draft for round 1 (Start
+  writes it), and every non-final round win goes intermission → draft → next round.
+  `draft_round` is the round being drafted for. Each client rolls its own offers and
+  publishes its pick through its player's replicated `net_mods` / `net_draft_round`;
+  the host ends the draft once every room player has `net_draft_round >= draft_round`,
+  or after `ModRules.DRAFT_SECONDS` + 2 s. `draft_opened(draft_round)` /
+  `draft_closed` fire on every peer from the phase change itself.
 - **Game over** after `rounds_total` rounds: results screen, then `_return_to_lobby`
   after 5 s (`GAME_OVER_SECONDS`).
 - **Intermission**: 3 s normally, 5 s after a round win so the map transition fits.
@@ -191,9 +203,11 @@ Master-authoritative; every client polls the room's custom properties every 0.25
   before evaluating, so a laggy respawn can't hand the match to the first client back.
 - **Map rotation**: on every non-final round win the host picks a random map other
   than the current one; `map_changed` fires on host and clients.
-- **Host migration**: the game-over countdown restarts if a new host takes over.
+- **Host migration**: the game-over and draft countdowns restart if a new host takes
+  over; a draft still advances the round (derived from `draft_round`).
 
-Room properties written: `match_phase` ("fight"/"intermission"/"game_over"/""), `round`,
+Room properties written: `match_phase` ("draft"/"fight"/"intermission"/"game_over"/""),
+`round`, `draft_round`,
 `map_index`, `last_result`, `result_serial`, `rounds_won_<id>`, `round_score_<id>`.
 Flat per-player int properties are deliberate — Photon handles them reliably and writing
 every player keeps keys from going stale. The host also bumps `game_serial` on every
@@ -203,7 +217,7 @@ from a changed `game_serial` — either way it despawns its previous player befo
 next game.
 
 Signals: `game_started`, `respawn_requested`, `map_changed(index)`,
-`returned_to_lobby`, `round_completed(round)`.
+`returned_to_lobby`, `draft_opened(draft_round)`, `draft_closed`.
 
 ---
 
@@ -224,6 +238,8 @@ One client is the Photon master; each client owns its own player replica
 - `net_nickname` (floating label)
 - `net_color` (robot shell color, html; `RobotColor.apply` on every peer)
 - `net_ping` (owner's `Fusion.get_rtt()` in ms, refreshed every second; TAB board)
+- `net_mods` (the modifier build: picked ids, comma separated; every copy rebuilds from
+  it) and `net_draft_round` (last draft picked in)
 
 ### RPCs (`@rpc("any_peer")`, kept on the leaf `player.gd`)
 
@@ -232,7 +248,7 @@ One client is the Photon master; each client owns its own player replica
 | `rpc_take_damage(amount, attacker_id)` | shooter → victim owner (`Fusion.rpc_to(TARGET_OWNER, …)`) | victim runs the defensive pipeline + `Health.apply` |
 | `died_fx(attacker_id)` | victim → all peers | remote copies go dead, emit `Health.died`, the attacker's client flashes the kill banner |
 | `respawn_fx()` | victim → all peers | remote copies restore alive visuals |
-| `rpc_draft_pick(index, use_reroll)` | leftover from `/fps` | inert (no `draft_manager` node) |
+| `rpc_apply_status(id)` | shooter → victim owner | applies a timed status modifier (e.g. Frost Rounds' `chilled`); ids that aren't statuses are ignored |
 
 `Fusion.rpc(Callable(node, "method"), args…)` invokes the method on every peer's replica
 of that node (sender included). `Fusion.rpc_to(Fusion.TARGET_OWNER, …)` routes to the
@@ -240,15 +256,16 @@ owner client of that replica.
 
 ### Damage pipeline (player-vs-player)
 
-1. Weapon (`weapon.gd::_apply_damage`): base `definition.damage` → attacker
-   `ModifierManager.on_damage_dealt(ctx)` (can mutate ctx) → clamp relative to base
-   (`clampf(amount, damage*0.5, damage*2.5)`) → `rpc_take_damage`.
-2. Victim (`player_lifecycle.gd::take_damage`): `ModifierManager.on_damage_taken(ctx)` →
-   clamp `clampf(amount, max_health*0.4, max_health*1.5)` → `Health.apply`.
+1. Weapon (`weapon.gd::_shoot`): camera ray → `mods.on_fire(shot)` (may retarget, e.g.
+   Homing Rounds) → `_apply_damage`: `mods.get_stat(&"damage", definition.damage)`
+   (capped) → `mods.on_damage_dealt(ctx)` (can mutate; `ctx.statuses` are sent with
+   `rpc_apply_status`) → `rpc_take_damage`; lifesteal heals the shooter.
+2. Victim (`player_lifecycle.gd::take_damage`): `mods.get_stat(&"damage_taken", amount)`
+   (capped) → `mods.on_damage_taken(ctx)` (e.g. Second Wind) → `Health.apply`.
 3. `Health.apply` subtracts, emits `damaged`, and on ≤0 emits `died(attacker_id)`.
 
-Note the asymmetric clamp: outgoing damage is relative to the weapon's base damage,
-incoming relative to **max_health** — at 100 HP every hit lands in [40, 150].
+Caps live in `ModRules.STATS` and apply inside `get_stat`; hooks run after the caps, so
+a behaviour has the final say. The pistol does 34 (3 hits kill at 100 HP).
 
 ### Death, spectator and respawn
 
@@ -383,52 +400,35 @@ every client.
 
 ## 8. Modifier system
 
+Full developer guide: **`docs/MODIFIER_GUIDE.md`** (architecture, recipes, balancing).
+
 ```
-modifier.gd            Resource base: id, display_name, description, tags, rarity,
-					   stackable/max_stacks, exclusive_group, stat_adds, stat_mults
-					   hooks: on_damage_dealt / on_damage_taken / on_kill / on_round_start
-modifier_db.gd         static registry: id -> def (loads .tres), get_def(), all_ids()
-defs/*.tres            10 stat-only modifiers
-modifier_manager.gd    per-player node: set_build/clear, stat cache, caps, hook dispatch
+scripts/modifiers/
+  modifier.gd           Modifier Resource: data (type, rarity, max_level, percent/flat
+                        per level, weapon, exclusive_group, duration) + hooks + describe()
+  mod_rules.gd          ModRules: offer count, draft timer, rarities (colour, weight),
+                        types (name, icon), STATS table (labels, caps, player bindings)
+  modifier_db.gd        ModifierDB: discovers resources/modifiers/*.tres (+ status/),
+                        validates them, roll_offers()
+  modifier_manager.gd   per player (`player.mods`): build sync, get_stat, stat/weapon
+                        application, statuses, hook dispatch
+  behaviors/*.gd        Modifier subclasses (frost_rounds, homing_rounds, second_wind)
+resources/modifiers/    one .tres per draftable modifier (file name = id)
+resources/modifiers/status/  timed statuses applied by hits (chilled)
+scenes/ui/mods/         draft_screen, mod_card, mod_icon
+tools/check_modifiers.gd  validation: godot --headless --path . --script res://tools/check_modifiers.gd
 ```
 
-Registered modifiers (`modifier_db.gd`):
-
-| id | effect | notes |
-|---|---|---|
-| `swift_boots` | move_speed ×1.15 | stackable ×2 |
-| `feather` | gravity ×0.8 | exclusive group `gravity` |
-| `dash_surge` | dash_cooldown ×0.65 | |
-| `hair_trigger` | fire_rate ×1.2 | stackable ×2 |
-| `extended_mag` | mag_size ×1.4 | stackable ×2 |
-| `fast_hands` | reload_time ×0.7 | |
-| `heavy_rounds` | damage ×1.15, fire_rate ×0.95 | |
-| `plating` | max_health +25 | stackable ×2, heals on apply |
-| `glass_cannon` | damage ×1.5, max_health ×0.7 | chaos |
-| `low_gravity` | gravity ×0.6 | chaos, exclusive `gravity` |
-
-Behavioral modifiers (`impl/*.gd` in `/fps`) were **not ported** — `modifier_db.gd` has a
-`ponytail:` note where they would be re-added.
-
-### How stats resolve
-
-- `ModifierManager.get_stat(stat, base)` = `(base + Σadds) × Πmults`, clamped per stat by
-  `STAT_CAPS` (`damage` [0.5, 2.5], `damage_taken` [0.4, 1.5], `move_speed` [0.5, 1.6],
-  `fire_rate` [0.5, 2.0], `reload_time` [0.3, 2.0], `mag_size` [0.5, 2.5], `max_health`
-  [0.4, 1.6], `gravity` [0.2, 1.2], `dash_cooldown` [0.3, 2.0]).
-- `set_build(ids)` duplicates each def (behavioral mods carry per-instance state),
-  enforces exclusive groups (last pick wins), rebuilds the add/mult cache, then
-  `_apply_player_stats()`.
-- `_apply_player_stats()` runs **only on the local copy** (`is_remote` early-return) and
-  snapshots controller bases once (`_bases`). It writes walk/run/crouch/wallrun/slide/
-  dash speeds, jump/fall gravity, `time_bef_reload_dash_ref`, and max health (heals the
-  difference when it grows).
-- Consumed by gameplay: `fire_rate`, `reload_time`, `mag_size`, `damage` in `weapon.gd`;
-  `damage_taken` in `player.take_damage`; the rest in `_apply_player_stats`.
-
-**No code path grants a modifier today.** The only way to exercise the system is to call
-`set_build(["swift_boots", …])` from a debug script/tool. The `round_completed` signal
-on `match_manager` is the intended future draft hook.
+- Build: `player.net_mods` (replicated) → `ModifierManager.sync_build()` on every copy →
+  `refresh()` on every manager: active set = own picks + other players' environment
+  modifiers + statuses.
+- Stats: `get_stat(stat, base) = (base + Σflat) × (1 + Σpercent/100)`, clamped by
+  `ModRules.STATS` caps. Stacking is additive. Player-bound stats (speeds, stamina,
+  traction, gravity, air jumps, dash charges/cooldown) are written onto the controller
+  by the local copy; `max_health` also heals the difference; weapon stats are read in
+  `weapon.gd`.
+- 19 starter modifiers (6 Common, 7 Rare, 6 Epic) across the four types; the table is in
+  the guide.
 
 ---
 
@@ -438,8 +438,11 @@ on `match_manager` is the intended future draft hook.
 |---|---|---|
 | Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scenes/ui/robot_icon.tscn`); lives in `MenuLayer` (CanvasLayer 10) |
 | Lobby roster | `scripts/ui/lobby_page.gd` | `player_chip.tscn` per player (robot icon, name, Host badge) + `empty_slot.tscn` "Waiting for player"; room info panel; host-only Start (disabled with <2 players) |
-| HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured), hides the gameplay HUD while a popup is up |
-| HUD theme | `resources/ui/hud_theme.tres` | HUD palette and Lilita/Rubik (400–700 `FontVariation`s) as type variations: `HudCard`, `HudSlot`, bar fills, `HudDot(On)`, `HudDiamond(On)`, label styles; sizes are the mockup's px × 0.79 |
+| HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured; the compact card hides meanwhile), feeds the modifier tray/list from `build_changed`, hides the gameplay HUD while a popup is up |
+| HUD theme | `resources/ui/hud_theme.tres` | HUD palette and Lilita/Rubik (400–700 `FontVariation`s) as type variations: `HudCard`, `HudSlot`, bar fills, `HudDot(On)`, `HudDiamond(On)`, label styles, and the `Mod*` modifier styles (white header/tile/pip styles tinted per rarity with `self_modulate`); sizes are the mockup's px × 0.79 (HUD) and pt × 0.96 (draft) |
+| Modifier draft | `scenes/ui/mods/draft_screen.tscn` + `scripts/ui/mods/draft_screen.gd` | dimmed overlay: round pill, CHOOSE A MODIFIER, `mod_card.tscn` offers (rarity header, type chip, icon, per-pick stat lines, level pips, NEW / MAX LEVEL / SINGLE USE tag), other players' Picked/Choosing, auto-pick timer; click or 1–3; debug builds: F2 opens a local draft |
+| Modifier tray | `scenes/player/hud/mod_tray.tscn` + `mod_tray.gd` | own modifiers + active environment ones as `mod_icon.tscn` (rarity tile, type glyph, level badge yellow at max), 8 then "+N"; a fresh pick pops its icon and shows a 3 s toast when gameplay resumes |
+| Modifier list | `scenes/player/hud/mod_list.tscn` + `mod_list.gd` | beside the TAB board: icon, name, summary at level, level pips |
 | Vitals | `scenes/player/hud/vitals.tscn` + `vitals.gd` | health: red ProgressBar, a tick every 10 HP, pale ghost ProgressBar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue ProgressBar |
 | Ammo panel | `scenes/player/hud/ammo_panel.tscn` + `ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N chip, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring (radial `TextureProgressBar`) + pips refill with `reload_progress()`; dash icon is a bottom-to-top ProgressBar while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
 | Reticle | `scenes/player/hud/reticle.tscn` + `scenes/player/reticle.gd` | 4 outlined bar Panels spread by planar speed and kicked open per shot, placed around the control's center so they sit exactly on the shot ray |
@@ -487,6 +490,7 @@ Fusion GDExtension; its `cs/` C# sources are unused. Every `.gd`/`.tscn` has a c
 godot --path .                            # run the game (needs a display)
 godot --headless --path . --quit          # import + parse every script; prints errors/warnings
 godot --headless --path . --quit-after 3  # also instantiates the main scene for a few frames
+godot --headless --path . --script res://tools/check_modifiers.gd  # modifier validation
 ```
 
 Expected noise on every run: warnings that `play_char_*` actions were added to the
@@ -502,17 +506,17 @@ two-client manual runs.
 - **Input actions are runtime-registered.** `project.godot` has no `[input]` section;
   `player_movement.gd` and `camera_script.gd` add `play_char_*` actions with default keys
   on `_ready` if missing (and warn). They do not persist.
-- **Modifiers are inert.** Nothing calls `set_build()`; `match_manager.round_completed`
-  is the future draft hook. `rpc_draft_pick` and the `input_mode` group lookups remain
-  inert leftovers from `/fps`.
+- **Modifier picks are client-trusted**, like damage: each client rolls its own offers
+  and writes its own `net_mods`. The `input_mode` group lookups are inert leftovers
+  from `/fps`.
 - **Room properties are polled.** Fusion has no property-changed signal; the match
   manager polls every 0.25 s. Flat per-player properties are used deliberately — nested
   dictionaries were avoided for Photon reliability.
 - **Passwords are a client-side gate.** The password lives in the room's custom
   properties (not the lobby list) and is checked after joining; a modified client could
   bypass it. Server enforcement needs Photon plugins/auth.
-- **Damage-taken clamp uses `max_health` as scale** (at 100 HP every hit is in
-  [40, 150]); retune when balancing TTK. The pistol's base damage is 30.
+- **TTK knob:** pistol damage 34 in `resources/weapons/pistol.tres` (3 hits at 100 HP).
+  Until the modifier pass the damage-taken clamp scaled every hit to ≥40.
 - **`reserve_max = 999`** in `pistol.tres` is "infinite ammo for debugging"; it is still
   consumed by reloads.
 - **Unvalidated spawns.** `world.gd::respawn_player` deterministically assigns a distinct

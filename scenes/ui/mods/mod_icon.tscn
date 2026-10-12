@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/mods/mod_icon.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/mods/stats.svg" id="2_glyph"]
+
+[node name="ModIcon" type="Control"]
+custom_minimum_size = Vector2(33, 33)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 33.0
+offset_bottom = 33.0
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Body" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Ring" type="Panel" parent="Body"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ModRing"
+
+[node name="Tile" type="Panel" parent="Body"]
+self_modulate = Color(0.302, 0.6353, 0.9961, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ModTile"
+
+[node name="Glyph" type="TextureRect" parent="Body/Tile"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.17
+anchor_top = 0.17
+anchor_right = 0.83
+anchor_bottom = 0.83
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_glyph")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Badge" type="PanelContainer" parent="Body"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"ModBadge"
+
+[node name="Label" type="Label" parent="Body/Badge"]
+layout_mode = 2
+theme_type_variation = &"HudPillLabel"
+theme_override_font_sizes/font_size = 9
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1

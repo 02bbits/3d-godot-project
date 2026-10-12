@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://d1vswg14wjjh5"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Marathon"
+description = "Run longer, recover sooner."
+max_level = 2
+percent = Dictionary[StringName, float]({
+&"stamina": 80.0
+})

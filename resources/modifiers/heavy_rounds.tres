@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://b64sbnrnmisfo"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Heavy Rounds"
+description = "Slower, harder-hitting shots."
+type = 1
+rarity = 1
+max_level = 2
+percent = Dictionary[StringName, float]({
+&"damage": 60.0,
+&"fire_rate": -20.0
+})

@@ -5,14 +5,16 @@ extends Node
 ## property-changed signal). A match is one elimination bout: the last player
 ## alive wins it and scores 1. First to `match_wins_per_round` match wins
 ## (lobby setting, default 2) takes the round; after the configured number of
-## rounds the game stops and the client shows the top-3 ranking.
+## rounds the game stops and the client shows the top-3 ranking. Before round 1
+## and between rounds every player drafts a modifier ("draft" phase).
 
 signal game_started
 signal respawn_requested
 signal map_changed(index: int)
 signal returned_to_lobby
-# Future hook: the modifier draft opens here (after a round, before the next).
-signal round_completed(round_number: int)
+# fire on every peer from the phase itself (scenes/ui/mods/draft_screen.tscn)
+signal draft_opened(draft_round: int)
+signal draft_closed
 
 const POLL_INTERVAL := 0.25
 const MATCH_WINS_PER_ROUND := 2
@@ -23,9 +25,13 @@ const INTERMISSION_SECONDS := 3.0
 const ROUND_INTERMISSION_SECONDS := 5.0
 # How long the game-over results stay up before everyone returns to the lobby.
 const GAME_OVER_SECONDS := 5.0
+# The host waits this long past ModRules.DRAFT_SECONDS for the last picks to
+# replicate (clients auto-pick when their own timer runs out).
+const DRAFT_GRACE_SECONDS := 2.0
 
-var match_phase := "" # "fight" | "intermission" | "game_over"
+var match_phase := "" # "draft" | "fight" | "intermission" | "game_over"
 var round := 0
+var draft_round := 0 # the round the current draft picks for
 var rounds_total := 3
 var rounds_won: Dictionary = {} # player number (String) -> rounds won, whole game
 var round_scores: Dictionary = {} # player number (String) -> match wins, this round
@@ -46,6 +52,8 @@ var _evaluate_time := 0.0
 var _intermission_left := 0.0
 var _game_over_left := 0.0
 var _round_over := false
+var _draft_left := 0.0
+var _seen_phase := ""
 
 
 func _ready() -> void:
@@ -59,6 +67,7 @@ func _process(delta: float) -> void:
 		_host_process(delta)
 	else:
 		_client_process(delta)
+	_emit_phase_signals()
 
 
 # HOST
@@ -72,6 +81,7 @@ func _host_process(delta: float) -> void:
 		rounds_total = int(props.get("rounds", 3))
 		round = int(props.get("round", 1))
 		match_phase = str(props.get("match_phase", "fight"))
+		draft_round = int(props.get("draft_round", round))
 		map_index = int(props.get("map_index", 0))
 		game_serial = int(props.get("game_serial", 0))
 		match_wins_per_round = int(props.get("match_wins", MATCH_WINS_PER_ROUND))
@@ -90,7 +100,17 @@ func _host_process(delta: float) -> void:
 		"intermission":
 			_intermission_left -= delta
 			if _intermission_left <= 0.0:
-				_begin_next_match()
+				if _round_over:
+					_begin_draft()
+				else:
+					_begin_next_match()
+		"draft":
+			# fallback covers host migration: the new host restarts the timer
+			if _draft_left <= 0.0:
+				_draft_left = ModRules.DRAFT_SECONDS + DRAFT_GRACE_SECONDS
+			_draft_left -= delta
+			if _draft_left <= 0.0 or _everyone_picked():
+				_end_draft()
 		"game_over":
 			# fallback covers host migration: the new host restarts the countdown
 			if _game_over_left <= 0.0:
@@ -143,12 +163,40 @@ func _evaluate_match() -> void:
 		match_phase = "game_over"
 		_write_state()
 		return
-	if _round_over:
-		# Future hook: open the modifier draft on round_completed here.
-		round_completed.emit(round)
 	match_phase = "intermission"
 	_intermission_left = ROUND_INTERMISSION_SECONDS if _round_over else INTERMISSION_SECONDS
 	_write_state()
+
+
+# Round over: everyone drafts a modifier for the next round.
+func _begin_draft() -> void:
+	draft_round = round + 1
+	match_phase = "draft"
+	_draft_left = 0.0
+	_write_state()
+
+
+func _end_draft() -> void:
+	_draft_left = 0.0
+	# a draft after a round starts the next one (round_over is host-local, so
+	# derive it from the draft itself to survive host migration)
+	if draft_round > round:
+		round = draft_round
+		round_scores = {}
+	_round_over = false
+	_begin_next_match()
+
+
+# Every player in the room has a spawned copy that picked in this draft.
+func _everyone_picked() -> bool:
+	var room = Fusion.get_room()
+	if room == null:
+		return true
+	var picked := 0
+	for player in get_tree().get_nodes_in_group("player"):
+		if is_instance_valid(player) and int(player.net_draft_round) >= draft_round:
+			picked += 1
+	return picked >= room.get_players().size()
 
 
 func _begin_next_match() -> void:
@@ -168,6 +216,8 @@ func _begin_next_match() -> void:
 func _return_to_lobby() -> void:
 	match_phase = ""
 	round = 0
+	draft_round = 0
+	_draft_left = 0.0
 	rounds_won = {}
 	round_scores = {}
 	_round_over = false
@@ -180,6 +230,7 @@ func _return_to_lobby() -> void:
 			"phase": "waiting",
 			"match_phase": "",
 			"round": 0,
+			"draft_round": 0,
 			"last_result": "",
 		}
 		for player in get_tree().get_nodes_in_group("player"):
@@ -225,6 +276,7 @@ func _client_process(delta: float) -> void:
 	var previous_map := map_index
 	match_phase = str(props.get("match_phase", "fight"))
 	round = int(props.get("round", round))
+	draft_round = int(props.get("draft_round", draft_round))
 	rounds_total = int(props.get("rounds", rounds_total))
 	map_index = int(props.get("map_index", map_index))
 	last_result = str(props.get("last_result", last_result))
@@ -239,11 +291,24 @@ func _client_process(delta: float) -> void:
 		return
 	if map_index != previous_map:
 		map_changed.emit(map_index)
-	if previous_phase == "intermission" and match_phase == "fight":
+	if previous_phase in ["intermission", "draft"] and match_phase == "fight":
 		respawn_requested.emit()
 
 
 # HELPERS
+
+# draft_opened / draft_closed come from the phase itself, so the host and every
+# client share one path (returning to the lobby mid-draft closes it too)
+func _emit_phase_signals() -> void:
+	if match_phase == _seen_phase:
+		return
+	var previous := _seen_phase
+	_seen_phase = match_phase
+	if previous == "draft":
+		draft_closed.emit()
+	if match_phase == "draft":
+		draft_opened.emit(draft_round)
+
 
 func _room_props() -> Dictionary:
 	var room = Fusion.get_room()
@@ -261,6 +326,7 @@ func _write_state() -> void:
 	var props := {
 		"match_phase": match_phase,
 		"round": round,
+		"draft_round": draft_round,
 		"map_index": map_index,
 		"last_result": last_result,
 		"result_serial": result_serial,

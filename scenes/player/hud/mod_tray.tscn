@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/player/hud/mod_tray.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/mods/mod_icon.tscn" id="3_icon"]
+
+[node name="ModTray" type="HBoxContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -131.0
+offset_right = 529.0
+offset_bottom = -98.0
+grow_vertical = 0
+mouse_filter = 2
+theme = ExtResource("1_theme")
+theme_override_constants/separation = 12
+script = ExtResource("2_script")
+
+[node name="Icons" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="ModIcon" parent="Icons" instance=ExtResource("3_icon")]
+visible = false
+layout_mode = 2
+
+[node name="More" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"ModMore"
+
+[node name="MoreLabel" type="Label" parent="More"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HudNameBold"
+theme_override_font_sizes/font_size = 13
+text = "+3"
+
+[node name="Toast" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"HudCard"
+
+[node name="Margin" type="MarginContainer" parent="Toast"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="H" type="HBoxContainer" parent="Toast/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="ToastName" type="Label" parent="Toast/Margin/H"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ModToastName"
+text = "HEAVY ROUNDS"
+
+[node name="Pill" type="PanelContainer" parent="Toast/Margin/H"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"HudPill"
+
+[node name="ToastLevel" type="Label" parent="Toast/Margin/H/Pill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HudPillLabel"
+theme_override_font_sizes/font_size = 11
+text = "Level 2 · MAX"

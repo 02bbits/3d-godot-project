@@ -40,17 +40,31 @@ func _ready() -> void:
 	setup_arm_ik()
 	_setup_weapon()
 	setup_network_control()
+	# a copy spawned mid-game may already carry a replicated build
+	mods.sync_build(net_mods)
 
 
-# Instantiates the equipped weapon (shared scene + per-weapon definition) under
-# the camera. Swapping weapons is a single `weapon_definition` change.
 func _setup_weapon() -> void:
 	if weapon_definition == null:
 		push_warning("Player has no weapon_definition assigned")
 		return
+	equip_weapon(weapon_definition)
+
+
+# Instantiates a weapon (shared scene + per-weapon definition) under the
+# camera, replacing the current one. Weapon-replacement modifiers call this
+# through ModifierManager.
+func equip_weapon(definition: WeaponDefinition) -> void:
+	var previous := weapon
 	weapon = WEAPON_SCENE.instantiate()
 	cam.add_child(weapon)
-	weapon.setup(self, weapon_definition)
+	weapon.setup(self, definition)
+	if previous != null:
+		# a dead or remote copy keeps its weapon inert
+		weapon.set_process(previous.is_processing())
+		weapon.set_process_input(previous.is_processing_input())
+		weapon.set_process_unhandled_input(previous.is_processing_unhandled_input())
+		previous.dispose()
 
 func _process(delta: float) -> void:
 	wallrun_timer(delta)
@@ -85,18 +99,12 @@ func rpc_take_damage(amount: int, attacker_id: int = -1) -> void:
 	take_damage(clampf(float(amount), 0.0, max_health), attacker_id)
 
 @rpc("any_peer")
-func rpc_draft_pick(index: int, use_reroll: bool = false) -> void:
-	# runs on the master's replica of the picking player (intentionally not
-	# gated on is_remote — that is exactly where it must execute); the
-	# requester id comes from the replica's owner, so a client can only ever
-	# pick for itself
-	var rep: Node = find_child("FusionSharedReplicator", true, false)
-	if rep == null or not rep.has_method("get_owner_id"):
+func rpc_apply_status(id: String) -> void:
+	# a hit's status effect (e.g. Frost Rounds' chill): the victim's owner
+	# applies it; ids that aren't timed statuses are ignored there
+	if is_remote:
 		return
-	var requester := int(rep.get_owner_id())
-	var dm: Node = get_tree().get_first_node_in_group("draft_manager")
-	if dm != null and dm.has_method("register_pick"):
-		dm.register_pick(requester, index, use_reroll)
+	mods.apply_status(StringName(id))
 
 @rpc("any_peer")
 func died_fx(attacker_id: int = -1) -> void:
@@ -114,6 +122,7 @@ func died_fx(attacker_id: int = -1) -> void:
 				if is_instance_valid(p) and not p.is_remote \
 						and p.weapon != null and p.weapon.has_method("show_kill"):
 					p.weapon.show_kill()
+					p.mods.on_kill({"victim": self})
 					break
 
 @rpc("any_peer")

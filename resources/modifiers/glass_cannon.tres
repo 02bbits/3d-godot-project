@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://dwds734qahf73"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Glass Cannon"
+description = "All or nothing."
+rarity = 2
+percent = Dictionary[StringName, float]({
+&"damage": 50.0,
+&"max_health": -50.0
+})

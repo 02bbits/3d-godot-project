@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://b3domv5vfvi5n"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Paper Armor"
+description = "Everyone breaks a little easier."
+type = 3
+rarity = 1
+percent = Dictionary[StringName, float]({
+&"max_health": -50.0
+})

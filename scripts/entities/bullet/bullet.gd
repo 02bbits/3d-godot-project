@@ -1,6 +1,6 @@
 extends Node3D
 
-const SPEED = 300.0
+const SPEED = 200.0
 const LIFETIME = 0.6
 
 # tracers are cosmetic on every client (shooter included); damage is hitscan

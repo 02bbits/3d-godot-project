@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://cadaa3y4f0jom"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/weapons/hand_cannon.tres" id="2_weapon"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Hand Cannon"
+description = "Five shots. Make them count."
+type = 1
+rarity = 2
+weapon = ExtResource("2_weapon")
+exclusive_group = &"weapon"

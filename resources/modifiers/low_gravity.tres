@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://tpf6xcnc5s4n"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Low Gravity"
+description = "Gravity drops for every player this match."
+type = 3
+rarity = 2
+percent = Dictionary[StringName, float]({
+&"gravity": -100.0
+})

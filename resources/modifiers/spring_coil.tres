@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://bwvkma662mq0b"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Spring Coil"
+description = "Two more jump in the air."
+type = 2
+rarity = 1
+max_level = 2
+flat = Dictionary[StringName, float]({
+&"air_jumps": 2.0
+})

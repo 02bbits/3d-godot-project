@@ -106,17 +106,14 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Icon1" parent="Pages/MainMenu/Center/Stack/Icons" unique_id=385690471 instance=ExtResource("3_robot")]
-custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 icon_color = Color(1, 0.7882, 0.2, 1)
 
 [node name="Icon2" parent="Pages/MainMenu/Center/Stack/Icons" unique_id=319509742 instance=ExtResource("3_robot")]
-custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 icon_color = Color(0.302, 0.6353, 0.9961, 1)
 
 [node name="Icon3" parent="Pages/MainMenu/Center/Stack/Icons" unique_id=2118384046 instance=ExtResource("3_robot")]
-custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 icon_color = Color(1, 0.4157, 0.3608, 1)
 
@@ -325,7 +322,6 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
 
 [node name="Row" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/CreateCard/V" unique_id=379827431]
 layout_mode = 2
@@ -366,7 +362,6 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
 
 [node name="CodeRow" type="HBoxContainer" parent="Pages/PlayChoice/V/Cards/JoinCard/V" unique_id=563688809]
 layout_mode = 2
@@ -1026,7 +1021,6 @@ columns = 2
 
 [node name="WindowLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=795425564]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "WINDOW"
@@ -1040,7 +1034,6 @@ button_size = Vector2(46, 40)
 
 [node name="VsyncLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=947876999]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "VSYNC"
@@ -1054,7 +1047,6 @@ button_size = Vector2(46, 40)
 
 [node name="MaxFpsLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=203694312]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "MAX FPS"
@@ -1068,7 +1060,6 @@ button_size = Vector2(46, 40)
 
 [node name="PostFxLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=1863673106]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "POST EFFECTS"
@@ -1082,7 +1073,6 @@ button_size = Vector2(46, 40)
 
 [node name="RenderScaleLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=302142728]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "RENDER SCALE"
@@ -1098,7 +1088,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = 50.0
-max_value = 100.0
 step = 5.0
 value = 100.0
 
@@ -1112,7 +1101,6 @@ horizontal_alignment = 2
 
 [node name="UiScaleLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=1189709946]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "UI SCALE"
@@ -1128,7 +1116,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = 50.0
-max_value = 100.0
 step = 5.0
 value = 100.0
 
@@ -1142,7 +1129,6 @@ horizontal_alignment = 2
 
 [node name="SensitivityLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=1031247021]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "MOUSE SENSITIVITY"
@@ -1172,7 +1158,6 @@ horizontal_alignment = 2
 
 [node name="VolumeLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=294804716]
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "MASTER VOLUME"
@@ -1187,9 +1172,6 @@ theme_override_constants/separation = 14
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-min_value = 0.0
-max_value = 100.0
-step = 1.0
 value = 100.0
 
 [node name="Value" type="Label" parent="Pages/Settings/Card/V/Rows/Volume" unique_id=226938843]

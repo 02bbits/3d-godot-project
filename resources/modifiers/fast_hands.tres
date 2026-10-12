@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://ctgfhbd7d2wvp"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Fast Hands"
+description = "Reload faster than HoTuan with 5x Quick Reload"
+type = 1
+max_level = 2
+percent = Dictionary[StringName, float]({
+&"reload_time": -60.0
+})

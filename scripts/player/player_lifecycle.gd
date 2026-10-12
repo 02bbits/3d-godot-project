@@ -3,17 +3,13 @@ extends "res://scripts/player/player_network.gd"
 func take_damage(amount: float, attacker_id: int = -1) -> void:
 	if dead or amount <= 0.0:
 		return
-	# Defensive stage of the damage pipeline: mods may mutate the ctx (e.g.
-	# Second Wind), then the damage-taken cap is applied before Health.
-	var ctx := {"amount": amount, "attacker_id": attacker_id}
-	var mods: ModifierManager = get_node_or_null("ModifierManager")
-	if mods != null:
-		mods.on_damage_taken(ctx)
-		var cap: Array = ModifierManager.STAT_CAPS[&"damage_taken"]
-		ctx["amount"] = clampf(float(ctx["amount"]), max_health * cap[0], max_health * cap[1])
+	# Defensive stage of the damage pipeline: the damage_taken stat (capped in
+	# get_stat), then mods may mutate the ctx (e.g. Second Wind).
+	var ctx := {"amount": mods.get_stat(&"damage_taken", amount), "attacker_id": attacker_id}
+	mods.on_damage_taken(ctx)
 	# Health node owns the number and emits died(attacker_id); that signal
 	# routes here for the death broadcast + visuals
-	$Health.apply(float(ctx["amount"]), attacker_id)
+	$Health.apply(maxf(float(ctx["amount"]), 0.0), attacker_id)
 
 func _on_health_changed(current: float, previous: float) -> void:
 	if current <= 0.0 and previous > 0.0 and death_effect != null:
@@ -93,6 +89,7 @@ func reset_for_respawn(spawn_transform: Transform3D) -> void:
 	_set_dead_visuals()
 	visual_root.scale = Vector3.ONE
 	net_is_grounded = false
+	mods.on_respawn()
 	if Engine.has_singleton("Fusion") and Fusion.is_in_room():
 		Fusion.rpc(Callable(self, "respawn_fx"))
 	set_physics_process(true)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3 uid="uid://bekhkxpnndd8j"]
+
+[ext_resource type="Script" uid="uid://qta530mx8t0j" path="res://scripts/modifiers/behaviors/second_wind.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Second Wind"
+description = "Not dead yet."
+type = 2
+rarity = 2

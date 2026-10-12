@@ -39,13 +39,13 @@ var walk_or_run: String = "WalkState" #keep in memory if play char was walking o
 @export_group("Walk variables")
 @export var walk_speed: float = 5.1
 @export var walk_accel: float = 8.0
-@export var walk_deccel: float = 13.0
+@export var walk_deccel: float = 17.0
 @export var backward_walk_speed_multiplier : float = 0.75
 
 @export_group("Run variables")
 @export var run_speed: float = 7.65
 @export var run_accel: float = 7.0
-@export var run_deccel: float = 13.0
+@export var run_deccel: float = 12.0
 @export var continious_run: bool = false #if true, doesn't need to keep run button on to run
 @export var backward_run_speed_multiplier : float = 0.7
 
@@ -90,11 +90,11 @@ var dash_direction: Vector3 = Vector3.ZERO
 @export var dash_speed: float = 64.0
 @export var dash_time: float = 0.1
 var dash_time_ref: float
-@export var nb_dashs_allowed: int = 1
+@export var nb_dashs_allowed: int = 0
 var nb_dashs_allowed_ref: int
 @export var time_bef_can_dash_again: float = 0.8
 var time_bef_can_dash_again_ref: float
-@export var time_bef_reload_dash: float = 3.0
+@export var time_bef_reload_dash: float = 6.0
 var time_bef_reload_dash_ref: float
 var velocity_pre_dash : Vector3
 var has_dashed : bool = false
@@ -213,6 +213,8 @@ var weapon: Node3D
 @onready var hitbox: CollisionShape3D = $Hitbox
 @onready var state_machine: Node = $StateMachine
 @onready var hud: CanvasLayer = $HUD
+# this player's modifiers: stats, hooks, build (scripts/modifiers/)
+@onready var mods: ModifierManager = $ModifierManager
 @onready var death_screen: Control = %DeathScreen
 @onready var ceiling_check: RayCast3D = %CeilingCheck
 @onready var floor_check: RayCast3D = %FloorCheck

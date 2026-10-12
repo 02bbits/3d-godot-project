@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://c683wqx2ysuuv"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Siphon"
+description = "Every hit patches you up."
+rarity = 1
+max_level = 2
+flat = Dictionary[StringName, float]({
+&"lifesteal": 40.0
+})

@@ -203,7 +203,9 @@ func _on_start_pressed() -> void:
 		start_map = randi() % world.MAP_PATHS.size()
 	room.set_properties({
 		"phase": "playing",
-		"match_phase": "fight",
+		# every game opens with a modifier draft for round 1
+		"match_phase": "draft",
+		"draft_round": 1,
 		"round": 1,
 		"map_index": start_map,
 		"game_serial": int(props.get("game_serial", 0)) + 1,

@@ -22,7 +22,6 @@ var play_char: Node3D
 var camera: Camera3D
 
 var ammo: int
-var reserve: int
 var reloading: bool = false
 var fire_cooldown: float = 0.0
 var _reload_generation := 0
@@ -62,7 +61,6 @@ func setup(player: Node3D, weapon_definition: WeaponDefinition) -> void:
 	_set_viewmodel_layers()
 
 	ammo = mag_size()
-	reserve = definition.reserve_max
 	update_visibility()
 
 
@@ -84,8 +82,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _shoot() -> void:
 	if play_char.is_remote or reloading or ammo <= 0 or fire_cooldown > 0.0:
 		return
-	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
-	fire_cooldown = definition.fire_interval / mods.get_stat(&"fire_rate", 1.0)
+	fire_cooldown = definition.fire_interval / play_char.mods.get_stat(&"fire_rate", 1.0)
 	ammo -= 1
 	if ammo == 0:
 		_reload()
@@ -97,7 +94,11 @@ func _shoot() -> void:
 	var view := camera.get_global_transform_interpolated()
 	var cam_origin := view.origin
 	var cam_dir := -view.basis.z
-	var hit := _raycast(cam_origin, cam_origin + cam_dir * definition.range)
+	var shot := {"origin": cam_origin, "direction": cam_dir, "range": definition.range,
+			"hit": raycast(cam_origin, cam_origin + cam_dir * definition.range)}
+	# gun modifiers may retarget the shot (Homing Rounds)
+	play_char.mods.on_fire(shot)
+	var hit: Dictionary = shot.hit
 	var collider: Object = hit.get("collider")
 	var hit_pos: Vector3 = hit.get("position", cam_origin + cam_dir * definition.range)
 	play_char.net_hit_normal = hit.get("normal", Vector3.ZERO)
@@ -109,7 +110,7 @@ func _shoot() -> void:
 	play_char.net_fire_count += 1
 
 
-func _raycast(from: Vector3, to: Vector3) -> Dictionary:
+func raycast(from: Vector3, to: Vector3) -> Dictionary:
 	if play_char == null:
 		return {}
 	var params := PhysicsRayQueryParameters3D.create(from, to, HIT_MASK, [play_char.get_rid()])
@@ -157,8 +158,8 @@ func update_visibility() -> void:
 	world_model.visible = alive and play_char.is_remote
 
 
-# Outgoing damage stage of the pipeline: base damage -> attacker modifier
-# stats -> attacker hooks (ctx mutation) -> cap. The victim's client owns the
+# Outgoing damage stage of the pipeline: base damage -> damage stat (capped in
+# get_stat) -> attacker hooks (ctx mutation). The victim's client owns the
 # defensive stage (rpc_take_damage).
 func _apply_damage(collider: Object, hit_pos: Vector3) -> void:
 	if collider == null or collider == play_char or not (collider is Node):
@@ -167,21 +168,25 @@ func _apply_damage(collider: Object, hit_pos: Vector3) -> void:
 	var hit_player := node.is_in_group("player")
 	if not hit_player and not node.is_in_group("enemy"):
 		return
-	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
-	var amount := float(definition.damage)
-	var ctx := {"amount": amount, "attacker_id": -1, "distance": 0.0, "hit_player": hit_player}
-	if Engine.has_singleton("Fusion"):
-		ctx["attacker_id"] = Fusion.get_local_player_id()
-	ctx["distance"] = (hit_pos - camera.global_position).length()
-	if mods != null:
-		mods.on_damage_dealt(ctx)
-		var cap: Array = ModifierManager.STAT_CAPS[&"damage"]
-		ctx["amount"] = clampf(float(ctx["amount"]),
-				definition.damage * cap[0], definition.damage * cap[1])
-	var final_amount := int(roundf(float(ctx["amount"])))
+	var mods: ModifierManager = play_char.mods
+	var ctx := {
+		"amount": mods.get_stat(&"damage", definition.damage),
+		"attacker_id": Fusion.get_local_player_id() if Engine.has_singleton("Fusion") else -1,
+		"distance": (hit_pos - camera.global_position).length(),
+		"hit_player": hit_player,
+		"victim": node,
+		"statuses": [],
+	}
+	mods.on_damage_dealt(ctx)
+	var final_amount := maxi(roundi(float(ctx["amount"])), 0)
 	if hit_player:
 		Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(collider, "rpc_take_damage"),
 				final_amount, int(ctx["attacker_id"]))
+		for status in ctx["statuses"]:
+			Fusion.rpc_to(Fusion.TARGET_OWNER, Callable(collider, "rpc_apply_status"), String(status))
+		var lifesteal := final_amount * mods.get_stat(&"lifesteal", 0.0) / 100.0
+		if lifesteal > 0.0:
+			play_char.get_node("Health").heal(lifesteal)
 		_feedback_hit(hit_pos, final_amount)
 	else:
 		# Targets are authoritative on the master client; route the damage so
@@ -232,23 +237,20 @@ func _spawn_tracer(from: Vector3, to: Vector3) -> void:
 
 
 func _reload() -> void:
-	if play_char.is_remote or reloading or ammo >= mag_size() or reserve <= 0:
+	if play_char.is_remote or reloading or ammo >= mag_size():
 		return
 	reloading = true
 	_reload_generation += 1
 	var generation := _reload_generation
 	# replicated counter: every peer replays the reload visual + sound
 	play_char.net_reload_count += 1
-	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
-	_reload_duration = definition.reload_time * mods.get_stat(&"reload_time", 1.0)
+	_reload_duration = definition.reload_time * play_char.mods.get_stat(&"reload_time", 1.0)
 	_reload_started_ms = Time.get_ticks_msec()
 	_motion.start_reload(_reload_duration)
 	await get_tree().create_timer(_reload_duration).timeout
 	if generation != _reload_generation or not is_inside_tree():
 		return
-	var taken := mini(mag_size() - ammo, reserve)
-	ammo += taken
-	reserve -= taken
+	ammo += mag_size()
 	reloading = false
 
 
@@ -262,19 +264,25 @@ func reload_progress() -> float:
 
 ## magazine size after modifiers
 func mag_size() -> int:
-	var mods: ModifierManager = play_char.get_node_or_null("ModifierManager")
-	return maxi(int(roundf(definition.mag_size * mods.get_stat(&"mag_size", 1.0))), 1)
+	return maxi(roundi(play_char.mods.get_stat(&"mag_size", definition.mag_size)), 1)
 
 
 func reset_for_respawn() -> void:
 	_reload_generation += 1
 	reloading = false
 	ammo = mag_size()
-	reserve = definition.reserve_max
 	fire_cooldown = 0.0
 	shoot_sound.stop()
 	reload_sound.stop()
 	_motion.raise()
+
+
+## Removes this weapon and the parts setup() moved elsewhere (viewmodel pivot,
+## hand-held world model). Used when a modifier replaces the weapon.
+func dispose() -> void:
+	_motion.queue_free()
+	world_model.queue_free()
+	queue_free()
 
 
 func show_kill() -> void:

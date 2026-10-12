@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Modifier" format=3 uid="uid://cwggmf0vxmcti"]
+
+[ext_resource type="Script" uid="uid://c85svlltko2v7" path="res://scripts/modifiers/modifier.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Extended Mag"
+description = "More rounds before the reload."
+type = 1
+max_level = 2
+percent = Dictionary[StringName, float]({
+&"damage": -75.0,
+&"fire_rate": 80.0,
+&"mag_size": 40.0
+})

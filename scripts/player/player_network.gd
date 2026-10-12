@@ -13,6 +13,15 @@ var net_color: String = "":
 		net_color = value
 		if is_node_ready():
 			apply_robot_color()
+# the modifier build: picked ids in pick order, comma separated. Every copy
+# rebuilds from it (ModifierManager.sync_build), so remote copies know it too.
+var net_mods: String = "":
+	set(value):
+		net_mods = value
+		if is_node_ready():
+			mods.sync_build(value)
+# the last draft this player picked in; match_manager waits for everyone
+var net_draft_round: int = 0
 # owner's round-trip time in ms, for the scoreboard (0 = unknown)
 var net_ping: int = 0
 var _ping_timer := 0.0

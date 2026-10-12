@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://dieoa6gjqkpmt" path="res://scripts/player/hud/scoreboard.gd" id="2_script"]
 [ext_resource type="PackedScene" uid="uid://5sdnsnp42la5" path="res://scenes/player/hud/score_row_full.tscn" id="3_row"]
+[ext_resource type="PackedScene" path="res://scenes/player/hud/mod_list.tscn" id="4_mods"]
 
 [node name="TabBoard" type="Control"]
 layout_mode = 3
@@ -25,13 +26,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Board" type="PanelContainer" parent="Center"]
+[node name="H" type="HBoxContainer" parent="Center"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Board" type="PanelContainer" parent="Center/H"]
 custom_minimum_size = Vector2(577, 0)
 layout_mode = 2
+size_flags_vertical = 0
 mouse_filter = 2
 theme_type_variation = &"HudBoard"
 
-[node name="Margin" type="MarginContainer" parent="Center/Board"]
+[node name="Margin" type="MarginContainer" parent="Center/H/Board"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 16
@@ -39,30 +46,30 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 16
 
-[node name="V" type="VBoxContainer" parent="Center/Board/Margin"]
+[node name="V" type="VBoxContainer" parent="Center/H/Board/Margin"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Header" type="MarginContainer" parent="Center/Board/Margin/V"]
+[node name="Header" type="MarginContainer" parent="Center/H/Board/Margin/V"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_right = 14
 
-[node name="H" type="HBoxContainer" parent="Center/Board/Margin/V/Header"]
+[node name="H" type="HBoxContainer" parent="Center/H/Board/Margin/V/Header"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 7
 
-[node name="Round" type="Label" parent="Center/Board/Margin/V/Header/H"]
+[node name="Round" type="Label" parent="Center/H/Board/Margin/V/Header/H"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HudTitle"
 theme_override_font_sizes/font_size = 32
 text = "ROUND 1"
 
-[node name="Total" type="Label" parent="Center/Board/Margin/V/Header/H"]
+[node name="Total" type="Label" parent="Center/H/Board/Margin/V/Header/H"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -71,38 +78,38 @@ theme_type_variation = &"HudSubtitle"
 theme_override_font_sizes/font_size = 19
 text = "OF 1"
 
-[node name="Pill" type="PanelContainer" parent="Center/Board/Margin/V/Header/H"]
+[node name="Pill" type="PanelContainer" parent="Center/H/Board/Margin/V/Header/H"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"HudPill"
 
-[node name="Goal" type="Label" parent="Center/Board/Margin/V/Header/H/Pill"]
+[node name="Goal" type="Label" parent="Center/H/Board/Margin/V/Header/H/Pill"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HudPillLabel"
 text = "First to 2 kills"
 horizontal_alignment = 1
 
-[node name="Columns" type="MarginContainer" parent="Center/Board/Margin/V"]
+[node name="Columns" type="MarginContainer" parent="Center/H/Board/Margin/V"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_right = 16
 
-[node name="H" type="HBoxContainer" parent="Center/Board/Margin/V/Columns"]
+[node name="H" type="HBoxContainer" parent="Center/H/Board/Margin/V/Columns"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Player" type="Label" parent="Center/Board/Margin/V/Columns/H"]
+[node name="Player" type="Label" parent="Center/H/Board/Margin/V/Columns/H"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HudCaption"
 theme_override_font_sizes/font_size = 11
 text = "PLAYER"
 
-[node name="Kills" type="Label" parent="Center/Board/Margin/V/Columns/H"]
+[node name="Kills" type="Label" parent="Center/H/Board/Margin/V/Columns/H"]
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
 theme_type_variation = &"HudCaption"
@@ -110,7 +117,7 @@ theme_override_font_sizes/font_size = 11
 text = "ROUND KILLS"
 horizontal_alignment = 1
 
-[node name="WinsHeader" type="Label" parent="Center/Board/Margin/V/Columns/H"]
+[node name="WinsHeader" type="Label" parent="Center/H/Board/Margin/V/Columns/H"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(111, 0)
 layout_mode = 2
@@ -119,7 +126,7 @@ theme_override_font_sizes/font_size = 11
 text = "MATCH WINS (1)"
 horizontal_alignment = 1
 
-[node name="Ping" type="Label" parent="Center/Board/Margin/V/Columns/H"]
+[node name="Ping" type="Label" parent="Center/H/Board/Margin/V/Columns/H"]
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 theme_type_variation = &"HudCaption"
@@ -127,19 +134,23 @@ theme_override_font_sizes/font_size = 11
 text = "PING"
 horizontal_alignment = 2
 
-[node name="Rows" type="VBoxContainer" parent="Center/Board/Margin/V"]
+[node name="Rows" type="VBoxContainer" parent="Center/H/Board/Margin/V"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="ScoreRow" parent="Center/Board/Margin/V/Rows" instance=ExtResource("3_row")]
+[node name="ScoreRow" parent="Center/H/Board/Margin/V/Rows" instance=ExtResource("3_row")]
 visible = false
 layout_mode = 2
 
-[node name="Footer" type="Label" parent="Center/Board/Margin/V"]
+[node name="Footer" type="Label" parent="Center/H/Board/Margin/V"]
 layout_mode = 2
 theme_type_variation = &"HudSmall"
 theme_override_font_sizes/font_size = 12
 text = "Shown while TAB is held · sorted by wins, then kills"
 horizontal_alignment = 1
+
+[node name="ModList" parent="Center/H" instance=ExtResource("4_mods")]
+unique_name_in_owner = true
+layout_mode = 2

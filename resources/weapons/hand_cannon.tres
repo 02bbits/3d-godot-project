@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" format=3]
+
+[ext_resource type="Script" uid="uid://ckmq35lonlcab" path="res://scripts/weapons/weapon_definition.gd" id="1_def"]
+[ext_resource type="PackedScene" uid="uid://cswiapk4jkjys" path="res://scenes/player/pistol.tscn" id="2_pistol"]
+[ext_resource type="AudioStream" uid="uid://ddvtney87kedb" path="res://assets/audio/laserLarge_000.ogg" id="3_s0"]
+[ext_resource type="AudioStream" uid="uid://c6ys5m8wp2tnp" path="res://assets/audio/laserLarge_001.ogg" id="4_s1"]
+[ext_resource type="AudioStream" uid="uid://cohxjyjukvmit" path="res://assets/audio/metalLatch.ogg" id="6_r0"]
+[ext_resource type="AudioStream" uid="uid://b7f3h27m73i0x" path="res://assets/audio/metalClick.ogg" id="7_r1"]
+
+[resource]
+script = ExtResource("1_def")
+display_name = "Hand Cannon"
+damage = 70
+mag_size = 5
+fire_interval = 0.6
+reload_time = 1.8
+viewmodel_scene = ExtResource("2_pistol")
+viewmodel_transform = Transform3D(-1.25, 0, 0, 0, 1.25, 0, 0, 0, -1.25, 0.787383, -0.4906, -0.55)
+world_model_scene = ExtResource("2_pistol")
+world_model_transform = Transform3D(-5.463924e-08, 0, 1.25, 0, 1.25, 0, -1.25, 0, -5.463924e-08, 0, 0.114, 0.036)
+muzzle_transform = Transform3D(1.922585, -0.000274, -0.043554, 0.004174, 1.915348, 0.172205, 0.043355, -0.172255, 1.914859, 0.788128, -0.334965, -1.367083)
+shoot_sounds = Array[AudioStream]([ExtResource("3_s0"), ExtResource("4_s1")])
+reload_sounds = Array[AudioStream]([ExtResource("6_r0"), ExtResource("7_r1")])

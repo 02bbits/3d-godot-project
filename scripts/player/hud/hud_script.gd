@@ -15,6 +15,8 @@ class_name HUD
 @onready var results_list: VBoxContainer = %ResultsList
 @onready var match_banner: Label = %MatchBanner
 @onready var crosshair: Control = $Reticle
+@onready var mod_tray: Control = $ModTray
+@onready var mod_list: Control = $TabBoard.get_node("%ModList")
 
 const ROWS_REFRESH := 0.25
 # scoreboard robot for players who haven't published a color yet
@@ -28,6 +30,16 @@ var _rows_timer := 0.0
 func _ready() -> void:
 	if play_char == null:
 		assert(false, "Player character reference for the hud is mandatory")
+	# the player's own @onready refs aren't set yet (children ready first)
+	var mods: ModifierManager = play_char.get_node("ModifierManager")
+	mods.build_changed.connect(_on_build_changed.bind(mods))
+	mods.picked.connect(mod_tray.celebrate)
+
+
+func _on_build_changed(mods: ModifierManager) -> void:
+	var active := mods.active()
+	mod_tray.show_mods(active)
+	mod_list.show_mods(active)
 
 func _process(delta : float) -> void:
 	_update_match_ui()
@@ -39,6 +51,8 @@ func _process(delta : float) -> void:
 		_push_scoreboard()
 	tab_board.visible = visible and Input.is_physical_key_pressed(KEY_TAB) \
 			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _popup_up()
+	# the full board (and the modifier list beside it) covers the compact card
+	score_card.visible = not tab_board.visible and not _popup_up()
 
 func display_speed_lines(value : bool) -> void:
 	speed_lines_container.visible = value
@@ -156,5 +170,5 @@ func _popup_up() -> bool:
 # the persistent gameplay HUD steps aside while an important popup is up
 func _refresh_hud_visibility() -> void:
 	var popup := _popup_up()
-	for widget in [vitals, ammo_panel, score_card, crosshair]:
+	for widget in [vitals, ammo_panel, crosshair, mod_tray]:
 		widget.visible = not popup

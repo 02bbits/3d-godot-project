@@ -10,9 +10,10 @@
 [ext_resource type="Script" uid="uid://dx02l6p6behb8" path="res://scripts/player/hud/hud_script.gd" id="10_hud"]
 [ext_resource type="Animation" uid="uid://caupvvy4vhuku" path="res://assets/photon/animations/aiming.res" id="10_oekrc"]
 [ext_resource type="PackedScene" uid="uid://gliqaxpmufvj" path="res://scenes/player/hud/ammo_panel.tscn" id="11_sb"]
+[ext_resource type="PackedScene" path="res://scenes/player/hud/mod_tray.tscn" id="39_tray"]
+[ext_resource type="Script" uid="uid://b3t0evs8nso2" path="res://scripts/player/death_screen.gd" id="12_dth"]
 [ext_resource type="PackedScene" uid="uid://cgwjxynysey1j" path="res://scenes/player/hud/scoreboard_card.tscn" id="12_score"]
 [ext_resource type="PackedScene" uid="uid://bqq7ak7odcjyi" path="res://scenes/player/hud/scoreboard_full.tscn" id="13_tab"]
-[ext_resource type="Script" uid="uid://b3t0evs8nso2" path="res://scripts/player/death_screen.gd" id="12_dth"]
 [ext_resource type="Script" uid="uid://x3epmarfawf4" path="res://scripts/player/state_machine/state_machine_script.gd" id="14_sm"]
 [ext_resource type="PackedScene" uid="uid://cotgwlr60fiq7" path="res://assets/photon/KayKit_Prototype_Bits_1.1/Character/Dummy.glb" id="14_yj68g"]
 [ext_resource type="Script" uid="uid://dxxwpi8pmmsmb" path="res://scripts/player/state_machine/idle_state_script.gd" id="15_idle"]
@@ -48,7 +49,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 19
+property_count = 21
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -163,6 +164,18 @@ properties/18/interface_tag = ""
 properties/18/interpolate = 0
 properties/18/element_type = 0
 properties/18/element_class_name = ""
+properties/19/path = NodePath(":net_mods")
+properties/19/max_array_capacity = 0
+properties/19/interface_tag = ""
+properties/19/interpolate = 0
+properties/19/element_type = 0
+properties/19/element_class_name = ""
+properties/20/path = NodePath(":net_draft_round")
+properties/20/max_array_capacity = 0
+properties/20/interface_tag = ""
+properties/20/interpolate = 0
+properties/20/element_type = 0
+properties/20/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -1014,6 +1027,11 @@ albedo_color = Color(0.196078, 0.223529, 1, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_p2iaj"]
 
+[sub_resource type="Environment" id="Environment_viewmodel"]
+ambient_light_source = 2
+ambient_light_color = Color(0.7228621, 0.7682954, 0.89730513, 1)
+reflected_light_source = 1
+
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jv0i6"]
 frequency = 0.15
 
@@ -1030,11 +1048,6 @@ shader_parameter/line_faloff = 1.0
 shader_parameter/mask_size = 0.1
 shader_parameter/mask_edge = 0.800000038
 shader_parameter/animation_speed = 20.0
-
-[sub_resource type="Environment" id="Environment_viewmodel"]
-ambient_light_source = 2
-ambient_light_color = Color(0.7228621, 0.7682954, 0.89730513, 1)
-reflected_light_source = 1
 
 [node name="PlayerCharacter" type="CharacterBody3D" unique_id=1247798821 node_paths=PackedStringArray("head_meshes") groups=["PlayerCharacter", "player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6476, 0)
@@ -1297,6 +1310,8 @@ far = 100.0
 [node name="Vitals" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
 
 [node name="AmmoPanel" parent="HUD" unique_id=614996660 instance=ExtResource("11_sb")]
+
+[node name="ModTray" parent="HUD" instance=ExtResource("39_tray")]
 
 [node name="DeathScreen" type="Control" parent="HUD" unique_id=1232994553]
 unique_name_in_owner = true
