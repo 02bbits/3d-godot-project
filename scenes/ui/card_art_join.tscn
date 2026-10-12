@@ -1,0 +1,280 @@
+[gd_scene format=3 uid="uid://bd4moy65w1xh3"]
+
+[ext_resource type="Texture2D" uid="uid://c0kxgwtbclifp" path="res://assets/ui/menu/sheet.svg" id="1_sheet"]
+[ext_resource type="PackedScene" uid="uid://cp8uau4jygfok" path="res://scenes/ui/robot_icon.tscn" id="2_robot"]
+
+[sub_resource type="StyleBoxFlat" id="SB_shadow"]
+bg_color = Color(0.1059, 0.1255, 0.1608, 0.18)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_door"]
+bg_color = Color(0.1059, 0.1255, 0.1608, 0.75)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.9569, 0.9333, 0.8863, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+
+[sub_resource type="StyleBoxFlat" id="SB_light"]
+bg_color = Color(1, 0.7882, 0.2, 1)
+corner_radius_top_left = 21
+corner_radius_top_right = 21
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 1.96
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Stage/Robot0:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.49, 0.98, 1.47),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [46.0, 28.0, 46.0, 28.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Stage/Robot1:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.219, 0.709, 1.199, 1.689),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [46.0, 28.0, 46.0, 28.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Stage/Robot2:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.438, 0.928, 1.418, 1.908),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [46.0, 28.0, 46.0, 28.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Stage/Shadow0:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.49, 0.98, 1.47),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector2(1, 0.25), Vector2(0.81, 0.2), Vector2(1, 0.25), Vector2(0.81, 0.2)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Stage/Shadow1:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.219, 0.709, 1.199, 1.689),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector2(1, 0.25), Vector2(0.81, 0.2), Vector2(1, 0.25), Vector2(0.81, 0.2)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Stage/Shadow2:scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.438, 0.928, 1.418, 1.908),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector2(1, 0.25), Vector2(0.81, 0.2), Vector2(1, 0.25), Vector2(0.81, 0.2)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Stage/Arrow:position:x")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.98, 1.96),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [-4.0, 4.0, -4.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Stage/Door/Light:modulate:a")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.98, 1.96),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [0.6, 0.15, 0.6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_art"]
+_data = {
+&"idle": SubResource("Animation_idle")
+}
+
+[node name="CardArtJoin" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Sheet" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_sheet")
+patch_margin_left = 3
+patch_margin_top = 3
+patch_margin_right = 3
+patch_margin_bottom = 3
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="Stage" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -178.0
+offset_top = -65.0
+offset_right = 177.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Shadow0" type="Panel" parent="Stage"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 85.0
+offset_right = 61.0
+offset_bottom = 143.0
+scale = Vector2(1, 0.25)
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("SB_shadow")
+
+[node name="Shadow1" type="Panel" parent="Stage"]
+layout_mode = 0
+offset_left = 89.0
+offset_top = 85.0
+offset_right = 147.0
+offset_bottom = 143.0
+scale = Vector2(1, 0.25)
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("SB_shadow")
+
+[node name="Shadow2" type="Panel" parent="Stage"]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 85.0
+offset_right = 233.0
+offset_bottom = 143.0
+scale = Vector2(1, 0.25)
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("SB_shadow")
+
+[node name="Robot0" parent="Stage" instance=ExtResource("2_robot")]
+layout_mode = 0
+offset_top = 46.0
+offset_right = 64.0
+offset_bottom = 110.0
+mouse_filter = 2
+outline = 3
+
+[node name="Robot1" parent="Stage" instance=ExtResource("2_robot")]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 46.0
+offset_right = 150.0
+offset_bottom = 110.0
+mouse_filter = 2
+icon_color = Color(1, 0.4157, 0.3608, 1)
+animate = true
+outline = 3
+
+[node name="Robot2" parent="Stage" instance=ExtResource("2_robot")]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 46.0
+offset_right = 236.0
+offset_bottom = 110.0
+mouse_filter = 2
+icon_color = Color(0.4784, 0.8745, 0.4863, 1)
+outline = 3
+
+[node name="Arrow" type="Node2D" parent="Stage"]
+
+[node name="Shaft" type="Line2D" parent="Stage/Arrow"]
+points = PackedVector2Array(249, 78, 284, 78)
+width = 4.0
+default_color = Color(0.1059, 0.1255, 0.1608, 1)
+
+[node name="Head" type="Line2D" parent="Stage/Arrow"]
+points = PackedVector2Array(274, 69, 284, 78, 274, 87)
+width = 4.0
+default_color = Color(0.1059, 0.1255, 0.1608, 1)
+
+[node name="Door" type="Panel" parent="Stage"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 24.0
+offset_right = 355.0
+offset_bottom = 110.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_door")
+
+[node name="Light" type="Panel" parent="Stage/Door"]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 9.0
+offset_right = -9.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_light")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_art")
+}
+autoplay = &"idle"

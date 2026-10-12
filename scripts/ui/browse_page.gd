@@ -5,6 +5,8 @@ extends MarginContainer
 
 signal room_chosen(room_name: String, title: String, passworded: bool)
 
+const ROOM_ROW := preload("res://scenes/ui/room_row.tscn")
+
 @onready var room_list: VBoxContainer = %RoomList
 
 var _room_filter := ""
@@ -41,42 +43,15 @@ func _make_room_row(room, properties: Dictionary) -> Control:
 	var passworded := bool(properties.get("passworded", false))
 	var full: bool = room.get_player_count() >= room.get_max_players() \
 			or not room.get_is_open()
-	var chip := PanelContainer.new()
-	chip.theme_type_variation = &"ChipPanel"
-	chip.custom_minimum_size = Vector2(0, 66)
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 24)
-	chip.add_child(hbox)
-
-	var names := VBoxContainer.new()
-	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hbox.add_child(names)
-	var title := Label.new()
-	title.theme_type_variation = &"TitleLabel"
-	title.text = str(properties.get("title", room.get_name()))
-	names.add_child(title)
-	var subtitle := Label.new()
-	subtitle.theme_type_variation = &"MutedLabel"
-	subtitle.text = "Password protected" if passworded else "Open lobby"
-	names.add_child(subtitle)
-
-	var count := Label.new()
-	count.theme_type_variation = &"TitleLabel"
-	count.text = "%d/%d" % [room.get_player_count(), room.get_max_players()]
-	hbox.add_child(count)
-
-	var rounds := Label.new()
-	rounds.theme_type_variation = &"MutedLabel"
-	rounds.text = "First to %d" % int(properties.get("rounds", 3))
-	hbox.add_child(rounds)
-
-	var join := Button.new()
-	join.theme_type_variation = &"BlueButton"
-	join.custom_minimum_size = Vector2(130, 46)
-	join.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var row := ROOM_ROW.instantiate()
+	var title := str(properties.get("title", room.get_name()))
+	row.get_node("H/Names/Title").text = title
+	row.get_node("H/Names/Subtitle").text = "Password protected" if passworded else "Open lobby"
+	row.get_node("H/Count").text = "%d/%d" % [room.get_player_count(), room.get_max_players()]
+	row.get_node("H/Rounds").text = "First to %d" % int(properties.get("rounds", 3))
+	var join: Button = row.get_node("H/Join")
 	join.text = "FULL" if full else "JOIN"
 	join.disabled = full
 	if not full:
-		join.pressed.connect(room_chosen.emit.bind(room.get_name(), title.text, passworded))
-	hbox.add_child(join)
-	return chip
+		join.pressed.connect(room_chosen.emit.bind(room.get_name(), title, passworded))
+	return row

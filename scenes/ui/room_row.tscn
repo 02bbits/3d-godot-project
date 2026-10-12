@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dnseymkfvtfrt"]
+
+[node name="RoomRow" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 66)
+theme_type_variation = &"ChipPanel"
+
+[node name="H" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Names" type="VBoxContainer" parent="H"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="H/Names"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Room"
+
+[node name="Subtitle" type="Label" parent="H/Names"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Open lobby"
+
+[node name="Count" type="Label" parent="H"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "0/4"
+
+[node name="Rounds" type="Label" parent="H"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "First to 3"
+
+[node name="Join" type="Button" parent="H"]
+custom_minimum_size = Vector2(130, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BlueButton"
+text = "JOIN"

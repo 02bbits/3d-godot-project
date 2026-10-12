@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://5sdnsnp42la5"]
+
+[ext_resource type="Script" uid="uid://bwdqivljkhic8" path="res://scripts/player/hud/score_row.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cp8uau4jygfok" path="res://scenes/ui/robot_icon.tscn" id="2_robot"]
+
+[node name="ScoreRow" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 37)
+mouse_filter = 2
+theme_type_variation = &"HudRow"
+script = ExtResource("1_script")
+
+[node name="Highlight" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"HudHighlight"
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="H" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" parent="Margin/H" instance=ExtResource("2_robot")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+outline = 2
+
+[node name="Name" type="Label" parent="Margin/H"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HudNameBold"
+theme_override_font_sizes/font_size = 17
+text = "Player"
+text_overrun_behavior = 3
+
+[node name="KillsColumn" type="CenterContainer" parent="Margin/H"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Kills" type="HBoxContainer" parent="Margin/H/KillsColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Mark" type="Control" parent="Margin/H/KillsColumn/Kills"]
+custom_minimum_size = Vector2(13, 13)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Shape" type="Panel" parent="Margin/H/KillsColumn/Kills/Mark"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"HudDot"
+
+[node name="WinsColumn" type="CenterContainer" parent="Margin/H"]
+custom_minimum_size = Vector2(111, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Wins" type="HBoxContainer" parent="Margin/H/WinsColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 9
+
+[node name="Mark" type="Control" parent="Margin/H/WinsColumn/Wins"]
+custom_minimum_size = Vector2(11, 11)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Shape" type="Panel" parent="Margin/H/WinsColumn/Wins/Mark"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+mouse_filter = 2
+theme_type_variation = &"HudDiamond"
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Ping" type="Label" parent="Margin/H"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+theme_type_variation = &"HudSmall"
+text = "—"
+horizontal_alignment = 2

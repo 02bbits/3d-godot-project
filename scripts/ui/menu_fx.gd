@@ -91,7 +91,7 @@ func _add_juice(button: Button) -> void:
 
 
 func _scale(button: Button, target: float, duration: float) -> void:
-	var previous: Tween = button.get_meta(&"juice_tween", null)
+	var previous: Tween = button.get_meta(&"juice_tween") if button.has_meta(&"juice_tween") else null
 	if previous != null and previous.is_valid():
 		previous.kill()
 	var tween := button.create_tween()

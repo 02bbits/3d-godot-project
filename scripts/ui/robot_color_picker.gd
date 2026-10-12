@@ -5,7 +5,7 @@ extends Control
 
 signal color_chosen(color: Color)
 
-const ROBOT_ICON := preload("res://scripts/ui/robot_icon.gd")
+const ROBOT_ICON := preload("res://scenes/ui/robot_icon.tscn")
 
 @onready var card: Control = $Center/Card
 @onready var swatches: GridContainer = $Center/Card/V/Swatches
@@ -17,7 +17,7 @@ func _ready() -> void:
 	$Center/Card/V/ColorDoneButton.pressed.connect(close)
 	gui_input.connect(_on_backdrop_input)
 	for color in RobotColor.PALETTE:
-		var swatch: Control = ROBOT_ICON.new()
+		var swatch: Control = ROBOT_ICON.instantiate()
 		swatch.icon_color = color
 		swatch.custom_minimum_size = Vector2(60, 60)
 		swatch.mouse_filter = Control.MOUSE_FILTER_STOP

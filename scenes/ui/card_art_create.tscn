@@ -1,0 +1,249 @@
+[gd_scene format=3 uid="uid://cpru7ovkcybv5"]
+
+[ext_resource type="Texture2D" uid="uid://c0kxgwtbclifp" path="res://assets/ui/menu/sheet.svg" id="1_sheet"]
+[ext_resource type="PackedScene" uid="uid://cp8uau4jygfok" path="res://scenes/ui/robot_icon.tscn" id="2_robot"]
+
+[sub_resource type="StyleBoxFlat" id="SB_shadow"]
+bg_color = Color(0.1059, 0.1255, 0.1608, 0.18)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_badge"]
+bg_color = Color(1, 0.4157, 0.3608, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.1059, 0.1255, 0.1608, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Stage/Float:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [34.0, 46.0, 34.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Stage/Shadow:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.86, 0.19), Vector2(1, 0.22), Vector2(0.86, 0.19)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Stage/Float/Badge:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.75, 1.5, 2.25, 3),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector2(0.92, 0.92), Vector2(1.08, 1.08), Vector2(0.92, 0.92), Vector2(1.08, 1.08), Vector2(0.92, 0.92)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Stage/Float/SparkleA:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.75, 1.5, 2.25, 3),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector2(0.2, 0.2), Vector2(1, 1), Vector2(0.2, 0.2), Vector2(1, 1), Vector2(0.2, 0.2)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Stage/Float/SparkleB:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.75, 1.5, 2.25, 3),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector2(0.78, 0.78), Vector2(0.16, 0.16), Vector2(0.78, 0.78), Vector2(0.16, 0.16), Vector2(0.78, 0.78)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_art"]
+_data = {
+&"idle": SubResource("Animation_idle")
+}
+
+[node name="CardArtCreate" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Sheet" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_sheet")
+patch_margin_left = 3
+patch_margin_top = 3
+patch_margin_right = 3
+patch_margin_bottom = 3
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="Stage" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -105.0
+offset_right = 130.0
+offset_bottom = 105.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Shadow" type="Panel" parent="Stage"]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 123.0
+offset_right = 177.0
+offset_bottom = 217.0
+scale = Vector2(1, 0.22)
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("SB_shadow")
+
+[node name="DimLine" type="ColorRect" parent="Stage"]
+layout_mode = 0
+offset_left = 74.0
+offset_top = 183.0
+offset_right = 186.0
+offset_bottom = 185.0
+mouse_filter = 2
+color = Color(0.1059, 0.1255, 0.1608, 0.4)
+
+[node name="DimLeft" type="ColorRect" parent="Stage"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = 178.0
+offset_right = 75.0
+offset_bottom = 190.0
+mouse_filter = 2
+color = Color(0.1059, 0.1255, 0.1608, 0.4)
+
+[node name="DimRight" type="ColorRect" parent="Stage"]
+layout_mode = 0
+offset_left = 185.0
+offset_top = 178.0
+offset_right = 187.0
+offset_bottom = 190.0
+mouse_filter = 2
+color = Color(0.1059, 0.1255, 0.1608, 0.4)
+
+[node name="Float" type="Control" parent="Stage"]
+layout_mode = 0
+offset_left = 74.0
+offset_top = 40.0
+offset_right = 186.0
+offset_bottom = 152.0
+mouse_filter = 2
+
+[node name="Robot" parent="Stage/Float" instance=ExtResource("2_robot")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+icon_color = Color(0.9569, 0.9333, 0.8863, 1)
+animate = true
+outline = 4
+
+[node name="Badge" type="Panel" parent="Stage/Float"]
+layout_mode = 0
+offset_left = 81.0
+offset_top = -20.0
+offset_right = 132.0
+offset_bottom = 31.0
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("SB_badge")
+
+[node name="PlusH" type="ColorRect" parent="Stage/Float/Badge"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -11.0
+offset_top = -3.0
+offset_right = 11.0
+offset_bottom = 3.0
+mouse_filter = 2
+color = Color(0.9569, 0.9333, 0.8863, 1)
+
+[node name="PlusV" type="ColorRect" parent="Stage/Float/Badge"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -11.0
+offset_right = 3.0
+offset_bottom = 11.0
+mouse_filter = 2
+color = Color(0.9569, 0.9333, 0.8863, 1)
+
+[node name="SparkleA" type="Polygon2D" parent="Stage/Float"]
+position = Vector2(-28, 17)
+color = Color(0.9569, 0.9333, 0.8863, 1)
+polygon = PackedVector2Array(10, 0, 2.1, 2.1, 0, 10, -2.1, 2.1, -10, 0, -2.1, -2.1, 0, -10, 2.1, -2.1)
+
+[node name="SparkleB" type="Polygon2D" parent="Stage/Float"]
+position = Vector2(137, 78)
+color = Color(0.9569, 0.9333, 0.8863, 1)
+polygon = PackedVector2Array(10, 0, 2.1, 2.1, 0, 10, -2.1, 2.1, -10, 0, -2.1, -2.1, 0, -10, 2.1, -2.1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_art")
+}
+autoplay = &"idle"

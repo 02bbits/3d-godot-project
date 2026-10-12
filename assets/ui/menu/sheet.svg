@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <!-- Nine-patch drafting sheet: 3px edges carry the dashed frame (11 on /
+       11 off per tile), the 22px center tile carries one grid cell. -->
+  <rect width="28" height="28" fill="#1B2029" fill-opacity="0.06"/>
+  <g fill="#1B2029" fill-opacity="0.07">
+    <rect x="24" y="3" width="1" height="22"/>
+    <rect x="3" y="24" width="22" height="1"/>
+  </g>
+  <g fill="#1B2029" fill-opacity="0.35">
+    <rect x="0" y="0" width="3" height="2"/><rect x="0" y="2" width="2" height="1"/>
+    <rect x="25" y="0" width="3" height="2"/><rect x="26" y="2" width="2" height="1"/>
+    <rect x="0" y="26" width="3" height="2"/><rect x="0" y="25" width="2" height="1"/>
+    <rect x="25" y="26" width="3" height="2"/><rect x="26" y="25" width="2" height="1"/>
+    <rect x="3" y="0" width="11" height="2"/>
+    <rect x="3" y="26" width="11" height="2"/>
+    <rect x="0" y="3" width="2" height="11"/>
+    <rect x="26" y="3" width="2" height="11"/>
+  </g>
+</svg>

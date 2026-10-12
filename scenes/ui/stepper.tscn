@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://djx2einqtl5qu"]
+
+[ext_resource type="Script" uid="uid://cn2d5d3fx8nwi" path="res://scripts/ui/stepper.gd" id="1_script"]
+
+[node name="Stepper" type="HBoxContainer"]
+theme_override_constants/separation = 18
+alignment = 1
+script = ExtResource("1_script")
+
+[node name="Minus" type="Button" parent="."]
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "-"
+
+[node name="Value" type="Label" parent="."]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Plus" type="Button" parent="."]
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "+"

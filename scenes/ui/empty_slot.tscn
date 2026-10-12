@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bhin28waluo0"]
+
+[node name="EmptySlot" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+theme_type_variation = &"SlotPanel"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Waiting for player"
+horizontal_alignment = 1
+vertical_alignment = 1

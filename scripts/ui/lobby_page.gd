@@ -6,7 +6,8 @@ extends MarginContainer
 
 signal code_copied
 
-const ROBOT_ICON := preload("res://scripts/ui/robot_icon.gd")
+const PLAYER_CHIP := preload("res://scenes/ui/player_chip.tscn")
+const EMPTY_SLOT := preload("res://scenes/ui/empty_slot.tscn")
 const WORLD := preload("res://scripts/worlds/world.gd")
 # fallback chip colors for players who joined before publishing a color
 const PLAYER_COLORS := [
@@ -88,7 +89,7 @@ func refresh() -> void:
 		players_list.add_child(_make_player_chip(display_name, number, color, is_host))
 		shown += 1
 	for _i in maxi(max_players - shown, 0):
-		players_list.add_child(_make_empty_slot())
+		players_list.add_child(EMPTY_SLOT.instantiate())
 	host_label.text = host_name
 	start_button.visible = Fusion.is_master_client()
 	start_button.disabled = player_count < 2
@@ -96,50 +97,9 @@ func refresh() -> void:
 
 
 func _make_player_chip(display_name: String, number: int, color: Color, is_host: bool) -> Control:
-	var chip := PanelContainer.new()
-	chip.theme_type_variation = &"ChipPanel"
-	chip.custom_minimum_size = Vector2(0, 56)
-	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 14)
-	chip.add_child(hbox)
-	hbox.add_child(_make_icon(color, 40))
-	var name_label := Label.new()
-	name_label.theme_type_variation = &"TitleLabel"
-	name_label.text = display_name
-	if number == Fusion.get_local_player_id():
-		name_label.text += " (you)"
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hbox.add_child(name_label)
-	if is_host:
-		var badge := PanelContainer.new()
-		badge.theme_type_variation = &"HostBadge"
-		badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		var badge_label := Label.new()
-		badge_label.theme_type_variation = &"CardTitleLabel"
-		badge_label.text = "Host"
-		badge.add_child(badge_label)
-		hbox.add_child(badge)
+	var chip := PLAYER_CHIP.instantiate()
+	chip.get_node("H/Icon").icon_color = color
+	chip.get_node("H/Name").text = display_name \
+			+ (" (you)" if number == Fusion.get_local_player_id() else "")
+	chip.get_node("H/HostBadge").visible = is_host
 	return chip
-
-
-func _make_empty_slot() -> Control:
-	var slot := PanelContainer.new()
-	slot.theme_type_variation = &"SlotPanel"
-	slot.custom_minimum_size = Vector2(0, 56)
-	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var label := Label.new()
-	label.theme_type_variation = &"MutedLabel"
-	label.text = "Waiting for player"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	slot.add_child(label)
-	return slot
-
-
-func _make_icon(color: Color, side: float) -> Control:
-	var icon: Control = ROBOT_ICON.new()
-	icon.icon_color = color
-	icon.custom_minimum_size = Vector2(side, side)
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	return icon

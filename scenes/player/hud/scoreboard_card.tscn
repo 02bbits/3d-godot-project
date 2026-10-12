@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://cgwjxynysey1j"]
+
+[ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://dieoa6gjqkpmt" path="res://scripts/player/hud/scoreboard.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://dh3hc7jqhl478" path="res://scenes/player/hud/score_row.tscn" id="3_row"]
+
+[node name="ScoreCard" type="PanelContainer"]
+custom_minimum_size = Vector2(231, 0)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 24.0
+grow_horizontal = 0
+mouse_filter = 2
+theme = ExtResource("1_theme")
+theme_type_variation = &"HudCard"
+script = ExtResource("2_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 10
+
+[node name="V" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="MarginContainer" parent="Margin/V"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_right = 9
+
+[node name="H" type="HBoxContainer" parent="Margin/V/Header"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Round" type="Label" parent="Margin/V/Header/H"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HudTitle"
+theme_override_font_sizes/font_size = 17
+text = "ROUND 1"
+
+[node name="Total" type="Label" parent="Margin/V/Header/H"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HudSubtitle"
+theme_override_font_sizes/font_size = 13
+text = "/ 1"
+
+[node name="Goal" type="Label" parent="Margin/V/Header/H"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HudCaption"
+theme_override_font_sizes/font_size = 10
+text = "FIRST TO 2 KILLS"
+horizontal_alignment = 2
+
+[node name="Rows" type="VBoxContainer" parent="Margin/V"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="ScoreRow" parent="Margin/V/Rows" instance=ExtResource("3_row")]
+visible = false
+layout_mode = 2
+
+[node name="Footer" type="Label" parent="Margin/V"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"HudCaption"
+theme_override_font_sizes/font_size = 10
+text = "+1 more · hold TAB"
+horizontal_alignment = 1

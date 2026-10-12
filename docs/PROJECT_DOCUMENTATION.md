@@ -82,13 +82,13 @@ PlayerCharacter (CharacterBody3D)
 ├── AnimationTree/AnimationPlayer
 └── HUD (CanvasLayer)
 	├── ViewModel           SubViewportContainer > transparent SubViewport (layer-4 camera)
-	├── Reticle             reticle.gd: 4 outlined bars, speed spread + shot kick
-	├── Vitals              hud/vitals.gd: health (10 HP segments, ghost) + stamina
-	├── AmmoPanel           hud/ammo_panel.gd: pips, reload ring, RELOAD prompt, dash
+	├── Reticle             hud/reticle.tscn: 4 outlined bars, speed spread + shot kick
+	├── Vitals              hud/vitals.tscn: health (10 HP segments, ghost) + stamina
+	├── AmmoPanel           hud/ammo_panel.tscn: pips, reload ring, RELOAD prompt, dash
 	├── DeathScreen         spectator overlay (ELIMINATED + target + hint)
 	├── SpeedLinesContainer
-	├── ScoreCard           hud/scoreboard.gd: compact top-right card (top 3 + you)
-	├── TabBoard            hud/scoreboard.gd (full = true): shown while TAB is held
+	├── ScoreCard           hud/scoreboard_card.tscn: compact top-right card (top 3 + you)
+	├── TabBoard            hud/scoreboard_full.tscn: shown while TAB is held
 	├── ResultsPanel        GAME OVER + top-3 + "Returning to the lobby..."
 	└── MatchBanner         transient match/round winner banner
 ```
@@ -115,10 +115,21 @@ Weapon (Node3D, scripts/weapons/weapon.gd)
 `scripts/ui/connection_ui.gd` (flow + joining) with per-page scripts —
 `create_lobby_form.gd`, `browse_page.gd`, `lobby_page.gd`, `settings_menu.gd`,
 `robot_color_picker.gd` — plus `scripts/worlds/world.gd` + `scripts/worlds/match_manager.gd`.
-Shared menu pieces: `stepper.gd` (the `[-] value [+]` control), `robot_icon.gd`
-(mascot drawing, bob/blink, selection ring), `card_art.gd` (play-choice card
-drawings), `menu_fx.gd` (page entrances, button hover/press, main-menu intro) and the
-animated blueprint backdrop `scripts/ui/shader/blueprint_bg.gdshader`.
+Shared menu pieces are scenes in `scenes/ui/`: `stepper.tscn` (the `[-] value [+]`
+control), `robot_icon.tscn` (mascot; bob/blink, selection ring, palette badge),
+`card_art_create.tscn` / `card_art_join.tscn` (play-choice card art, looped by an
+AnimationPlayer), `room_row.tscn`, `player_chip.tscn`, `empty_slot.tscn`. Plus
+`menu_fx.gd` (page entrances, button hover/press, main-menu intro) and the animated
+blueprint backdrop `scripts/ui/shader/blueprint_bg.gdshader`.
+
+**UI is built from nodes, not `_draw()`.** Layout and look live in `.tscn` scenes and
+theme type variations (`resources/ui/menu_theme.tres` for menus,
+`resources/ui/hud_theme.tres` for the HUD); scripts only set values, visibility and
+variations. Repeated items (pips, health ticks, score rows, dots/diamonds) are a
+template child duplicated by `NodeUtil.fit_children()` (`scripts/ui/node_util.gd`).
+Icons that need curves are SVGs in `assets/ui/` (HUD icons import as `DPITexture`, so
+they stay sharp at any UI scale). Containers reset a child's rotation and scale, so a
+rotated piece (score diamonds) sits inside an unrotated holder.
 
 1. **Menu pages** (ConnectionMenu, `MenuLayer` CanvasLayer 10): MainMenu → NameScreen →
    PlayChoice → CreateLobby / BrowseLobbies / PasswordPrompt → Lobby. The menu root
@@ -352,7 +363,7 @@ only seen by the viewmodel camera.
    **interpolated** pose (`get_global_transform_interpolated()`) — what the player
    actually sees; the physics-tick pose runs up to a tick ahead while moving.
 2. Damage, hit normal and the tracer use that hit — exactly under the reticle (the
-   reticle draws around its container's center for the same reason).
+   reticle's bars sit around its control's center for the same reason).
 3. The tracer starts at the drawn barrel (viewmodel muzzle projected into the gameplay
    camera; the world model's MuzzleFlash on remote copies) and stops at the hit.
 
@@ -425,15 +436,15 @@ on `match_manager` is the intended future draft hook.
 
 | Piece | File | Notes |
 |---|---|---|
-| Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scripts/ui/robot_icon.gd`); lives in `MenuLayer` (CanvasLayer 10) |
-| Lobby roster | `scripts/ui/lobby_page.gd` | player chips (robot icon, name, Host badge) + empty "Waiting for player" slots; room info panel; host-only Start (disabled with <2 players) |
+| Menu flow | `scripts/ui/connection_ui.gd` + `scenes/ui/connection_menu.tscn` | main menu, name, create/join, browser, password, lobby, in-game menu; styled by `resources/ui/menu_theme.tres` (Lilita One headings/buttons, Rubik body, robot icons from `scenes/ui/robot_icon.tscn`); lives in `MenuLayer` (CanvasLayer 10) |
+| Lobby roster | `scripts/ui/lobby_page.gd` | `player_chip.tscn` per player (robot icon, name, Host badge) + `empty_slot.tscn` "Waiting for player"; room info panel; host-only Start (disabled with <2 players) |
 | HUD | `scripts/player/hud/hud_script.gd` | builds scoreboard rows every 0.25 s, shows the TAB board while TAB is held (mouse captured), hides the gameplay HUD while a popup is up |
-| HUD style | `scripts/player/hud/hud_style.gd` | palette, Lilita/Rubik fonts, card/dot/diamond drawing; metrics are mockup px × `K` (0.79) |
-| Vitals | `scripts/player/hud/vitals.gd` | health: red bar, 10 HP segments, pale ghost bar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue bar |
-| Ammo panel | `scripts/player/hud/ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N tag, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring + pips refill with `reload_progress()`; dash icon fills while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
-| Reticle | `scenes/player/reticle.gd` | 4 outlined bars spread by planar speed and kicked open per shot; drawn around `size / 2` so it sits exactly on the shot ray |
+| HUD theme | `resources/ui/hud_theme.tres` | HUD palette and Lilita/Rubik (400–700 `FontVariation`s) as type variations: `HudCard`, `HudSlot`, bar fills, `HudDot(On)`, `HudDiamond(On)`, label styles; sizes are the mockup's px × 0.79 |
+| Vitals | `scenes/player/hud/vitals.tscn` + `vitals.gd` | health: red ProgressBar, a tick every 10 HP, pale ghost ProgressBar holds lost health 0.4 s then drains (0.35 s), icon throbs ≤25%; stamina: blue ProgressBar |
+| Ammo panel | `scenes/player/hud/ammo_panel.tscn` + `ammo_panel.gd` | ≤24 pips, each `ceil(mag/24)` rounds (×N chip, half pip = partial group); red ≤25%; "RELOAD · R" when empty; reload ring (radial `TextureProgressBar`) + pips refill with `reload_progress()`; dash icon is a bottom-to-top ProgressBar while recovering (`time_bef_reload_dash` / `time_bef_can_dash_again`) |
+| Reticle | `scenes/player/hud/reticle.tscn` + `scenes/player/reticle.gd` | 4 outlined bar Panels spread by planar speed and kicked open per shot, placed around the control's center so they sit exactly on the shot ray |
 | Spectator overlay | `scripts/player/death_screen.gd` | 1 s dark hold, then dim fades out; "ELIMINATED" drops, spectated name + A/D hint move to the top center |
-| Scoreboard | `scripts/player/hud/scoreboard.gd` | yellow dots = this round's match wins ("kills", `match_wins_per_round`), blue diamonds = rounds won, out of a majority of `rounds_total`; sorted by wins, then kills |
+| Scoreboard | `scoreboard_card.tscn` / `scoreboard_full.tscn` + `scoreboard.gd`, rows `score_row(_full).tscn` + `score_row.gd` | yellow dots = this round's match wins ("kills", `match_wins_per_round`), blue diamonds = rounds won, out of a majority of `rounds_total`; sorted by wins, then kills |
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |
 | Match banner | player HUD | "X wins the match!/round N!" or a draw |
 | Hit confirm | `scripts/player/hit_confirm.gd` | hit marker, kill banner, kill sound |
@@ -520,7 +531,8 @@ two-client manual runs.
   the gameplay camera's *interpolated* pose each frame (otherwise the gun shakes when
   turning); it has its own Environment (no sky/SSAO/glow) and remote copies disable
   their SubViewport entirely.
-- **Settings** (`scripts/ui/settings_menu.gd`, Settings page): steppers for window
+- **Settings** (`scripts/ui/settings_menu.gd`, Settings page; rows are nodes in the
+  page, slider ranges on the HSlider nodes): steppers for window
   mode, vsync, max FPS, post effects; sliders (themed in `menu_theme.tres`) for render
   scale (FSR), UI scale (`content_scale_factor`, 50–100%, applied on release), mouse
   sensitivity (`CameraObject.mouse_sensitivity`) and master volume. Saved under

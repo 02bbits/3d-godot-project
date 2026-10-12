@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://cp8uau4jygfok"]
+
+[ext_resource type="Script" uid="uid://bagafyebha3kr" path="res://scripts/ui/robot_icon.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="SB_body"]
+bg_color = Color(1, 0.7882, 0.2, 1)
+border_color = Color(0.1059, 0.1255, 0.1608, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="SB_ring"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9569, 0.9333, 0.8863, 1)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+
+[sub_resource type="StyleBoxFlat" id="SB_eye"]
+bg_color = Color(0.1059, 0.1255, 0.1608, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_badge"]
+bg_color = Color(0.9569, 0.9333, 0.8863, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1059, 0.1255, 0.1608, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_paint_yellow"]
+bg_color = Color(1, 0.7882, 0.2, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_paint_blue"]
+bg_color = Color(0.302, 0.6353, 0.9961, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="SB_paint_red"]
+bg_color = Color(1, 0.4157, 0.3608, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[node name="RobotIcon" type="AspectRatioContainer"]
+custom_minimum_size = Vector2(44, 44)
+script = ExtResource("1_script")
+
+[node name="Square" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Bob" type="Control" parent="Square"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Ring" type="Panel" parent="Square/Bob"]
+visible = false
+layout_mode = 1
+anchor_left = -0.1
+anchor_top = -0.1
+anchor_right = 1.1
+anchor_bottom = 1.1
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_ring")
+
+[node name="Body" type="Panel" parent="Square/Bob"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_body")
+
+[node name="Eyes" type="Control" parent="Square/Bob/Body"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+pivot_offset_ratio = Vector2(0.5, 0.38)
+
+[node name="EyeL" type="Panel" parent="Square/Bob/Body/Eyes"]
+layout_mode = 1
+anchor_left = 0.225
+anchor_top = 0.305
+anchor_right = 0.375
+anchor_bottom = 0.455
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_eye")
+
+[node name="EyeR" type="Panel" parent="Square/Bob/Body/Eyes"]
+layout_mode = 1
+anchor_left = 0.625
+anchor_top = 0.305
+anchor_right = 0.775
+anchor_bottom = 0.455
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_eye")
+
+[node name="Badge" type="Panel" parent="Square/Bob"]
+visible = false
+layout_mode = 1
+anchor_left = 0.72
+anchor_top = 0.72
+anchor_right = 1.12
+anchor_bottom = 1.12
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_badge")
+
+[node name="Yellow" type="Panel" parent="Square/Bob/Badge"]
+layout_mode = 1
+anchor_left = 0.36
+anchor_top = 0.135
+anchor_right = 0.64
+anchor_bottom = 0.415
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_paint_yellow")
+
+[node name="Blue" type="Panel" parent="Square/Bob/Badge"]
+layout_mode = 1
+anchor_left = 0.555
+anchor_top = 0.4725
+anchor_right = 0.835
+anchor_bottom = 0.7525
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_paint_blue")
+
+[node name="Red" type="Panel" parent="Square/Bob/Badge"]
+layout_mode = 1
+anchor_left = 0.165
+anchor_top = 0.4725
+anchor_right = 0.445
+anchor_bottom = 0.7525
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_paint_red")

@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cbrthmahmk417"]
+
+[ext_resource type="Theme" uid="uid://b1u0b4e2ddtkj" path="res://resources/ui/hud_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://b50e5gf1ri032" path="res://scenes/player/reticle.gd" id="2_script"]
+
+[node name="Reticle" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Up" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 5.0
+offset_bottom = 10.0
+mouse_filter = 2
+theme_type_variation = &"HudReticle"
+
+[node name="Down" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 5.0
+offset_bottom = 10.0
+mouse_filter = 2
+theme_type_variation = &"HudReticle"
+
+[node name="Left" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 10.0
+offset_bottom = 5.0
+mouse_filter = 2
+theme_type_variation = &"HudReticle"
+
+[node name="Right" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 10.0
+offset_bottom = 5.0
+mouse_filter = 2
+theme_type_variation = &"HudReticle"

@@ -17,6 +17,8 @@ class_name HUD
 @onready var crosshair: Control = $Reticle
 
 const ROWS_REFRESH := 0.25
+# scoreboard robot for players who haven't published a color yet
+const FALLBACK_COLOR := Color("#9AA3B1")
 
 var _match_manager: Node
 var _last_state := ""
@@ -99,7 +101,7 @@ func _player_rows() -> Array:
 		rows.append({
 			"name": display_name,
 			"color": Color.html(p.net_color) if Color.html_is_valid(p.net_color) \
-					else HudStyle.MUTED,
+					else FALLBACK_COLOR,
 			"wins": int(_match_manager.rounds_won.get(str(id), 0)),
 			"kills": int(_match_manager.round_scores.get(str(id), 0)),
 			"ping": int(p.net_ping),
@@ -120,17 +122,13 @@ func _update_results() -> void:
 	_refresh_hud_visibility()
 	if not over:
 		return
-	for child in results_list.get_children():
-		child.free()
-	var rank := 1
-	for row in _player_rows().slice(0, 3):
-		var label := Label.new()
-		label.text = "%d.  %s — %d rounds" % [rank, row.name, row.wins]
-		label.add_theme_font_override("font", HudStyle.LILITA)
-		label.add_theme_font_size_override("font_size", 32)
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		results_list.add_child(label)
-		rank += 1
+	# the podium: one label per place, authored in the scene
+	var top := _player_rows().slice(0, results_list.get_child_count())
+	for i in results_list.get_child_count():
+		var label := results_list.get_child(i) as Label
+		label.visible = i < top.size()
+		if label.visible:
+			label.text = "%d.  %s — %d rounds" % [i + 1, top[i].name, top[i].wins]
 
 
 func _show_match_banner(text: String) -> void:

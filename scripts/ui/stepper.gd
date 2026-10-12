@@ -1,8 +1,9 @@
 class_name Stepper
 extends HBoxContainer
 
-## The menu's [-] value [+] picker over a fixed list of values (create-lobby
-## form, settings). Buttons disable at the ends of the list.
+## The menu's [-] value [+] picker (scenes/ui/stepper.tscn) over a fixed list
+## of values (create-lobby form, settings). Buttons disable at the ends of the
+## list. The exports size the child nodes per instance.
 
 signal changed(value: Variant)
 
@@ -17,30 +18,14 @@ var value: Variant:
 	get:
 		return values[index] if index < values.size() else null
 
-var _minus := Button.new()
-var _plus := Button.new()
-var _label := Label.new()
-
-
-func _init() -> void:
-	add_theme_constant_override("separation", 18)
-	alignment = BoxContainer.ALIGNMENT_CENTER
-	for button in [_minus, _plus]:
-		button.theme_type_variation = &"PrimaryButton"
-		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_minus.text = "-"
-	_plus.text = "+"
-	_minus.pressed.connect(step.bind(-1))
-	_plus.pressed.connect(step.bind(1))
-	_label.theme_type_variation = &"TitleLabel"
-	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	add_child(_minus)
-	add_child(_label)
-	add_child(_plus)
+@onready var _minus: Button = $Minus
+@onready var _plus: Button = $Plus
+@onready var _label: Label = $Value
 
 
 func _ready() -> void:
+	_minus.pressed.connect(step.bind(-1))
+	_plus.pressed.connect(step.bind(1))
 	_minus.custom_minimum_size = button_size
 	_plus.custom_minimum_size = button_size
 	_label.custom_minimum_size.x = value_width
@@ -65,7 +50,7 @@ func step(direction: int) -> void:
 
 
 func _refresh() -> void:
-	if values.is_empty():
+	if values.is_empty() or not is_node_ready():
 		return
 	_label.text = str(labels[index]) if index < labels.size() else str(values[index])
 	_minus.disabled = index <= 0
