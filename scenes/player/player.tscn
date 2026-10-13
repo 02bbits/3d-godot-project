@@ -39,6 +39,7 @@
 [ext_resource type="PackedScene" path="res://scenes/player/hud/mod_tray.tscn" id="39_tray"]
 [ext_resource type="PackedScene" path="res://scenes/player/hud/hit_flash.tscn" id="40_flash"]
 [ext_resource type="PackedScene" path="res://scenes/player/hud/status_chips.tscn" id="41_status"]
+[ext_resource type="Script" path="res://scripts/player/hud/viewmodel_sun.gd" id="42_vmsun"]
 
 [sub_resource type="Curve" id="Curve_s7fsc"]
 _limits = [10.0, 30.0, 0.0, 60.0]
@@ -1029,10 +1030,8 @@ albedo_color = Color(0.196078, 0.223529, 1, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_p2iaj"]
 
-[sub_resource type="Environment" id="Environment_viewmodel"]
-ambient_light_source = 2
-ambient_light_color = Color(0.7228621, 0.7682954, 0.89730513, 1)
-reflected_light_source = 1
+[sub_resource type="World3D" id="World3D_viewmodel"]
+resource_local_to_scene = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jv0i6"]
 frequency = 0.15
@@ -1296,6 +1295,7 @@ stretch = true
 
 [node name="Viewport" type="SubViewport" parent="HUD/ViewModel" unique_id=612222732]
 transparent_bg = true
+world_3d = SubResource("World3D_viewmodel")
 handle_input_locally = false
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
@@ -1303,11 +1303,15 @@ render_target_update_mode = 4
 [node name="Camera" type="Camera3D" parent="HUD/ViewModel/Viewport" unique_id=1611658020]
 physics_interpolation_mode = 2
 cull_mask = 4
-environment = SubResource("Environment_viewmodel")
 current = true
 fov = 90.0
 near = 0.01
 far = 100.0
+
+[node name="SunMirror" type="DirectionalLight3D" parent="HUD/ViewModel/Viewport"]
+layers = 4
+shadow_enabled = true
+script = ExtResource("42_vmsun")
 
 [node name="HitFlash" parent="HUD" unique_id=515301381 instance=ExtResource("40_flash")]
 

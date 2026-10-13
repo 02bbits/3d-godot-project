@@ -301,8 +301,11 @@ a behaviour has the final say. The pistol does 34 (3 hits kill at 100 HP).
 - There is **no auto-respawn**: eliminated players spectate until the match ends.
 - **Kill height**: a local player below `kill_height` (export, −20) dies at once via
   `Health.apply` (no damage pipeline, no Second Wind, no kill credit).
-- **Hit feedback** (victim only, `player_lifecycle.gd::_on_damaged`): a red edge flash
-  (`scenes/player/hud/hit_flash.tscn`, stronger for bigger hits) and a short view shake
+- **Hit feedback** (victim only, `player_lifecycle.gd::_on_damaged`): a red flash in the
+  screen corner nearest the damage source (`scenes/player/hud/hit_flash.tscn`; the
+  direction is resolved from the attacker's replica and converted to camera space, and
+  all four corners light when the source is unknown, e.g. fall damage) and a short view
+  shake
   (`camera_script.gd::shake()`, projection offsets only, so aim never moves).
 - Spectating (`scenes/worlds/spectator.tscn` + `scripts/worlds/spectator.gd`, driven by
   `world.gd::_update_spectator`): while the local player is dead the rig sits on a living
@@ -387,8 +390,9 @@ Crouch and slide tween `CameraHolder.position.y` down and restore it on exit
 | 3 | raycast-only helpers (`CameraBasedRaycasts`) |
 
 Weapon aim uses mask 7 (map + players + helpers); wall checks mask 5; floor/ceiling
-checks mask 1. Camera `cull_mask = 1`; the viewmodel renders on render layer 4 and is
-only seen by the viewmodel camera.
+checks mask 1. Camera `cull_mask = 1`; the viewmodel renders on render layer 4 in its
+own SubViewport world and is only seen by the viewmodel camera (lights must include
+layer 4 to affect it — see §12).
 
 ---
 
@@ -505,7 +509,7 @@ tools/check_modifiers.gd  validation: godot --headless --path . --script res://t
 | Results | player HUD | GAME OVER + top-3 by rounds won; auto-returns to the lobby after 5 s |
 | Match flow | `scenes/ui/match_flow.tscn` + `scripts/ui/match_flow.gd` | slow motion from the last elimination until the next screen (`SLOW_MO_SCALE` 0.3, 1.0 disables; match timers run on real time so it never stretches an intermission); result card: round · match, winner, score, what's next; wipe (`cover()`/`reveal()`, AnimationPlayer); countdown card: round/total · match · map, "GET READY", what you can do, 3-2-1, FIGHT! |
 | Hit confirm | `scripts/player/hit_confirm.gd` | hit marker, kill banner, kill sound |
-| Hit flash | `scenes/player/hud/hit_flash.tscn` + `hit_flash.gd` | red radial edge vignette (GradientTexture2D) flashed by an AnimationPlayer when the local player is hit; alpha scales with the damage |
+| Hit flash | `scenes/player/hud/hit_flash.tscn` + `hit_flash.gd` | four corner gradients (one GradientTexture2D, flipped per corner); the corner nearest the damage source flashes (front hits → top corners, behind → bottom, unknown source → all four), alpha scales with the damage, tween fade |
 | Speed lines | `scripts/player/shader/speed_lines_shader.gdshader` | shown by DashState |
 
 The UI is a view only: it reads player/network/match state and never owns gameplay state.
@@ -583,13 +587,15 @@ two-client manual runs.
 - **Physics tuning is baked in**: gravity 24 (not 9.8), Jolt, interpolation on, jitter
   fix off. Remote copies turn interpolation off intentionally.
 - **D3D12 on Windows** is forced in `project.godot`; Forward+ everywhere.
-- **The viewmodel is local-only.** It renders in a transparent SubViewport that shares
-  the game's `World3D` (so it stays lit), on render layer 4 with a fixed FOV; the
-  gameplay camera never sees it and it does not depth-test against walls (it draws over
-  them by design). The viewmodel camera has physics interpolation **off** and copies
-  the gameplay camera's *interpolated* pose each frame (otherwise the gun shakes when
-  turning); it has its own Environment (no sky/SSAO/glow) and remote copies disable
-  their SubViewport entirely.
+- **The viewmodel is local-only.** It renders in a transparent SubViewport on its **own
+  `World3D`** (map lights don't cross worlds in this Godot build), on render layer 4
+  with a fixed FOV; the gameplay camera never sees it and it does not depth-test
+  against walls (it draws over them by design). Its world copies the map's environment
+  at `_ready` (sky ambient/reflections) and `SunMirror` (`viewmodel_sun.gd`, layer 4)
+  mirrors the map sun (group `sun`) each frame, so the gun picks up directional shading.
+  The viewmodel camera has physics interpolation **off** and copies the gameplay
+  camera's *interpolated* pose each frame (otherwise the gun shakes when turning);
+  remote copies disable their SubViewport entirely.
 - **Settings** (`scripts/ui/settings_menu.gd`, Settings page; rows are nodes in the
   page, slider ranges on the HSlider nodes): steppers for window
   mode, vsync, max FPS, post effects; sliders (themed in `menu_theme.tres`) for render

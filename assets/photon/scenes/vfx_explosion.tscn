@@ -1,7 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://qvbk6pl4651f"]
 
-[ext_resource type="Script" path="res://assets/photon/scripts/effect.gd" id="1_ypo65"]
-[ext_resource type="AudioStream" path="res://assets/photon/kenney_impact-sounds/Audio/footstep_snow_002.ogg" id="2_6f5ep"]
+[ext_resource type="Script" uid="uid://svyhvpk8i8ef" path="res://assets/photon/scripts/effect.gd" id="1_ypo65"]
+[ext_resource type="AudioStream" uid="uid://cc4egi4d7k3lc" path="res://assets/photon/kenney_impact-sounds/Audio/footstep_snow_002.ogg" id="2_6f5ep"]
 
 [sub_resource type="Gradient" id="Gradient_main"]
 offsets = PackedFloat32Array(0, 0.3, 0.7, 1)
@@ -123,19 +123,19 @@ height = 0.8
 radial_segments = 8
 rings = 4
 
-[node name="VFXExplosion" type="Node3D"]
+[node name="VFXExplosion" type="Node3D" unique_id=1654095949]
 script = ExtResource("1_ypo65")
 
-[node name="MainBurst" type="GPUParticles3D" parent="."]
+[node name="MainBurst" type="GPUParticles3D" parent="." unique_id=1739428911]
 emitting = false
-amount = 16
+amount = 30
 lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_main")
 draw_pass_1 = SubResource("SphereMesh_main")
 
-[node name="Sparks" type="GPUParticles3D" parent="."]
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=1040478557]
 emitting = false
 amount = 24
 lifetime = 0.8
@@ -144,15 +144,17 @@ explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_sparks")
 draw_pass_1 = SubResource("SphereMesh_sparks")
 
-[node name="Smoke" type="GPUParticles3D" parent="."]
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=1233830254]
 emitting = false
+amount = 16
 lifetime = 1.2
 one_shot = true
 explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_smoke")
 draw_pass_1 = SubResource("SphereMesh_smoke")
 
-[node name="Sound" type="AudioStreamPlayer3D" parent="."]
+[node name="Sound" type="AudioStreamPlayer3D" parent="." unique_id=1587668971]
 stream = ExtResource("2_6f5ep")
+volume_db = 1.0
 unit_size = 30.0
 max_distance = 60.0

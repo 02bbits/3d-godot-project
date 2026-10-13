@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bullet001"]
 
 [ext_resource type="Script" uid="uid://boy5dgbteu" path="res://scripts/entities/bullet/bullet.gd" id="1_bg"]
+[ext_resource type="PackedScene" uid="uid://l3mk56ty44tw" path="res://assets/MagicProjectilesVFX/assets/BinbunVFX/magic_projectiles/effects/mprojectile_javelin/mprojectile_javelin_vfx_01.tscn" id="2_byxw7"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_tlwt5"]
 radius = 0.8
@@ -23,11 +24,15 @@ script = ExtResource("1_bg")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=822222317]
 transform = Transform3D(0.14, 0, 0, 0, -6.1195937e-09, -0.14, 0, 0.14, -6.1195937e-09, 0, 6.8855317e-09, -0.037647024)
+visible = false
 mesh = SubResource("CapsuleMesh_tlwt5")
 surface_material_override/0 = SubResource("StandardMaterial3D_dwbse")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1060520002]
 transform = Transform3D(0.19999996, 0, 0, 0, -8.742275e-09, -0.19999996, 0, 0.19999996, -8.742275e-09, 0, 2.1280082e-09, -0.04868316)
 shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="Visual" parent="." unique_id=233598993 instance=ExtResource("2_byxw7")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
