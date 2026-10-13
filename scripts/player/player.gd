@@ -40,6 +40,12 @@ func _ready() -> void:
 	setup_arm_ik()
 	_setup_weapon()
 	setup_network_control()
+	# The viewmodel renders in its own World3D (map lights don't reach across
+	# worlds): give it the map's environment so the gun gets the same sky
+	# ambient and reflections as the world. SunMirror copies the directional sun.
+	var vm_world := viewmodel_camera.get_viewport().world_3d
+	if vm_world != null and get_world_3d().environment != null:
+		vm_world.environment = get_world_3d().environment
 	# a copy spawned mid-game may already carry a replicated build
 	mods.sync_build(net_mods)
 

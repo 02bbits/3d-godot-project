@@ -42,12 +42,30 @@ func take_damage(amount: float, attacker_id: int = -1) -> void:
 	$Health.apply(maxf(float(ctx["amount"]), 0.0), attacker_id)
 
 # Owner-side hit reaction: bumps the replicated counter so every peer replays
-# the flinch through the setter, and gives the victim a red edge flash and a
-# slight camera shake.
-func _on_damaged(amount: float, _attacker_id: int) -> void:
+# the flinch through the setter, flashes the damage indicator toward the
+# attacker and gives a slight camera shake.
+func _on_damaged(amount: float, attacker_id: int) -> void:
 	net_hit_count += 1
-	hud.hit_flash.flash(amount / maxf(max_health, 1.0))
+	hud.hit_flash.flash(amount / maxf(max_health, 1.0), _damage_direction(attacker_id))
 	cam_holder.shake()
+
+
+# Camera-space direction (x right, y up, -z forward) to the attacker's replica;
+# zero when the source is unknown (fall damage, world kills). The indicator
+# turns this into one of the four screen corners.
+func _damage_direction(attacker_id: int) -> Vector3:
+	if attacker_id < 0 or not (Engine.has_singleton("Fusion") and Fusion.is_in_room()):
+		return Vector3.ZERO
+	for p in get_tree().get_nodes_in_group("player"):
+		if p == self or not is_instance_valid(p):
+			continue
+		var rep: Node = p.find_child("FusionSharedReplicator", true, false)
+		if rep == null or not rep.has_method("get_owner_id"):
+			continue
+		if int(rep.get_owner_id()) == attacker_id:
+			var to_attacker: Vector3 = p.global_position + Vector3.UP - cam.global_position
+			return cam.global_transform.basis.inverse() * to_attacker
+	return Vector3.ZERO
 
 func _on_health_changed(current: float, previous: float) -> void:
 	if current <= 0.0 and previous > 0.0 and death_effect != null:

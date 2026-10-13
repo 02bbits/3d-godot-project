@@ -4774,12 +4774,12 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="InteriorRuins" type="Node3D" parent="."]
+[node name="InteriorRuins" type="Node3D" parent="." unique_id=1939071462]
 
-[node name="West_Lab" type="Node3D" parent="InteriorRuins"]
+[node name="West_Lab" type="Node3D" parent="InteriorRuins" unique_id=1323210215]
 
-[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, 0.000000, 0.000000, 1.000000, -32.000000, 0.500000, -25.000000)
+[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=609999266]
+transform = Transform3D(1, 0, 0, 0, 0.73, 0, 0, 0, 1, -32, 0.5, -25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4789,8 +4789,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.530000, 0.000000, 0.000000, 0.000000, 1.000000, -32.000000, 0.500000, -9.000000)
+[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1963838011]
+transform = Transform3D(1, 0, 0, 0, 0.53, 0, 0, 0, 1, -32, 0.5, -9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4800,8 +4800,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.720000, 0.000000, -1.500000, 0.000000, 0.000000, -35.000000, 0.500000, -22.000000)
+[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1356535416]
+transform = Transform3D(0, 0, 1, 0, 0.72, 0, -1.5, 0, 0, -35, 0.5, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4811,8 +4811,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.000000, -1.000000, 0.000000, 0.000000, -35.000000, 0.500000, -11.000000)
+[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1112228511]
+transform = Transform3D(0, 0, 1, 0, 0.35, 0, -1, 0, 0, -35, 0.5, -11)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4822,8 +4822,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.580000, 0.000000, 0.000000, 0.000000, 1.000000, -24.000000, 0.500000, -25.000000)
+[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1543259072]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, -24, 0.5, -25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4833,8 +4833,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.680000, 0.000000, 0.000000, 0.000000, 1.000000, -24.000000, 0.500000, -9.000000)
+[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=213725173]
+transform = Transform3D(1, 0, 0, 0, 0.68, 0, 0, 0, 1, -24, 0.5, -9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4844,8 +4844,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.720000, 0.000000, -1.500000, 0.000000, 0.000000, -21.000000, 0.500000, -22.000000)
+[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=734915842]
+transform = Transform3D(0, 0, 1, 0, 0.72, 0, -1.5, 0, 0, -21, 0.5, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4855,8 +4855,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.000000, -1.000000, 0.000000, 0.000000, -21.000000, 0.500000, -11.000000)
+[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1352764211]
+transform = Transform3D(0, 0, 1, 0, 0.35, 0, -1, 0, 0, -21, 0.5, -11)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4866,8 +4866,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, 0.000000, 0.000000, 1.000000, -28.000000, 0.500000, -25.000000)
+[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=154122615]
+transform = Transform3D(1, 0, 0, 0, 0.73, 0, 0, 0, 1, -28, 0.5, -25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4877,8 +4877,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 54)
 }
 
-[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.790000, 0.000000, 0.000000, 0.000000, 1.000000, -35.000000, 0.500000, -25.000000)
+[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=888601306]
+transform = Transform3D(1, 0, 0, 0, 0.79, 0, 0, 0, 1, -35, 0.5, -25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4888,8 +4888,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 25)
 }
 
-[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, 0.000000, 0.000000, 1.000000, -21.000000, 0.500000, -25.000000)
+[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=696821636]
+transform = Transform3D(1, 0, 0, 0, 0.42, 0, 0, 0, 1, -21, 0.5, -25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4899,8 +4899,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.196472, -0.437229, -0.145538, 0.618187, 0.145238, 0.000000, 0.041761, -0.092936, 0.684703, -23.200000, 1.100000, -24.300000)
+[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1715630214]
+transform = Transform3D(0.196472, -0.437229, -0.145538, 0.618187, 0.145238, 0, 0.041761, -0.092936, 0.684703, -23.2, 1.1, -24.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4910,8 +4910,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.952469, 0.118739, 0.190809, -0.241922, 0.485148, 0.000000, -0.185141, -0.023080, 0.981627, -33.800000, 0.650000, -24.800000)
+[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1652775965]
+transform = Transform3D(0.952469, 0.118739, 0.190809, -0.241922, 0.485148, 0, -0.185141, -0.02308, 0.981627, -33.8, 0.65, -24.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4921,8 +4921,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 51)
 }
 
-[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.994522, 0.000000, 0.104528, 0.000000, 1.000000, 0.000000, -0.104528, 0.000000, 0.994522, -31.600000, 0.500000, -21.900000)
+[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=745349545]
+transform = Transform3D(0.994522, 0, 0.104528, 0, 1, 0, -0.104528, 0, 0.994522, -31.6, 0.5, -21.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4932,8 +4932,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, -24.200000, 0.500000, -21.900000)
+[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=904731312]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -24.2, 0.5, -21.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4943,8 +4943,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.284452, -0.875452, 0.390731, 0.951057, 0.309017, 0.000000, -0.120743, 0.371607, 0.920505, -32.400000, 1.500000, -12.500000)
+[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1732267647]
+transform = Transform3D(0.284452, -0.875452, 0.390731, 0.951057, 0.309017, 0, -0.120743, 0.371607, 0.920505, -32.4, 1.5, -12.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4954,8 +4954,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.987688, 0.000000, -0.156434, 0.000000, 1.000000, 0.000000, 0.156434, 0.000000, 0.987688, -32.000000, 1.330000, -22.100000)
+[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=872137329]
+transform = Transform3D(0.987688, 0, -0.156434, 0, 1, 0, 0.156434, 0, 0.987688, -32, 1.33, -22.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4965,8 +4965,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.956305, 0.000000, 0.292372, 0.000000, 1.000000, 0.000000, -0.292372, 0.000000, 0.956305, -24.200000, 1.500000, -22.400000)
+[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1572493105]
+transform = Transform3D(0.956305, 0, 0.292372, 0, 1, 0, -0.292372, 0, 0.956305, -24.2, 1.5, -22.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4976,8 +4976,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(2.151925, 0.000000, 0.457406, 0.000000, 2.200000, 0.000000, -0.457406, 0.000000, 2.151925, -22.300000, 0.500000, -13.100000)
+[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=667298775]
+transform = Transform3D(2.151925, 0, 0.457406, 0, 2.2, 0, -0.457406, 0, 2.151925, -22.3, 0.5, -13.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4987,8 +4987,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.047811, -0.912293, 0.406737, 0.998630, 0.052336, 0.000000, -0.021287, 0.406179, 0.913545, -33.600000, 0.840000, -18.400000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=960219040]
+transform = Transform3D(0.047811, -0.912293, 0.406737, 0.99863, 0.052336, 0, -0.021287, 0.406179, 0.913545, -33.6, 0.84, -18.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -4998,8 +4998,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 0)
 }
 
-[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.595528, 0.000000, -0.073122, 0.000000, 0.600000, 0.000000, 0.073122, 0.000000, 0.595528, -23.300000, 0.500000, -10.800000)
+[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1531289436]
+transform = Transform3D(0.595528, 0, -0.073122, 0, 0.6, 0, 0.073122, 0, 0.595528, -23.3, 0.5, -10.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5009,8 +5009,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 23)
 }
 
-[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.174653, 0.000000, 0.050804, 0.000000, 0.130000, 0.000000, -0.043546, 0.000000, 0.203762, -33.500000, 0.540000, -24.200000)
+[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=300383575]
+transform = Transform3D(0.174653, 0, 0.050804, 0, 0.13, 0, -0.043546, 0, 0.203762, -33.5, 0.54, -24.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5020,8 +5020,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.154715, 0.000000, 0.137772, 0.000000, 0.130000, 0.000000, -0.134492, 0.000000, 0.158489, -32.600000, 0.540000, -24.800000)
+[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=351667582]
+transform = Transform3D(0.154715, 0, 0.137772, 0, 0.13, 0, -0.134492, 0, 0.158489, -32.6, 0.54, -24.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5031,8 +5031,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.086160, 0.000000, 0.194709, 0.000000, 0.130000, 0.000000, -0.213252, 0.000000, 0.078667, -22.200000, 0.540000, -9.600000)
+[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1213974249]
+transform = Transform3D(0.08616, 0, 0.194709, 0, 0.13, 0, -0.213252, 0, 0.078667, -22.2, 0.54, -9.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5042,8 +5042,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(-0.022225, 0.000000, 0.209201, 0.000000, 0.130000, 0.000000, -0.254030, 0.000000, -0.018303, -33.400000, 0.540000, -10.100000)
+[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=1762250659]
+transform = Transform3D(-0.022225, 0, 0.209201, 0, 0.13, 0, -0.25403, 0, -0.018303, -33.4, 0.54, -10.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5053,8 +5053,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.520000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, 0.000000, 0.000000, 0.520000, -32.000000, 0.460000, -24.000000)
+[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=416750833]
+transform = Transform3D(0.52, 0, 0, 0, 0.12, 0, 0, 0, 0.52, -32, 0.46, -24)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5064,8 +5064,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.000000, 0.000000, 0.520000, 0.000000, 0.120000, 0.000000, -0.520000, 0.000000, 0.000000, -30.000000, 0.460000, -24.000000)
+[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Lab" unique_id=717199028]
+transform = Transform3D(0, 0, 0.52, 0, 0.12, 0, -0.52, 0, 0, -30, 0.46, -24)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5075,11 +5075,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(-0.940256, -0.269614, 0.207912, -0.275637, 0.961262, 0.000000, -0.199858, -0.057308, -0.978148, -31.400000, 0.650000, -20.600000)
+[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Lab" unique_id=1462499581]
+transform = Transform3D(-0.940256, -0.269614, 0.207912, -0.275637, 0.961262, 0, -0.199858, -0.057308, -0.978148, -31.4, 0.65, -20.6)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/LeaningDeskChair" unique_id=899125722]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5089,8 +5089,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/LeaningDeskChair" unique_id=1424532349]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5100,11 +5100,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.129039, -0.918161, 0.374607, 0.990268, 0.139173, 0.000000, -0.052135, 0.370961, 0.927184, -24.200000, 0.920000, -19.800000)
+[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Lab" unique_id=1505253406]
+transform = Transform3D(0.129039, -0.918161, 0.374607, 0.990268, 0.139173, 0, -0.052135, 0.370961, 0.927184, -24.2, 0.92, -19.8)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/ToppledChair" unique_id=1438535364]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5114,8 +5114,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/ToppledChair" unique_id=825657558]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5125,11 +5125,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Lab"]
-transform = Transform3D(0.518339, -0.110176, 0.848048, 0.207912, 0.978148, 0.000000, -0.829516, 0.176319, 0.529919, -33.400000, 0.570000, -12.900000)
+[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Lab" unique_id=1247595103]
+transform = Transform3D(0.518339, -0.110176, 0.848048, 0.207912, 0.978148, 0, -0.829516, 0.176319, 0.529919, -33.4, 0.57, -12.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Lab/DiscardedChair" unique_id=673615480]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5139,8 +5139,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Lab/DiscardedChair" unique_id=1092089116]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5150,10 +5150,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="West_Office" type="Node3D" parent="InteriorRuins"]
+[node name="West_Office" type="Node3D" parent="InteriorRuins" unique_id=179377950]
 
-[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, 0.000000, 0.000000, 1.000000, -12.000000, 0.500000, -23.000000)
+[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=111997900]
+transform = Transform3D(1, 0, 0, 0, 0.73, 0, 0, 0, 1, -12, 0.5, -23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5163,8 +5163,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.530000, 0.000000, 0.000000, 0.000000, 1.000000, -12.000000, 0.500000, -7.000000)
+[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1927497965]
+transform = Transform3D(1, 0, 0, 0, 0.53, 0, 0, 0, 1, -12, 0.5, -7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5174,8 +5174,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.720000, 0.000000, -1.500000, 0.000000, 0.000000, -15.000000, 0.500000, -20.000000)
+[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=330386626]
+transform = Transform3D(0, 0, 1, 0, 0.72, 0, -1.5, 0, 0, -15, 0.5, -20)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5185,8 +5185,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.000000, -1.000000, 0.000000, 0.000000, -15.000000, 0.500000, -9.000000)
+[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1843059676]
+transform = Transform3D(0, 0, 1, 0, 0.35, 0, -1, 0, 0, -15, 0.5, -9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5196,8 +5196,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.580000, 0.000000, 0.000000, 0.000000, 1.000000, -4.000000, 0.500000, -23.000000)
+[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=356449560]
+transform = Transform3D(1, 0, 0, 0, 0.58, 0, 0, 0, 1, -4, 0.5, -23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5207,8 +5207,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.680000, 0.000000, 0.000000, 0.000000, 1.000000, -4.000000, 0.500000, -7.000000)
+[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=742434294]
+transform = Transform3D(1, 0, 0, 0, 0.68, 0, 0, 0, 1, -4, 0.5, -7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5218,8 +5218,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.720000, 0.000000, -1.500000, 0.000000, 0.000000, -1.000000, 0.500000, -20.000000)
+[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1776299725]
+transform = Transform3D(0, 0, 1, 0, 0.72, 0, -1.5, 0, 0, -1, 0.5, -20)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5229,8 +5229,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.000000, -1.000000, 0.000000, 0.000000, -1.000000, 0.500000, -9.000000)
+[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1083396582]
+transform = Transform3D(0, 0, 1, 0, 0.35, 0, -1, 0, 0, -1, 0.5, -9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5240,8 +5240,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, 0.000000, 0.000000, 1.000000, -8.000000, 0.500000, -23.000000)
+[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1377203272]
+transform = Transform3D(1, 0, 0, 0, 0.73, 0, 0, 0, 1, -8, 0.5, -23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5251,8 +5251,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 54)
 }
 
-[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.790000, 0.000000, 0.000000, 0.000000, 1.000000, -15.000000, 0.500000, -23.000000)
+[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1499341391]
+transform = Transform3D(1, 0, 0, 0, 0.79, 0, 0, 0, 1, -15, 0.5, -23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5262,8 +5262,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 25)
 }
 
-[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, 0.000000, 0.000000, 1.000000, -1.000000, 0.500000, -23.000000)
+[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1975627216]
+transform = Transform3D(1, 0, 0, 0, 0.42, 0, 0, 0, 1, -1, 0.5, -23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5273,8 +5273,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.196472, -0.437229, -0.145538, 0.618187, 0.145238, 0.000000, 0.041761, -0.092936, 0.684703, -3.200000, 1.100000, -22.300000)
+[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1491762930]
+transform = Transform3D(0.196472, -0.437229, -0.145538, 0.618187, 0.145238, 0, 0.041761, -0.092936, 0.684703, -3.2, 1.1, -22.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5284,8 +5284,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.952469, 0.118739, 0.190809, -0.241922, 0.485148, 0.000000, -0.185141, -0.023080, 0.981627, -13.800000, 0.650000, -22.800000)
+[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1201752939]
+transform = Transform3D(0.952469, 0.118739, 0.190809, -0.241922, 0.485148, 0, -0.185141, -0.02308, 0.981627, -13.8, 0.65, -22.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5295,8 +5295,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 51)
 }
 
-[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.994522, 0.000000, 0.104528, 0.000000, 1.000000, 0.000000, -0.104528, 0.000000, 0.994522, -11.600000, 0.500000, -19.900000)
+[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Office" unique_id=516027024]
+transform = Transform3D(0.994522, 0, 0.104528, 0, 1, 0, -0.104528, 0, 0.994522, -11.6, 0.5, -19.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5306,8 +5306,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, -4.200000, 0.500000, -19.900000)
+[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1824584624]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.2, 0.5, -19.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5317,8 +5317,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.284452, -0.875452, 0.390731, 0.951057, 0.309017, 0.000000, -0.120743, 0.371607, 0.920505, -12.400000, 1.500000, -10.500000)
+[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1886366884]
+transform = Transform3D(0.284452, -0.875452, 0.390731, 0.951057, 0.309017, 0, -0.120743, 0.371607, 0.920505, -12.4, 1.5, -10.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5328,8 +5328,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.987688, 0.000000, -0.156434, 0.000000, 1.000000, 0.000000, 0.156434, 0.000000, 0.987688, -12.000000, 1.330000, -20.100000)
+[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Office" unique_id=531066047]
+transform = Transform3D(0.987688, 0, -0.156434, 0, 1, 0, 0.156434, 0, 0.987688, -12, 1.33, -20.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5339,8 +5339,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.956305, 0.000000, 0.292372, 0.000000, 1.000000, 0.000000, -0.292372, 0.000000, 0.956305, -4.200000, 1.500000, -20.400000)
+[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Office" unique_id=718722325]
+transform = Transform3D(0.956305, 0, 0.292372, 0, 1, 0, -0.292372, 0, 0.956305, -4.2, 1.5, -20.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5350,8 +5350,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(2.151925, 0.000000, 0.457406, 0.000000, 2.200000, 0.000000, -0.457406, 0.000000, 2.151925, -2.300000, 0.500000, -11.100000)
+[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1015750591]
+transform = Transform3D(2.151925, 0, 0.457406, 0, 2.2, 0, -0.457406, 0, 2.151925, -2.3, 0.5, -11.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5361,8 +5361,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.047811, -0.912293, 0.406737, 0.998630, 0.052336, 0.000000, -0.021287, 0.406179, 0.913545, -13.600000, 0.840000, -16.400000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Office" unique_id=940498881]
+transform = Transform3D(0.047811, -0.912293, 0.406737, 0.99863, 0.052336, 0, -0.021287, 0.406179, 0.913545, -13.6, 0.84, -16.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5372,8 +5372,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 0)
 }
 
-[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.595528, 0.000000, -0.073122, 0.000000, 0.600000, 0.000000, 0.073122, 0.000000, 0.595528, -3.300000, 0.500000, -8.800000)
+[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Office" unique_id=416107070]
+transform = Transform3D(0.595528, 0, -0.073122, 0, 0.6, 0, 0.073122, 0, 0.595528, -3.3, 0.5, -8.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5383,8 +5383,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 23)
 }
 
-[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.174653, 0.000000, 0.050804, 0.000000, 0.130000, 0.000000, -0.043546, 0.000000, 0.203762, -13.500000, 0.540000, -22.200000)
+[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Office" unique_id=287320132]
+transform = Transform3D(0.174653, 0, 0.050804, 0, 0.13, 0, -0.043546, 0, 0.203762, -13.5, 0.54, -22.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5394,8 +5394,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.154715, 0.000000, 0.137772, 0.000000, 0.130000, 0.000000, -0.134492, 0.000000, 0.158489, -12.600000, 0.540000, -22.800000)
+[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=1572520337]
+transform = Transform3D(0.154715, 0, 0.137772, 0, 0.13, 0, -0.134492, 0, 0.158489, -12.6, 0.54, -22.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5405,8 +5405,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.086160, 0.000000, 0.194709, 0.000000, 0.130000, 0.000000, -0.213252, 0.000000, 0.078667, -2.200000, 0.540000, -7.600000)
+[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Office" unique_id=747814505]
+transform = Transform3D(0.08616, 0, 0.194709, 0, 0.13, 0, -0.213252, 0, 0.078667, -2.2, 0.54, -7.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5416,8 +5416,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(-0.022225, 0.000000, 0.209201, 0.000000, 0.130000, 0.000000, -0.254030, 0.000000, -0.018303, -13.400000, 0.540000, -8.100000)
+[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Office" unique_id=119039171]
+transform = Transform3D(-0.022225, 0, 0.209201, 0, 0.13, 0, -0.25403, 0, -0.018303, -13.4, 0.54, -8.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5427,8 +5427,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.520000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, 0.000000, 0.000000, 0.520000, -12.000000, 0.460000, -22.000000)
+[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Office" unique_id=901743510]
+transform = Transform3D(0.52, 0, 0, 0, 0.12, 0, 0, 0, 0.52, -12, 0.46, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5438,8 +5438,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.000000, 0.000000, 0.520000, 0.000000, 0.120000, 0.000000, -0.520000, 0.000000, 0.000000, -10.000000, 0.460000, -22.000000)
+[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Office" unique_id=764320303]
+transform = Transform3D(0, 0, 0.52, 0, 0.12, 0, -0.52, 0, 0, -10, 0.46, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5449,11 +5449,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Office"]
-transform = Transform3D(-0.940256, -0.269614, 0.207912, -0.275637, 0.961262, 0.000000, -0.199858, -0.057308, -0.978148, -11.400000, 0.650000, -18.600000)
+[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Office" unique_id=1708911775]
+transform = Transform3D(-0.940256, -0.269614, 0.207912, -0.275637, 0.961262, 0, -0.199858, -0.057308, -0.978148, -11.4, 0.65, -18.6)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/LeaningDeskChair" unique_id=2092002588]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5463,8 +5463,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/LeaningDeskChair" unique_id=221367060]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5474,11 +5474,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.129039, -0.918161, 0.374607, 0.990268, 0.139173, 0.000000, -0.052135, 0.370961, 0.927184, -4.200000, 0.920000, -17.800000)
+[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Office" unique_id=111373269]
+transform = Transform3D(0.129039, -0.918161, 0.374607, 0.990268, 0.139173, 0, -0.052135, 0.370961, 0.927184, -4.2, 0.92, -17.8)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/ToppledChair" unique_id=1721934203]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5488,8 +5488,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/ToppledChair" unique_id=1692144515]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5499,11 +5499,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Office"]
-transform = Transform3D(0.518339, -0.110176, 0.848048, 0.207912, 0.978148, 0.000000, -0.829516, 0.176319, 0.529919, -13.400000, 0.570000, -10.900000)
+[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Office" unique_id=954752752]
+transform = Transform3D(0.518339, -0.110176, 0.848048, 0.207912, 0.978148, 0, -0.829516, 0.176319, 0.529919, -13.4, 0.57, -10.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Office/DiscardedChair" unique_id=190363717]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5513,8 +5513,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Office/DiscardedChair" unique_id=1972917443]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5524,10 +5524,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="West_Workshop" type="Node3D" parent="InteriorRuins"]
+[node name="West_Workshop" type="Node3D" parent="InteriorRuins" unique_id=1767261450]
 
-[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, -0.000000, 0.000000, -1.000000, -24.000000, 0.500000, 26.000000)
+[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1198638202]
+transform = Transform3D(-1, 0, 0, 0, 0.73, 0, 0, 0, -1, -24, 0.5, 26)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5537,8 +5537,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.530000, 0.000000, -0.000000, 0.000000, -1.000000, -24.000000, 0.500000, 10.000000)
+[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=737280369]
+transform = Transform3D(-1, 0, 0, 0, 0.53, 0, 0, 0, -1, -24, 0.5, 10)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5548,8 +5548,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.720000, 0.000000, 1.500000, 0.000000, -0.000000, -21.000000, 0.500000, 23.000000)
+[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1486435837]
+transform = Transform3D(0, 0, -1, 0, 0.72, 0, 1.5, 0, 0, -21, 0.5, 23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5559,8 +5559,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.350000, 0.000000, 1.000000, 0.000000, -0.000000, -21.000000, 0.500000, 12.000000)
+[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=823918766]
+transform = Transform3D(0, 0, -1, 0, 0.35, 0, 1, 0, 0, -21, 0.5, 12)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5570,8 +5570,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.580000, 0.000000, -0.000000, 0.000000, -1.000000, -32.000000, 0.500000, 26.000000)
+[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1689487566]
+transform = Transform3D(-1, 0, 0, 0, 0.58, 0, 0, 0, -1, -32, 0.5, 26)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5581,8 +5581,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.680000, 0.000000, -0.000000, 0.000000, -1.000000, -32.000000, 0.500000, 10.000000)
+[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1661718855]
+transform = Transform3D(-1, 0, 0, 0, 0.68, 0, 0, 0, -1, -32, 0.5, 10)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5592,8 +5592,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.720000, 0.000000, 1.500000, 0.000000, -0.000000, -35.000000, 0.500000, 23.000000)
+[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=853694651]
+transform = Transform3D(0, 0, -1, 0, 0.72, 0, 1.5, 0, 0, -35, 0.5, 23)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5603,8 +5603,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.350000, 0.000000, 1.000000, 0.000000, -0.000000, -35.000000, 0.500000, 12.000000)
+[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1663908376]
+transform = Transform3D(0, 0, -1, 0, 0.35, 0, 1, 0, 0, -35, 0.5, 12)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5614,8 +5614,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, -0.000000, 0.000000, -1.000000, -28.000000, 0.500000, 26.000000)
+[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=636745224]
+transform = Transform3D(-1, 0, 0, 0, 0.73, 0, 0, 0, -1, -28, 0.5, 26)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5625,8 +5625,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 54)
 }
 
-[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.790000, 0.000000, -0.000000, 0.000000, -1.000000, -21.000000, 0.500000, 26.000000)
+[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=218038649]
+transform = Transform3D(-1, 0, 0, 0, 0.79, 0, 0, 0, -1, -21, 0.5, 26)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5636,8 +5636,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 25)
 }
 
-[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, -0.000000, 0.000000, -1.000000, -35.000000, 0.500000, 26.000000)
+[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1055176056]
+transform = Transform3D(-1, 0, 0, 0, 0.42, 0, 0, 0, -1, -35, 0.5, 26)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5647,8 +5647,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.196472, 0.437229, 0.145538, 0.618187, 0.145238, 0.000000, -0.041761, 0.092936, -0.684703, -32.800000, 1.100000, 25.300000)
+[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1846498659]
+transform = Transform3D(-0.196472, 0.437229, 0.145538, 0.618187, 0.145238, 0, -0.041761, 0.092936, -0.684703, -32.8, 1.1, 25.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5658,8 +5658,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.952469, -0.118739, -0.190809, -0.241922, 0.485148, 0.000000, 0.185141, 0.023080, -0.981627, -22.200000, 0.650000, 25.800000)
+[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=830473617]
+transform = Transform3D(-0.952469, -0.118739, -0.190809, -0.241922, 0.485148, 0, 0.185141, 0.02308, -0.981627, -22.2, 0.65, 25.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5669,8 +5669,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 51)
 }
 
-[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.994522, 0.000000, -0.104528, 0.000000, 1.000000, 0.000000, 0.104528, 0.000000, -0.994522, -24.400000, 0.500000, 22.900000)
+[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1170644799]
+transform = Transform3D(-0.994522, 0, -0.104528, 0, 1, 0, 0.104528, 0, -0.994522, -24.4, 0.5, 22.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5680,8 +5680,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -0.000000, -31.800000, 0.500000, 22.900000)
+[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1355094031]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -31.8, 0.5, 22.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5691,8 +5691,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.284452, 0.875452, -0.390731, 0.951057, 0.309017, 0.000000, 0.120743, -0.371607, -0.920505, -23.600000, 1.500000, 13.500000)
+[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1326006526]
+transform = Transform3D(-0.284452, 0.875452, -0.390731, 0.951057, 0.309017, 0, 0.120743, -0.371607, -0.920505, -23.6, 1.5, 13.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5702,8 +5702,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.987688, 0.000000, 0.156434, 0.000000, 1.000000, 0.000000, -0.156434, 0.000000, -0.987688, -24.000000, 1.330000, 23.100000)
+[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=800367705]
+transform = Transform3D(-0.987688, 0, 0.156434, 0, 1, 0, -0.156434, 0, -0.987688, -24, 1.33, 23.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5713,8 +5713,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.956305, 0.000000, -0.292372, 0.000000, 1.000000, 0.000000, 0.292372, 0.000000, -0.956305, -31.800000, 1.500000, 23.400000)
+[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1929229383]
+transform = Transform3D(-0.956305, 0, -0.292372, 0, 1, 0, 0.292372, 0, -0.956305, -31.8, 1.5, 23.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5724,8 +5724,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-2.151925, 0.000000, -0.457406, 0.000000, 2.200000, 0.000000, 0.457406, 0.000000, -2.151925, -33.700000, 0.500000, 14.100000)
+[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=913764612]
+transform = Transform3D(-2.151925, 0, -0.457406, 0, 2.2, 0, 0.457406, 0, -2.151925, -33.7, 0.5, 14.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5735,8 +5735,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.047811, 0.912293, -0.406737, 0.998630, 0.052336, 0.000000, 0.021287, -0.406179, -0.913545, -22.400000, 0.840000, 19.400000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=902683359]
+transform = Transform3D(-0.047811, 0.912293, -0.406737, 0.99863, 0.052336, 0, 0.021287, -0.406179, -0.913545, -22.4, 0.84, 19.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5746,8 +5746,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 0)
 }
 
-[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.595528, 0.000000, 0.073122, 0.000000, 0.600000, 0.000000, -0.073122, 0.000000, -0.595528, -32.700000, 0.500000, 11.800000)
+[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=346621404]
+transform = Transform3D(-0.595528, 0, 0.073122, 0, 0.6, 0, -0.073122, 0, -0.595528, -32.7, 0.5, 11.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5757,8 +5757,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 23)
 }
 
-[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.174653, 0.000000, -0.050804, 0.000000, 0.130000, 0.000000, 0.043546, 0.000000, -0.203762, -22.500000, 0.540000, 25.200000)
+[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1674497297]
+transform = Transform3D(-0.174653, 0, -0.050804, 0, 0.13, 0, 0.043546, 0, -0.203762, -22.5, 0.54, 25.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5768,8 +5768,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.154715, 0.000000, -0.137772, 0.000000, 0.130000, 0.000000, 0.134492, 0.000000, -0.158489, -23.400000, 0.540000, 25.800000)
+[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1694972337]
+transform = Transform3D(-0.154715, 0, -0.137772, 0, 0.13, 0, 0.134492, 0, -0.158489, -23.4, 0.54, 25.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5779,8 +5779,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.086160, 0.000000, -0.194709, 0.000000, 0.130000, 0.000000, 0.213252, 0.000000, -0.078667, -33.800000, 0.540000, 10.600000)
+[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1117217910]
+transform = Transform3D(-0.08616, 0, -0.194709, 0, 0.13, 0, 0.213252, 0, -0.078667, -33.8, 0.54, 10.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5790,8 +5790,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(0.022225, 0.000000, -0.209201, 0.000000, 0.130000, 0.000000, 0.254030, 0.000000, 0.018303, -22.600000, 0.540000, 11.100000)
+[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=502150265]
+transform = Transform3D(0.022225, 0, -0.209201, 0, 0.13, 0, 0.25403, 0, 0.018303, -22.6, 0.54, 11.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5801,8 +5801,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.520000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, -0.000000, 0.000000, -0.520000, -24.000000, 0.460000, 25.000000)
+[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=1613417938]
+transform = Transform3D(-0.52, 0, 0, 0, 0.12, 0, 0, 0, -0.52, -24, 0.46, 25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5812,8 +5812,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.000000, 0.000000, -0.520000, 0.000000, 0.120000, 0.000000, 0.520000, 0.000000, -0.000000, -26.000000, 0.460000, 25.000000)
+[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Workshop" unique_id=698847936]
+transform = Transform3D(0, 0, -0.52, 0, 0.12, 0, 0.52, 0, 0, -26, 0.46, 25)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5823,11 +5823,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(0.940256, 0.269614, -0.207912, -0.275637, 0.961262, 0.000000, 0.199858, 0.057308, 0.978148, -24.600000, 0.650000, 21.600000)
+[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Workshop" unique_id=1982445422]
+transform = Transform3D(0.940256, 0.269614, -0.207912, -0.275637, 0.961262, 0, 0.199858, 0.057308, 0.978148, -24.6, 0.65, 21.6)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/LeaningDeskChair" unique_id=526558498]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5837,8 +5837,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/LeaningDeskChair" unique_id=1145286614]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5848,11 +5848,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.129039, 0.918161, -0.374607, 0.990268, 0.139173, 0.000000, 0.052135, -0.370961, -0.927184, -31.800000, 0.920000, 20.800000)
+[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Workshop" unique_id=295117796]
+transform = Transform3D(-0.129039, 0.918161, -0.374607, 0.990268, 0.139173, 0, 0.052135, -0.370961, -0.927184, -31.8, 0.92, 20.8)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/ToppledChair" unique_id=1869299616]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5862,8 +5862,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/ToppledChair" unique_id=1236946478]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5873,11 +5873,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Workshop"]
-transform = Transform3D(-0.518339, 0.110176, -0.848048, 0.207912, 0.978148, 0.000000, 0.829516, -0.176319, -0.529919, -22.600000, 0.570000, 13.900000)
+[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Workshop" unique_id=166805715]
+transform = Transform3D(-0.518339, 0.110176, -0.848048, 0.207912, 0.978148, 0, 0.829516, -0.176319, -0.529919, -22.6, 0.57, 13.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Workshop/DiscardedChair" unique_id=698139162]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5887,8 +5887,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Workshop/DiscardedChair" unique_id=1709674211]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5898,10 +5898,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="West_Store" type="Node3D" parent="InteriorRuins"]
+[node name="West_Store" type="Node3D" parent="InteriorRuins" unique_id=1387163508]
 
-[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, -0.000000, 0.000000, -1.000000, -4.000000, 0.500000, 22.000000)
+[node name="RearWall-1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1595343991]
+transform = Transform3D(-1, 0, 0, 0, 0.73, 0, 0, 0, -1, -4, 0.5, 22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5911,8 +5911,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.530000, 0.000000, -0.000000, 0.000000, -1.000000, -4.000000, 0.500000, 6.000000)
+[node name="FrontFragment-1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=2079536079]
+transform = Transform3D(-1, 0, 0, 0, 0.53, 0, 0, 0, -1, -4, 0.5, 6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5922,8 +5922,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.720000, 0.000000, 0.700000, 0.000000, -0.000000, -1.000000, 0.500000, 17.500000)
+[node name="SideWall-1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=2088509405]
+transform = Transform3D(0, 0, -1, 0, 0.72, 0, 0.7, 0, 0, -1, 0.5, 17.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5933,8 +5933,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.350000, 0.000000, 1.000000, 0.000000, -0.000000, -1.000000, 0.500000, 8.000000)
+[node name="SideExitStump-1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1970106665]
+transform = Transform3D(0, 0, -1, 0, 0.35, 0, 1, 0, 0, -1, 0.5, 8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5944,8 +5944,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.580000, 0.000000, -0.000000, 0.000000, -1.000000, -12.000000, 0.500000, 22.000000)
+[node name="RearWall1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=2090833464]
+transform = Transform3D(-1, 0, 0, 0, 0.58, 0, 0, 0, -1, -12, 0.5, 22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5955,8 +5955,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.680000, 0.000000, -0.000000, 0.000000, -1.000000, -12.000000, 0.500000, 6.000000)
+[node name="FrontFragment1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1324567712]
+transform = Transform3D(-1, 0, 0, 0, 0.68, 0, 0, 0, -1, -12, 0.5, 6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5966,8 +5966,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.720000, 0.000000, 1.500000, 0.000000, -0.000000, -15.000000, 0.500000, 19.000000)
+[node name="SideWall1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=797240756]
+transform = Transform3D(0, 0, -1, 0, 0.72, 0, 1.5, 0, 0, -15, 0.5, 19)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5977,8 +5977,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 0.350000, 0.000000, 1.000000, 0.000000, -0.000000, -15.000000, 0.500000, 8.000000)
+[node name="SideExitStump1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=850394598]
+transform = Transform3D(0, 0, -1, 0, 0.35, 0, 1, 0, 0, -15, 0.5, 8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5988,8 +5988,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.730000, 0.000000, -0.000000, 0.000000, -1.000000, -8.000000, 0.500000, 22.000000)
+[node name="RearWindow" type="GridMap" parent="InteriorRuins/West_Store" unique_id=35304212]
+transform = Transform3D(-1, 0, 0, 0, 0.73, 0, 0, 0, -1, -8, 0.5, 22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -5999,8 +5999,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 54)
 }
 
-[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.790000, 0.000000, -0.000000, 0.000000, -1.000000, -2.500000, 0.500000, 22.000000)
+[node name="CornerPier" type="GridMap" parent="InteriorRuins/West_Store" unique_id=30986100]
+transform = Transform3D(-1, 0, 0, 0, 0.79, 0, 0, 0, -1, -2.5, 0.5, 22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6010,8 +6010,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 25)
 }
 
-[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-1.000000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, -0.000000, 0.000000, -1.000000, -15.000000, 0.500000, 22.000000)
+[node name="BrokenCornerPier" type="GridMap" parent="InteriorRuins/West_Store" unique_id=263508897]
+transform = Transform3D(-1, 0, 0, 0, 0.42, 0, 0, 0, -1, -15, 0.5, 22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6021,8 +6021,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.196472, 0.437229, 0.145538, 0.618187, 0.145238, 0.000000, -0.041761, 0.092936, -0.684703, -12.800000, 1.100000, 21.300000)
+[node name="CollapsedPanel" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1074865769]
+transform = Transform3D(-0.196472, 0.437229, 0.145538, 0.618187, 0.145238, 0, -0.041761, 0.092936, -0.684703, -12.8, 1.1, 21.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6032,8 +6032,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.952469, -0.118739, -0.190809, -0.241922, 0.485148, 0.000000, 0.185141, 0.023080, -0.981627, -2.200000, 0.650000, 21.800000)
+[node name="LeaningRearFragment" type="GridMap" parent="InteriorRuins/West_Store" unique_id=918954497]
+transform = Transform3D(-0.952469, -0.118739, -0.190809, -0.241922, 0.485148, 0, 0.185141, 0.02308, -0.981627, -2.2, 0.65, 21.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6043,8 +6043,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 51)
 }
 
-[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.994522, 0.000000, -0.104528, 0.000000, 1.000000, 0.000000, 0.104528, 0.000000, -0.994522, -4.400000, 0.500000, 18.900000)
+[node name="MainDesk" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1384015714]
+transform = Transform3D(-0.994522, 0, -0.104528, 0, 1, 0, 0.104528, 0, -0.994522, -4.4, 0.5, 18.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6054,8 +6054,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -0.000000, -11.800000, 0.500000, 18.900000)
+[node name="SecondWorktable" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1221310795]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -11.8, 0.5, 18.9)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6065,8 +6065,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.284452, 0.875452, -0.390731, 0.951057, 0.309017, 0.000000, 0.120743, -0.371607, -0.920505, -3.600000, 1.500000, 9.500000)
+[node name="OverturnedTable" type="GridMap" parent="InteriorRuins/West_Store" unique_id=68450625]
+transform = Transform3D(-0.284452, 0.875452, -0.390731, 0.951057, 0.309017, 0, 0.120743, -0.371607, -0.920505, -3.6, 1.5, 9.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6076,8 +6076,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.987688, 0.000000, 0.156434, 0.000000, 1.000000, 0.000000, -0.156434, 0.000000, -0.987688, -4.000000, 1.330000, 19.100000)
+[node name="BoxOnDesk" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1263001457]
+transform = Transform3D(-0.987688, 0, 0.156434, 0, 1, 0, -0.156434, 0, -0.987688, -4, 1.33, 19.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6087,8 +6087,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.956305, 0.000000, -0.292372, 0.000000, 1.000000, 0.000000, 0.292372, 0.000000, -0.956305, -11.800000, 1.500000, 19.400000)
+[node name="BoxOnTable" type="GridMap" parent="InteriorRuins/West_Store" unique_id=379540929]
+transform = Transform3D(-0.956305, 0, -0.292372, 0, 1, 0, 0.292372, 0, -0.956305, -11.8, 1.5, 19.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6098,8 +6098,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-2.151925, 0.000000, -0.457406, 0.000000, 2.200000, 0.000000, 0.457406, 0.000000, -2.151925, -13.700000, 0.500000, 10.100000)
+[node name="CrateAgainstWall" type="GridMap" parent="InteriorRuins/West_Store" unique_id=644131914]
+transform = Transform3D(-2.151925, 0, -0.457406, 0, 2.2, 0, 0.457406, 0, -2.151925, -13.7, 0.5, 10.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6109,8 +6109,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.047811, 0.912293, -0.406737, 0.998630, 0.052336, 0.000000, 0.021287, -0.406179, -0.913545, -2.400000, 0.840000, 15.400000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/West_Store" unique_id=931843999]
+transform = Transform3D(-0.047811, 0.912293, -0.406737, 0.99863, 0.052336, 0, 0.021287, -0.406179, -0.913545, -2.4, 0.84, 15.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6120,8 +6120,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 0)
 }
 
-[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.595528, 0.000000, 0.073122, 0.000000, 0.600000, 0.000000, -0.073122, 0.000000, -0.595528, -12.700000, 0.500000, 7.800000)
+[node name="SupplyPallet" type="GridMap" parent="InteriorRuins/West_Store" unique_id=43911014]
+transform = Transform3D(-0.595528, 0, 0.073122, 0, 0.6, 0, -0.073122, 0, -0.595528, -12.7, 0.5, 7.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6131,8 +6131,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 23)
 }
 
-[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.174653, 0.000000, -0.050804, 0.000000, 0.130000, 0.000000, 0.043546, 0.000000, -0.203762, -2.500000, 0.540000, 21.200000)
+[node name="LooseMasonry0" type="GridMap" parent="InteriorRuins/West_Store" unique_id=61468016]
+transform = Transform3D(-0.174653, 0, -0.050804, 0, 0.13, 0, 0.043546, 0, -0.203762, -2.5, 0.54, 21.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6142,8 +6142,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.154715, 0.000000, -0.137772, 0.000000, 0.130000, 0.000000, 0.134492, 0.000000, -0.158489, -3.400000, 0.540000, 21.800000)
+[node name="LooseMasonry1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=7319405]
+transform = Transform3D(-0.154715, 0, -0.137772, 0, 0.13, 0, 0.134492, 0, -0.158489, -3.4, 0.54, 21.8)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6153,8 +6153,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.086160, 0.000000, -0.194709, 0.000000, 0.130000, 0.000000, 0.213252, 0.000000, -0.078667, -13.800000, 0.540000, 6.600000)
+[node name="LooseMasonry2" type="GridMap" parent="InteriorRuins/West_Store" unique_id=548489083]
+transform = Transform3D(-0.08616, 0, -0.194709, 0, 0.13, 0, 0.213252, 0, -0.078667, -13.8, 0.54, 6.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6164,8 +6164,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(0.022225, 0.000000, -0.209201, 0.000000, 0.130000, 0.000000, 0.254030, 0.000000, 0.018303, -2.600000, 0.540000, 7.100000)
+[node name="LooseMasonry3" type="GridMap" parent="InteriorRuins/West_Store" unique_id=29010992]
+transform = Transform3D(0.022225, 0, -0.209201, 0, 0.13, 0, 0.25403, 0, 0.018303, -2.6, 0.54, 7.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6175,8 +6175,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.520000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, -0.000000, 0.000000, -0.520000, -4.000000, 0.460000, 21.000000)
+[node name="SandThroughBreach0" type="GridMap" parent="InteriorRuins/West_Store" unique_id=1223085249]
+transform = Transform3D(-0.52, 0, 0, 0, 0.12, 0, 0, 0, -0.52, -4, 0.46, 21)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6186,8 +6186,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.000000, 0.000000, -0.520000, 0.000000, 0.120000, 0.000000, 0.520000, 0.000000, -0.000000, -6.000000, 0.460000, 21.000000)
+[node name="SandThroughBreach1" type="GridMap" parent="InteriorRuins/West_Store" unique_id=943628721]
+transform = Transform3D(0, 0, -0.52, 0, 0.12, 0, 0.52, 0, 0, -6, 0.46, 21)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6197,11 +6197,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Store"]
-transform = Transform3D(0.940256, 0.269614, -0.207912, -0.275637, 0.961262, 0.000000, 0.199858, 0.057308, 0.978148, -4.600000, 0.650000, 17.600000)
+[node name="LeaningDeskChair" type="Node3D" parent="InteriorRuins/West_Store" unique_id=1985824256]
+transform = Transform3D(0.940256, 0.269614, -0.207912, -0.275637, 0.961262, 0, 0.199858, 0.057308, 0.978148, -4.6, 0.65, 17.6)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/LeaningDeskChair" unique_id=1381118421]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6211,8 +6211,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/LeaningDeskChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/LeaningDeskChair" unique_id=968109829]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6222,11 +6222,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.129039, 0.918161, -0.374607, 0.990268, 0.139173, 0.000000, 0.052135, -0.370961, -0.927184, -11.800000, 0.920000, 16.800000)
+[node name="ToppledChair" type="Node3D" parent="InteriorRuins/West_Store" unique_id=915787174]
+transform = Transform3D(-0.129039, 0.918161, -0.374607, 0.990268, 0.139173, 0, 0.052135, -0.370961, -0.927184, -11.8, 0.92, 16.8)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/ToppledChair" unique_id=517578200]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6236,8 +6236,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/ToppledChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/ToppledChair" unique_id=1371495302]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6247,11 +6247,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Store"]
-transform = Transform3D(-0.518339, 0.110176, -0.848048, 0.207912, 0.978148, 0.000000, 0.829516, -0.176319, -0.529919, -2.600000, 0.570000, 9.900000)
+[node name="DiscardedChair" type="Node3D" parent="InteriorRuins/West_Store" unique_id=783989670]
+transform = Transform3D(-0.518339, 0.110176, -0.848048, 0.207912, 0.978148, 0, 0.829516, -0.176319, -0.529919, -2.6, 0.57, 9.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/West_Store/DiscardedChair" unique_id=1666913114]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6261,8 +6261,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/DiscardedChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/West_Store/DiscardedChair" unique_id=920346219]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6272,10 +6272,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="East_Lower_ResearchRoom" type="Node3D" parent="InteriorRuins"]
+[node name="East_Lower_ResearchRoom" type="Node3D" parent="InteriorRuins" unique_id=378869395]
 
-[node name="PartitionWest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(1.400000, 0.000000, 0.000000, 0.000000, 0.700000, 0.000000, 0.000000, 0.000000, 1.000000, 64.000000, 0.500000, -14.000000)
+[node name="PartitionWest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=2037664922]
+transform = Transform3D(1.4, 0, 0, 0, 0.7, 0, 0, 0, 1, 64, 0.5, -14)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6285,8 +6285,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="PartitionEastStump" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.600000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, 0.000000, 0.000000, 1.000000, 73.200000, 0.500000, -14.000000)
+[node name="PartitionEastStump" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=61507875]
+transform = Transform3D(0.6, 0, 0, 0, 0.42, 0, 0, 0, 1, 73.2, 0.5, -14)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6296,8 +6296,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="BrokenReturn" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.480000, 0.000000, -0.900000, 0.000000, 0.000000, 69.000000, 0.500000, -21.000000)
+[node name="BrokenReturn" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=236584292]
+transform = Transform3D(0, 0, 1, 0, 0.48, 0, -0.9, 0, 0, 69, 0.5, -21)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6307,8 +6307,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="DeskWithObjects" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.996195, 0.000000, -0.087156, 0.000000, 1.000000, 0.000000, 0.087156, 0.000000, 0.996195, 64.000000, 0.500000, -22.000000)
+[node name="DeskWithObjects" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=408354793]
+transform = Transform3D(0.996195, 0, -0.087156, 0, 1, 0, 0.087156, 0, 0.996195, 64, 0.5, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6318,8 +6318,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="LongResearchTable" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.999391, 0.000000, 0.034899, 0.000000, 1.000000, 0.000000, -0.034899, 0.000000, 0.999391, 67.200000, 0.500000, -22.600000)
+[node name="LongResearchTable" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1401630963]
+transform = Transform3D(0.999391, 0, 0.034899, 0, 1, 0, -0.034899, 0, 0.999391, 67.2, 0.5, -22.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6329,8 +6329,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="BoxOnResearchTable" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.956305, 0.000000, 0.292372, 0.000000, 1.000000, 0.000000, -0.292372, 0.000000, 0.956305, 66.400000, 1.500000, -22.700000)
+[node name="BoxOnResearchTable" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=943414367]
+transform = Transform3D(0.956305, 0, 0.292372, 0, 1, 0, -0.292372, 0, 0.956305, 66.4, 1.5, -22.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6340,8 +6340,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="OverturnedDesk" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.321560, -0.933878, -0.156434, 0.945519, 0.325568, 0.000000, 0.050930, -0.147912, 0.987688, 63.400000, 1.460000, -17.700000)
+[node name="OverturnedDesk" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=862938050]
+transform = Transform3D(0.32156, -0.933878, -0.156434, 0.945519, 0.325568, 0, 0.05093, -0.147912, 0.987688, 63.4, 1.46, -17.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6351,8 +6351,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="FallenShelfBeam" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.637212, -0.054344, 0.073122, 0.101682, 0.345691, 0.000000, -0.078240, 0.006673, 0.595528, 63.200000, 0.620000, -23.700000)
+[node name="FallenShelfBeam" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=898788747]
+transform = Transform3D(0.637212, -0.054344, 0.073122, 0.101682, 0.345691, 0, -0.07824, 0.006673, 0.595528, 63.2, 0.62, -23.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6362,8 +6362,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 27)
 }
 
-[node name="ScatteredBox" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(1.125833, 0.000000, 0.650000, 0.000000, 1.300000, 0.000000, -0.650000, 0.000000, 1.125833, 62.900000, 0.500000, -21.100000)
+[node name="ScatteredBox" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1033458351]
+transform = Transform3D(1.125833, 0, 0.65, 0, 1.3, 0, -0.65, 0, 1.125833, 62.9, 0.5, -21.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6373,8 +6373,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BrokenPier" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.400000, 0.000000, 0.000000, 0.000000, 1.000000, 61.700000, 0.500000, -14.300000)
+[node name="BrokenPier" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1460357526]
+transform = Transform3D(1, 0, 0, 0, 0.4, 0, 0, 0, 1, 61.7, 0.5, -14.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6384,8 +6384,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="WallDebris0" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.170000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, 0.000000, 0.000000, 0.220000, 62.700000, 0.500000, -14.400000)
+[node name="WallDebris0" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=966690468]
+transform = Transform3D(0.17, 0, 0, 0, 0.12, 0, 0, 0, 0.22, 62.7, 0.5, -14.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6395,8 +6395,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="WallDebris1" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.155303, 0.000000, 0.089482, 0.000000, 0.120000, 0.000000, -0.069145, 0.000000, 0.200980, 63.400000, 0.500000, -14.170000)
+[node name="WallDebris1" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1503181389]
+transform = Transform3D(0.155303, 0, 0.089482, 0, 0.12, 0, -0.069145, 0, 0.20098, 63.4, 0.5, -14.17)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6406,8 +6406,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="WallDebris2" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.113752, 0.000000, 0.163492, 0.000000, 0.120000, 0.000000, -0.126335, 0.000000, 0.147209, 64.100000, 0.500000, -13.940000)
+[node name="WallDebris2" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1694949495]
+transform = Transform3D(0.113752, 0, 0.163492, 0, 0.12, 0, -0.126335, 0, 0.147209, 64.1, 0.5, -13.94)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6417,8 +6417,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="SandLeak" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.000000, 0.000000, 0.400000, 0.000000, 0.100000, 0.000000, -0.400000, 0.000000, 0.000000, 63.300000, 0.470000, -23.600000)
+[node name="SandLeak" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=583642666]
+transform = Transform3D(0, 0, 0.4, 0, 0.1, 0, -0.4, 0, 0, 63.3, 0.47, -23.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6428,11 +6428,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 39)
 }
 
-[node name="LeaningResearchChair" type="Node3D" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(-0.941776, -0.287930, 0.173648, -0.292372, 0.956305, 0.000000, -0.166061, -0.050770, -0.984808, 64.600000, 0.650000, -20.700000)
+[node name="LeaningResearchChair" type="Node3D" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=1041865531]
+transform = Transform3D(-0.941776, -0.28793, 0.173648, -0.292372, 0.956305, 0, -0.166061, -0.05077, -0.984808, 64.6, 0.65, -20.7)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/LeaningResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/LeaningResearchChair" unique_id=1460115322]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6442,8 +6442,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/LeaningResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/LeaningResearchChair" unique_id=2023819763]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6453,11 +6453,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledResearchChair" type="Node3D" parent="InteriorRuins/East_Lower_ResearchRoom"]
-transform = Transform3D(0.085625, -0.814665, 0.573576, 0.994522, 0.104528, 0.000000, -0.059955, 0.570434, 0.819152, 66.600000, 0.920000, -18.900000)
+[node name="ToppledResearchChair" type="Node3D" parent="InteriorRuins/East_Lower_ResearchRoom" unique_id=452848828]
+transform = Transform3D(0.085625, -0.814665, 0.573576, 0.994522, 0.104528, 0, -0.059955, 0.570434, 0.819152, 66.6, 0.92, -18.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/ToppledResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/ToppledResearchChair" unique_id=855270796]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6467,8 +6467,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/ToppledResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_ResearchRoom/ToppledResearchChair" unique_id=2072511753]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6478,10 +6478,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="East_Lower_SupplyRoom" type="Node3D" parent="InteriorRuins"]
+[node name="East_Lower_SupplyRoom" type="Node3D" parent="InteriorRuins" unique_id=774245174]
 
-[node name="BrokenOfficeDivider" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.450000, 0.000000, -0.650000, 0.000000, 0.000000, 66.500000, 0.500000, -10.600000)
+[node name="BrokenOfficeDivider" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=2077452079]
+transform = Transform3D(0, 0, 1, 0, 0.45, 0, -0.65, 0, 0, 66.5, 0.5, -10.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6491,8 +6491,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideDesk" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 63.600000, 0.500000, -7.200000)
+[node name="SideDesk" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=1458737793]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 63.6, 0.5, -7.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6502,8 +6502,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="LeaningWorktable" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.944818, -0.253163, -0.207912, 0.258819, 0.965926, 0.000000, 0.200827, -0.053812, 0.978148, 68.400000, 0.770000, -6.600000)
+[node name="LeaningWorktable" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=1241330816]
+transform = Transform3D(0.944818, -0.253163, -0.207912, 0.258819, 0.965926, 0, 0.200827, -0.053812, 0.978148, 68.4, 0.77, -6.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6513,8 +6513,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="StoragePallet" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.696165, 0.000000, 0.073170, 0.000000, 0.700000, 0.000000, -0.073170, 0.000000, 0.696165, 72.500000, 0.500000, -7.100000)
+[node name="StoragePallet" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=2088922763]
+transform = Transform3D(0.696165, 0, 0.07317, 0, 0.7, 0, -0.07317, 0, 0.696165, 72.5, 0.5, -7.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6524,8 +6524,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 24)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.086083, -0.983930, -0.156434, 0.996195, 0.087156, 0.000000, 0.013634, -0.155839, 0.987688, 71.700000, 0.850000, -10.300000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=947024382]
+transform = Transform3D(0.086083, -0.98393, -0.156434, 0.996195, 0.087156, 0, 0.013634, -0.155839, 0.987688, 71.7, 0.85, -10.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6535,8 +6535,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 1)
 }
 
-[node name="SmallSupplyBox" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(1.271592, 0.000000, 0.270285, 0.000000, 1.300000, 0.000000, -0.270285, 0.000000, 1.271592, 63.600000, 0.500000, -8.700000)
+[node name="SmallSupplyBox" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=1901755460]
+transform = Transform3D(1.271592, 0, 0.270285, 0, 1.3, 0, -0.270285, 0, 1.271592, 63.6, 0.5, -8.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6546,8 +6546,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="BrokenLintel" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.586846, -0.038489, -0.093861, 0.083504, 0.277275, 0.000000, 0.092947, -0.006096, 0.592613, 70.500000, 0.580000, -6.200000)
+[node name="BrokenLintel" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=603702955]
+transform = Transform3D(0.586846, -0.038489, -0.093861, 0.083504, 0.277275, 0, 0.092947, -0.006096, 0.592613, 70.5, 0.58, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6557,8 +6557,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 27)
 }
 
-[node name="LooseDebris0" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.160000, 0.000000, 0.000000, 0.000000, 0.100000, 0.000000, 0.000000, 0.000000, 0.200000, 72.800000, 0.500000, -6.200000)
+[node name="LooseDebris0" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=1353114395]
+transform = Transform3D(0.16, 0, 0, 0, 0.1, 0, 0, 0, 0.2, 72.8, 0.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6568,8 +6568,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseDebris1" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.135688, 0.000000, 0.105984, 0.000000, 0.100000, 0.000000, -0.084787, 0.000000, 0.169610, 72.100000, 0.500000, -6.200000)
+[node name="LooseDebris1" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=1602068572]
+transform = Transform3D(0.135688, 0, 0.105984, 0, 0.1, 0, -0.084787, 0, 0.16961, 72.1, 0.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6579,8 +6579,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseDebris2" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.070139, 0.000000, 0.179759, 0.000000, 0.100000, 0.000000, -0.143807, 0.000000, 0.087674, 71.400000, 0.500000, -6.200000)
+[node name="LooseDebris2" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=574276799]
+transform = Transform3D(0.070139, 0, 0.179759, 0, 0.1, 0, -0.143807, 0, 0.087674, 71.4, 0.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6590,11 +6590,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="OverturnedOfficeChair" type="Node3D" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(0.027165, -0.171510, 0.984808, 0.987688, 0.156434, 0.000000, -0.154058, 0.972683, 0.173648, 64.900000, 0.920000, -7.900000)
+[node name="OverturnedOfficeChair" type="Node3D" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=279679612]
+transform = Transform3D(0.027165, -0.17151, 0.984808, 0.987688, 0.156434, 0, -0.154058, 0.972683, 0.173648, 64.9, 0.92, -7.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/OverturnedOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/OverturnedOfficeChair" unique_id=1711632468]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6604,8 +6604,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/OverturnedOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/OverturnedOfficeChair" unique_id=733548946]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6615,11 +6615,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="LeaningOfficeChair" type="Node3D" parent="InteriorRuins/East_Lower_SupplyRoom"]
-transform = Transform3D(-0.936608, 0.304322, 0.173648, 0.309017, 0.951057, 0.000000, -0.165149, 0.053660, -0.984808, 69.600000, 0.650000, -8.200000)
+[node name="LeaningOfficeChair" type="Node3D" parent="InteriorRuins/East_Lower_SupplyRoom" unique_id=2032115423]
+transform = Transform3D(-0.936608, 0.304322, 0.173648, 0.309017, 0.951057, 0, -0.165149, 0.05366, -0.984808, 69.6, 0.65, -8.2)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/LeaningOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/LeaningOfficeChair" unique_id=103350861]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6629,8 +6629,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/LeaningOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Lower_SupplyRoom/LeaningOfficeChair" unique_id=1406223161]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6640,10 +6640,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="East_Upper_ResearchRoom" type="Node3D" parent="InteriorRuins"]
+[node name="East_Upper_ResearchRoom" type="Node3D" parent="InteriorRuins" unique_id=1978380033]
 
-[node name="PartitionWest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(1.400000, 0.000000, 0.000000, 0.000000, 0.700000, 0.000000, 0.000000, 0.000000, 1.000000, 64.000000, 4.500000, -14.000000)
+[node name="PartitionWest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=539925846]
+transform = Transform3D(1.4, 0, 0, 0, 0.7, 0, 0, 0, 1, 64, 4.5, -14)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6653,8 +6653,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="PartitionEastStump" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.600000, 0.000000, 0.000000, 0.000000, 0.420000, 0.000000, 0.000000, 0.000000, 1.000000, 73.200000, 4.500000, -14.000000)
+[node name="PartitionEastStump" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1284564422]
+transform = Transform3D(0.6, 0, 0, 0, 0.42, 0, 0, 0, 1, 73.2, 4.5, -14)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6664,8 +6664,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="BrokenReturn" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.480000, 0.000000, -0.900000, 0.000000, 0.000000, 69.000000, 4.500000, -21.000000)
+[node name="BrokenReturn" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=400607881]
+transform = Transform3D(0, 0, 1, 0, 0.48, 0, -0.9, 0, 0, 69, 4.5, -21)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6675,8 +6675,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="DeskWithObjects" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.996195, 0.000000, -0.087156, 0.000000, 1.000000, 0.000000, 0.087156, 0.000000, 0.996195, 64.000000, 4.500000, -22.000000)
+[node name="DeskWithObjects" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1530491426]
+transform = Transform3D(0.996195, 0, -0.087156, 0, 1, 0, 0.087156, 0, 0.996195, 64, 4.5, -22)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6686,8 +6686,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="LongResearchTable" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.999391, 0.000000, 0.034899, 0.000000, 1.000000, 0.000000, -0.034899, 0.000000, 0.999391, 67.200000, 4.500000, -22.600000)
+[node name="LongResearchTable" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1130419492]
+transform = Transform3D(0.999391, 0, 0.034899, 0, 1, 0, -0.034899, 0, 0.999391, 67.2, 4.5, -22.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6697,8 +6697,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 57)
 }
 
-[node name="BoxOnResearchTable" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.956305, 0.000000, 0.292372, 0.000000, 1.000000, 0.000000, -0.292372, 0.000000, 0.956305, 66.400000, 5.500000, -22.700000)
+[node name="BoxOnResearchTable" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1102288721]
+transform = Transform3D(0.956305, 0, 0.292372, 0, 1, 0, -0.292372, 0, 0.956305, 66.4, 5.5, -22.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6708,8 +6708,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 5)
 }
 
-[node name="OverturnedDesk" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.321560, -0.933878, -0.156434, 0.945519, 0.325568, 0.000000, 0.050930, -0.147912, 0.987688, 63.400000, 5.460000, -17.700000)
+[node name="OverturnedDesk" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=937972389]
+transform = Transform3D(0.32156, -0.933878, -0.156434, 0.945519, 0.325568, 0, 0.05093, -0.147912, 0.987688, 63.4, 5.46, -17.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6719,8 +6719,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="FallenShelfBeam" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.637212, -0.054344, 0.073122, 0.101682, 0.345691, 0.000000, -0.078240, 0.006673, 0.595528, 63.200000, 4.620000, -23.700000)
+[node name="FallenShelfBeam" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1820058408]
+transform = Transform3D(0.637212, -0.054344, 0.073122, 0.101682, 0.345691, 0, -0.07824, 0.006673, 0.595528, 63.2, 4.62, -23.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6730,8 +6730,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 27)
 }
 
-[node name="ScatteredBox" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(1.125833, 0.000000, 0.650000, 0.000000, 1.300000, 0.000000, -0.650000, 0.000000, 1.125833, 62.900000, 4.500000, -21.100000)
+[node name="ScatteredBox" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1499282614]
+transform = Transform3D(1.125833, 0, 0.65, 0, 1.3, 0, -0.65, 0, 1.125833, 62.9, 4.5, -21.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6741,8 +6741,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 4)
 }
 
-[node name="BrokenPier" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.400000, 0.000000, 0.000000, 0.000000, 1.000000, 61.700000, 4.500000, -14.300000)
+[node name="BrokenPier" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=427390481]
+transform = Transform3D(1, 0, 0, 0, 0.4, 0, 0, 0, 1, 61.7, 4.5, -14.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6752,8 +6752,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 26)
 }
 
-[node name="WallDebris0" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.170000, 0.000000, 0.000000, 0.000000, 0.120000, 0.000000, 0.000000, 0.000000, 0.220000, 62.700000, 4.500000, -14.400000)
+[node name="WallDebris0" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1433395595]
+transform = Transform3D(0.17, 0, 0, 0, 0.12, 0, 0, 0, 0.22, 62.7, 4.5, -14.4)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6763,8 +6763,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="WallDebris1" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.155303, 0.000000, 0.089482, 0.000000, 0.120000, 0.000000, -0.069145, 0.000000, 0.200980, 63.400000, 4.500000, -14.170000)
+[node name="WallDebris1" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=1799639761]
+transform = Transform3D(0.155303, 0, 0.089482, 0, 0.12, 0, -0.069145, 0, 0.20098, 63.4, 4.5, -14.17)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6774,8 +6774,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="WallDebris2" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.113752, 0.000000, 0.163492, 0.000000, 0.120000, 0.000000, -0.126335, 0.000000, 0.147209, 64.100000, 4.500000, -13.940000)
+[node name="WallDebris2" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=612869575]
+transform = Transform3D(0.113752, 0, 0.163492, 0, 0.12, 0, -0.126335, 0, 0.147209, 64.1, 4.5, -13.94)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6785,11 +6785,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LeaningResearchChair" type="Node3D" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(-0.941776, -0.287930, 0.173648, -0.292372, 0.956305, 0.000000, -0.166061, -0.050770, -0.984808, 64.600000, 4.650000, -20.700000)
+[node name="LeaningResearchChair" type="Node3D" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=2066559485]
+transform = Transform3D(-0.941776, -0.28793, 0.173648, -0.292372, 0.956305, 0, -0.166061, -0.05077, -0.984808, 64.6, 4.65, -20.7)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/LeaningResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/LeaningResearchChair" unique_id=123605]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6799,8 +6799,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/LeaningResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/LeaningResearchChair" unique_id=1256617191]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6810,11 +6810,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="ToppledResearchChair" type="Node3D" parent="InteriorRuins/East_Upper_ResearchRoom"]
-transform = Transform3D(0.085625, -0.814665, 0.573576, 0.994522, 0.104528, 0.000000, -0.059955, 0.570434, 0.819152, 66.600000, 4.920000, -18.900000)
+[node name="ToppledResearchChair" type="Node3D" parent="InteriorRuins/East_Upper_ResearchRoom" unique_id=395367862]
+transform = Transform3D(0.085625, -0.814665, 0.573576, 0.994522, 0.104528, 0, -0.059955, 0.570434, 0.819152, 66.6, 4.92, -18.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/ToppledResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/ToppledResearchChair" unique_id=1293744757]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6824,8 +6824,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/ToppledResearchChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_ResearchRoom/ToppledResearchChair" unique_id=1345001384]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6835,10 +6835,10 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="East_Upper_SupplyRoom" type="Node3D" parent="InteriorRuins"]
+[node name="East_Upper_SupplyRoom" type="Node3D" parent="InteriorRuins" unique_id=1285476614]
 
-[node name="BrokenOfficeDivider" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 0.450000, 0.000000, -0.650000, 0.000000, 0.000000, 66.500000, 4.500000, -10.600000)
+[node name="BrokenOfficeDivider" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=965831569]
+transform = Transform3D(0, 0, 1, 0, 0.45, 0, -0.65, 0, 0, 66.5, 4.5, -10.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6848,8 +6848,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 48)
 }
 
-[node name="SideDesk" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 63.600000, 4.500000, -7.200000)
+[node name="SideDesk" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=1722079540]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 63.6, 4.5, -7.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6859,8 +6859,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 56)
 }
 
-[node name="LeaningWorktable" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.944818, -0.253163, -0.207912, 0.258819, 0.965926, 0.000000, 0.200827, -0.053812, 0.978148, 68.400000, 4.770000, -6.600000)
+[node name="LeaningWorktable" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=979335066]
+transform = Transform3D(0.944818, -0.253163, -0.207912, 0.258819, 0.965926, 0, 0.200827, -0.053812, 0.978148, 68.4, 4.77, -6.6)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6870,8 +6870,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="StoragePallet" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.696165, 0.000000, 0.073170, 0.000000, 0.700000, 0.000000, -0.073170, 0.000000, 0.696165, 63.200000, 4.500000, -11.500000)
+[node name="StoragePallet" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=213489804]
+transform = Transform3D(0.696165, 0, 0.07317, 0, 0.7, 0, -0.07317, 0, 0.696165, 63.2, 4.5, -11.5)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6881,8 +6881,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 24)
 }
 
-[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.086083, -0.983930, -0.156434, 0.996195, 0.087156, 0.000000, 0.013634, -0.155839, 0.987688, 63.700000, 4.850000, -12.100000)
+[node name="FallenBarrel" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=1931689324]
+transform = Transform3D(0.086083, -0.98393, -0.156434, 0.996195, 0.087156, 0, 0.013634, -0.155839, 0.987688, 63.7, 4.85, -12.1)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6892,8 +6892,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 1)
 }
 
-[node name="SmallSupplyBox" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(1.271592, 0.000000, 0.270285, 0.000000, 1.300000, 0.000000, -0.270285, 0.000000, 1.271592, 63.600000, 4.500000, -8.700000)
+[node name="SmallSupplyBox" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=700908872]
+transform = Transform3D(1.271592, 0, 0.270285, 0, 1.3, 0, -0.270285, 0, 1.271592, 63.6, 4.5, -8.7)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6903,8 +6903,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 3)
 }
 
-[node name="BrokenLintel" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.586846, -0.038489, -0.093861, 0.083504, 0.277275, 0.000000, 0.092947, -0.006096, 0.592613, 65.000000, 4.580000, -12.000000)
+[node name="BrokenLintel" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=274288528]
+transform = Transform3D(0.586846, -0.038489, -0.093861, 0.083504, 0.277275, 0, 0.092947, -0.006096, 0.592613, 65, 4.58, -12)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6914,8 +6914,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 27)
 }
 
-[node name="LooseDebris0" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.160000, 0.000000, 0.000000, 0.000000, 0.100000, 0.000000, 0.000000, 0.000000, 0.200000, 65.000000, 4.500000, -6.200000)
+[node name="LooseDebris0" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=1655280171]
+transform = Transform3D(0.16, 0, 0, 0, 0.1, 0, 0, 0, 0.2, 65, 4.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6925,8 +6925,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseDebris1" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.135688, 0.000000, 0.105984, 0.000000, 0.100000, 0.000000, -0.084787, 0.000000, 0.169610, 64.300000, 4.500000, -6.200000)
+[node name="LooseDebris1" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=1008470354]
+transform = Transform3D(0.135688, 0, 0.105984, 0, 0.1, 0, -0.084787, 0, 0.16961, 64.3, 4.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6936,8 +6936,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="LooseDebris2" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.070139, 0.000000, 0.179759, 0.000000, 0.100000, 0.000000, -0.143807, 0.000000, 0.087674, 63.600000, 4.500000, -6.200000)
+[node name="LooseDebris2" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=855552732]
+transform = Transform3D(0.070139, 0, 0.179759, 0, 0.1, 0, -0.143807, 0, 0.087674, 63.6, 4.5, -6.2)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6947,11 +6947,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 29)
 }
 
-[node name="OverturnedOfficeChair" type="Node3D" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(0.027165, -0.171510, 0.984808, 0.987688, 0.156434, 0.000000, -0.154058, 0.972683, 0.173648, 64.900000, 4.920000, -7.900000)
+[node name="OverturnedOfficeChair" type="Node3D" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=1902428398]
+transform = Transform3D(0.027165, -0.17151, 0.984808, 0.987688, 0.156434, 0, -0.154058, 0.972683, 0.173648, 64.9, 4.92, -7.9)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/OverturnedOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/OverturnedOfficeChair" unique_id=1414425843]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6961,8 +6961,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/OverturnedOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/OverturnedOfficeChair" unique_id=628025337]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6972,11 +6972,11 @@ data = {
 "cells": PackedInt32Array(0, 0, 22)
 }
 
-[node name="LeaningOfficeChair" type="Node3D" parent="InteriorRuins/East_Upper_SupplyRoom"]
-transform = Transform3D(-0.936608, 0.304322, 0.173648, 0.309017, 0.951057, 0.000000, -0.165149, 0.053660, -0.984808, 69.600000, 4.650000, -8.200000)
+[node name="LeaningOfficeChair" type="Node3D" parent="InteriorRuins/East_Upper_SupplyRoom" unique_id=402512962]
+transform = Transform3D(-0.936608, 0.304322, 0.173648, 0.309017, 0.951057, 0, -0.165149, 0.05366, -0.984808, 69.6, 4.65, -8.2)
 
-[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/LeaningOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.630000, 0.000000, 0.000000, 0.000000, 0.380000, 0.000000, 0.000000, 0.000000)
+[node name="SeatAndLegs" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/LeaningOfficeChair" unique_id=30072150]
+transform = Transform3D(0.38, 0, 0, 0, 0.63, 0, 0, 0, 0.38, 0, 0, 0)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
@@ -6986,8 +6986,8 @@ data = {
 "cells": PackedInt32Array(0, 0, 55)
 }
 
-[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/LeaningOfficeChair"]
-transform = Transform3D(0.380000, 0.000000, 0.000000, 0.000000, 0.000000, -0.380000, 0.000000, 0.100000, 0.000000, 0.000000, 0.850000, -0.300000)
+[node name="PalletBackrest" type="GridMap" parent="InteriorRuins/East_Upper_SupplyRoom/LeaningOfficeChair" unique_id=1415332274]
+transform = Transform3D(0.38, 0, 0, 0, 0, -0.38, 0, 0.1, 0, 0, 0.85, -0.3)
 mesh_library = ExtResource("15_meshlib")
 cell_size = Vector3(1, 1, 1)
 cell_center_x = false
