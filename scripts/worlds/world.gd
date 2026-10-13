@@ -17,6 +17,11 @@ const MAP_PATHS := [
 	"res://scenes/worlds/arena_lanes.tscn",
 	"res://scenes/worlds/arena_cross.tscn",
 	"res://scenes/worlds/arena_ring.tscn",
+	"res://scenes/worlds/arena_citadel.tscn",
+	"res://scenes/worlds/arena_foundry.tscn",
+	"res://scenes/worlds/arena_causeway.tscn",
+	"res://scenes/worlds/arena_butterfly.tscn",
+	"res://scenes/worlds/arena_spire.tscn",
 ]
 # Let the round-win announcement show before the wipe covers the screen; must
 # stay under match_manager's ROUND_INTERMISSION_SECONDS.
