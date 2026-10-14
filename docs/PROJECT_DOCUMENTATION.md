@@ -62,6 +62,7 @@ world (Node3D)
 ├── MatchManager                  match_manager.gd
 ├── DraftScreen (CanvasLayer 5)   ui/mods/draft_screen.tscn: the modifier draft overlay
 ├── Spectator (Node3D)            worlds/spectator.tscn: third-person rig while eliminated
+├── MapCamera (Node3D)            worlds/map_camera.tscn: flyover of the coming map behind the draft
 ├── MatchFlow (CanvasLayer 8)     ui/match_flow.tscn: wipe, result/countdown cards, slow-mo
 └── MenuLayer (CanvasLayer 10)    above the player HUD (CanvasLayer 1)
 	└── ConnectionMenu            connection_menu.tscn + connection_ui.gd
@@ -307,6 +308,12 @@ a behaviour has the final say. The pistol does 34 (3 hits kill at 100 HP).
   all four corners light when the source is unknown, e.g. fall damage) and a short view
   shake
   (`camera_script.gd::shake()`, projection offsets only, so aim never moves).
+- Map flyover (`scenes/worlds/map_camera.tscn` + `scripts/worlds/map_camera.gd`): when the
+  phase becomes `"draft"`, `world.gd::_on_phase_changed` makes it the current camera and
+  it circles the map in MapRoot from outside its edge (exports: orbit seconds, height and
+  distance ratios). It restarts on a map swap, and `_respawn_local_player` stops it behind
+  the countdown wipe, so the cut back to first person is hidden. The spectator stands
+  down while it runs. The draft screen dims to 40% and names the next map.
 - Spectating (`scenes/worlds/spectator.tscn` + `scripts/worlds/spectator.gd`, driven by
   `world.gd::_update_spectator`): while the local player is dead the rig sits on a living
   player's head and a `SpringArm3D` (map-only mask, sphere probe) holds the camera 3.5 m

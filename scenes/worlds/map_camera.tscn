@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/worlds/map_camera.gd" id="1_script"]
+
+[node name="MapCamera" type="Node3D"]
+physics_interpolation_mode = 2
+script = ExtResource("1_script")
+
+[node name="Camera" type="Camera3D" parent="."]
+fov = 60.0
+far = 1000.0
