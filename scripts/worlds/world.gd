@@ -3,7 +3,8 @@ extends Node3D
 ## World manager: spawns the local player when the match manager reports the
 ## game started, respawns everyone between matches, and runs the local
 ## spectator camera while the player is eliminated. The match manager owns the
-## room-property polling that used to live here.
+## room-property polling that used to live here. During the modifier draft the
+## view is a flyover of the coming map (map_camera.gd).
 
 signal local_player_changed(player: PlayerCharacter)
 signal game_started
@@ -40,6 +41,8 @@ const MAP_SETTLE_SECONDS := 1.0
 @onready var match_flow: CanvasLayer = $MatchFlow
 # third-person camera while the local player is eliminated
 @onready var spectator: Node3D = $Spectator
+# flyover of the coming map behind the draft
+@onready var map_camera: Node3D = $MapCamera
 
 var local_player: PlayerCharacter
 var spawn_points: Array[Node3D] = []
@@ -57,6 +60,7 @@ func _ready() -> void:
 	match_manager.map_changed.connect(_on_map_changed)
 	match_manager.returned_to_lobby.connect(_return_to_lobby)
 	match_manager.phase_changed.connect(_apply_input_lock.unbind(2))
+	match_manager.phase_changed.connect(_on_phase_changed)
 
 
 func _process(_delta: float) -> void:
@@ -127,15 +131,28 @@ func _start_game() -> void:
 
 func _respawn_local_player() -> void:
 	if local_player == null:
+		map_camera.stop()
 		return
 	# the round start can land while the new map is still being swapped in
 	while _swapping:
 		await get_tree().process_frame
-	# the teleport happens behind the wipe, then the countdown reveals the arena
+	# the teleport (and the cut back from the map flyover) happens behind the
+	# wipe, then the countdown reveals the arena
 	await match_flow.cover()
+	map_camera.stop()
 	if local_player != null:
 		respawn_player(local_player)
 	match_flow.reveal()
+
+
+# The draft shows the map flyover; it ends behind the countdown's respawn wipe
+# (_respawn_local_player), or right away if the game moves anywhere else.
+func _on_phase_changed(phase: String, _previous: String) -> void:
+	if phase == "draft":
+		spectator.stop()
+		map_camera.start(map_root.get_child(0))
+	elif phase != "countdown":
+		map_camera.stop()
 
 
 func _apply_input_lock() -> void:
@@ -146,6 +163,7 @@ func _apply_input_lock() -> void:
 # Game over finished: remove the local player and hand the UI back to the lobby.
 func _return_to_lobby() -> void:
 	spectator.stop()
+	map_camera.stop()
 	if local_player != null:
 		player_spawner.despawn(local_player)
 		local_player = null
@@ -186,6 +204,8 @@ func _swap_map(index: int) -> void:
 	map_root.add_child(scene.instantiate())
 	_current_map = index
 	_collect_spawn_points()
+	if map_camera.active:
+		map_camera.start(map_root.get_child(0))
 
 
 func _spawn_local_player() -> void:
@@ -227,7 +247,7 @@ func _register_local_player(player: PlayerCharacter) -> void:
 # While the local player is eliminated, watch a living player in third person
 # (spectator.gd: mouse orbits, A/D cycles). Runs only on the dead client.
 func _update_spectator() -> void:
-	if local_player == null or not local_player.dead:
+	if local_player == null or not local_player.dead or map_camera.active:
 		spectator.stop()
 		return
 	var target: Node3D = spectator.follow(local_player)
