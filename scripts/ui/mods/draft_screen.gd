@@ -56,6 +56,9 @@ func open(draft_round: int) -> void:
 		round_label.text = "Get ready"
 	else:
 		round_label.text = "Round %d complete" % (draft_round - 1)
+	# the flyover behind the cards (map_camera.gd) shows this map
+	if draft_round > 0:
+		round_label.text += " · Next map: %s" % world.map_display_name(_match_manager.map_index)
 	NodeUtil.fit_children(cards, _offers.size())
 	for i in _offers.size():
 		var card := cards.get_child(i)
