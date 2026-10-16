@@ -14,6 +14,7 @@
 [ext_resource type="Shader" uid="uid://bxa6m55ut41wc" path="res://scripts/ui/shader/blueprint_bg.gdshader" id="11_bg"]
 [ext_resource type="Script" uid="uid://b3g6enkee12go" path="res://scripts/ui/lobby_page.gd" id="12_lobby"]
 [ext_resource type="Script" uid="uid://bsh0dlqba6p58" path="res://scripts/ui/browse_page.gd" id="13_browse"]
+[ext_resource type="PackedScene" path="res://scenes/ui/chat.tscn" id="14_chat"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blueprint"]
 shader = ExtResource("11_bg")
@@ -734,7 +735,6 @@ theme_type_variation = &"PrimaryButton"
 text = "JOIN"
 
 [node name="Lobby" type="MarginContainer" parent="Pages" unique_id=2117014368]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -787,6 +787,10 @@ size_flags_vertical = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 14
 columns = 2
+
+[node name="Chat" parent="Pages/Lobby/V/Body" unique_id=641191995 instance=ExtResource("14_chat")]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
 
 [node name="InfoCard" type="PanelContainer" parent="Pages/Lobby/V/Body" unique_id=1692067638]
 custom_minimum_size = Vector2(330, 0)
@@ -920,6 +924,14 @@ layout_mode = 2
 theme_type_variation = &"CreamButton"
 theme_override_font_sizes/font_size = 30
 text = "-----"
+
+[node name="EditRulesButton" type="Button" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=527420533]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+theme_type_variation = &"BlueButton"
+text = "EDIT SETTINGS"
 
 [node name="LobbyStatus" type="Label" parent="Pages/Lobby/V" unique_id=760861189]
 unique_name_in_owner = true
@@ -1114,6 +1126,19 @@ theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 22
 text = "100%"
 horizontal_alignment = 2
+
+[node name="UiScaleModeLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=472070361]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "UI SCALING"
+horizontal_alignment = 2
+
+[node name="UiScaleMode" parent="Pages/Settings/Card/V/Rows" unique_id=1249439843 instance=ExtResource("6_stepper")]
+layout_mode = 2
+value_width = 162.0
+font_size = 24
+button_size = Vector2(46, 40)
 
 [node name="UiScaleLabel" type="Label" parent="Pages/Settings/Card/V/Rows" unique_id=1189709946]
 layout_mode = 2

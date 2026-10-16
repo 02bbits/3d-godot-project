@@ -1,15 +1,10 @@
-[gd_resource type="Resource" script_class="Modifier" format=3]
+[gd_resource type="Resource" format=3 uid="uid://bp5kmb7auwrv4"]
 
-[ext_resource type="Script" path="res://scripts/modifiers/behaviors/lifted.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://ddgbou30b1spw" path="res://scripts/modifiers/behaviors/lifted.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
+speed_scale = 0.6
 display_name = "Lifted"
 description = "Pulled into the sky."
-type = 0
-rarity = 0
-max_level = 1
-percent = Dictionary[StringName, float]({})
-flat = Dictionary[StringName, float]({})
-duration = 2.0
-speed_scale = 1.0
+duration = 3.0

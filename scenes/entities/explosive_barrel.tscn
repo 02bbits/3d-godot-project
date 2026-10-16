@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cstutepphpvvg"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bx4y2"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_fy5b6"]
+
+[node name="Node3D" type="Node3D" unique_id=196874141]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1449910097]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=2081794592]
+shape = SubResource("CylinderShape3D_bx4y2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1619374529]
+mesh = SubResource("CylinderMesh_fy5b6")

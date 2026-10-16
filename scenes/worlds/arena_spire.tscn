@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bxh2ntsm7v86e"]
 
-[ext_resource type="MeshLibrary" path="res://resources/worlds/arena_mesh_library.tres" id="1_ho8ji"]
+[ext_resource type="MeshLibrary" uid="uid://yw26kw2g5nq2" path="res://resources/worlds/arena_mesh_library.tres" id="1_ho8ji"]
 
 [node name="ArenaSpire" type="Node3D" unique_id=327900422]
 metadata/layout_description = "Four playable heights around a central tower with a skylight and crown"

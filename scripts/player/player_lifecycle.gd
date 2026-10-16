@@ -4,6 +4,16 @@ extends "res://scripts/player/player_network.gd"
 var input_locked := false
 # seconds left of a stun (Zap Gun); counted down in player.gd
 var _stun_left := 0.0
+# true while the chat input is open (scripts/ui/chat.gd); separate from the
+# match-flow lock so a phase change can't unfreeze a typing player
+var typing := false
+# replicated: bumped by the owner per chat message; every copy shows "..."
+var net_chat_count: int = 0:
+	set(value):
+		var previous := net_chat_count
+		net_chat_count = value
+		if is_node_ready() and value > previous:
+			_show_chat_bubble()
 
 ## Freezes movement, jumps, dashes and shooting; the camera can still look
 ## around and gravity still runs (player.gd) so the player settles on the
@@ -18,8 +28,12 @@ func stun(seconds: float) -> void:
 	_stun_left = maxf(_stun_left, seconds)
 	_sync_controls()
 
+func set_typing(value: bool) -> void:
+	typing = value
+	_sync_controls()
+
 func is_frozen() -> bool:
-	return input_locked or _stun_left > 0.0
+	return input_locked or typing or _stun_left > 0.0
 
 # one place decides whether the local player's controls run
 func _sync_controls() -> void:
@@ -175,3 +189,19 @@ func _set_dead_visuals() -> void:
 	if weapon != null:
 		weapon.update_visibility()
 	hitbox.disabled = dead
+
+# "..." over a remote robot for chat_bubble_seconds, then a fade (the message
+# itself stays in the chat log; the local view is first person)
+func _show_chat_bubble() -> void:
+	if not is_remote:
+		return
+	if _chat_bubble_tween != null:
+		_chat_bubble_tween.kill()
+	chat_bubble.visible = true
+	chat_bubble.modulate.a = 1.0
+	chat_bubble.outline_modulate.a = 1.0
+	_chat_bubble_tween = create_tween()
+	_chat_bubble_tween.tween_interval(chat_bubble_seconds)
+	_chat_bubble_tween.tween_property(chat_bubble, "modulate:a", 0.0, chat_bubble_fade)
+	_chat_bubble_tween.parallel().tween_property(chat_bubble, "outline_modulate:a", 0.0, chat_bubble_fade)
+	_chat_bubble_tween.tween_callback(chat_bubble.hide)

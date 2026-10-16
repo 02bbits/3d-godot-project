@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/match_flow.tscn" id="7_flow"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/spectator.tscn" id="8_spectator"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/map_camera.tscn" id="9_map_camera"]
+[ext_resource type="PackedScene" path="res://scenes/ui/chat.tscn" id="10_chat"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qwx2d"]
 sky_top_color = Color(0.5921009, 0.6607336, 0.9253923, 1)
@@ -62,5 +63,19 @@ world = NodePath("..")
 
 [node name="MenuLayer" type="CanvasLayer" parent="." unique_id=1822758334]
 layer = 10
+
+[node name="GameChat" parent="MenuLayer" node_paths=PackedStringArray("world") instance=ExtResource("10_chat")]
+custom_minimum_size = Vector2(520, 0)
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 24.0
+offset_top = 200.0
+offset_right = 544.0
+offset_bottom = 200.0
+grow_vertical = 0
+mouse_filter = 2
+in_game = true
+world = NodePath("../..")
 
 [node name="ConnectionMenu" parent="MenuLayer" unique_id=1822758332 instance=ExtResource("4_menu")]

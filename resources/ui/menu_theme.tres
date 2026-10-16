@@ -86,6 +86,79 @@ shadow_color = Color(0.0353, 0.0431, 0.0549, 1)
 shadow_size = 2
 shadow_offset = Vector2(0, 7)
 
+[sub_resource type="StyleBoxFlat" id="SB_input"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.0902, 0.1059, 0.1412, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.0627, 0.0784, 0.1098, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="SB_chat_overlay"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0.0902, 0.1059, 0.1412, 0.94)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.0627, 0.0784, 0.1098, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="SB_chat_pill"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.0902, 0.1059, 0.1412, 0.78)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SB_chat_mention"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.0902, 0.1059, 0.1412, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.7882, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="SB_chat_plain"]
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+
+[sub_resource type="FontVariation" id="Font_rubik_bold"]
+base_font = ExtResource("2_rubik")
+variation_opentype = {
+2003265652: 700
+}
+
+[sub_resource type="FontVariation" id="Font_rubik_italic"]
+base_font = ExtResource("2_rubik")
+variation_transform = Transform2D(1, 0, 0.2, 1, 0, 0)
+
 [sub_resource type="StyleBoxFlat" id="SB_chip"]
 content_margin_left = 24.0
 content_margin_top = 10.0
@@ -216,22 +289,6 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(1, 0.7882, 0.2, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="SB_input"]
-content_margin_left = 16.0
-content_margin_top = 10.0
-content_margin_right = 16.0
-content_margin_bottom = 10.0
-bg_color = Color(0.0902, 0.1059, 0.1412, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.0627, 0.0784, 0.1098, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -397,6 +454,24 @@ CardPanel/styles/panel = SubResource("SB_card")
 CardTitleLabel/base_type = &"Label"
 CardTitleLabel/colors/font_color = Color(0.1059, 0.1255, 0.1608, 1)
 CardTitleLabel/fonts/font = ExtResource("1_lilita")
+ChatLog/base_type = &"PanelContainer"
+ChatLog/styles/panel = SubResource("SB_input")
+ChatOverlay/base_type = &"PanelContainer"
+ChatOverlay/styles/panel = SubResource("SB_chat_overlay")
+ChatPill/base_type = &"PanelContainer"
+ChatPill/styles/panel = SubResource("SB_chat_pill")
+ChatPillMention/base_type = &"PanelContainer"
+ChatPillMention/styles/panel = SubResource("SB_chat_mention")
+ChatPlain/base_type = &"PanelContainer"
+ChatPlain/styles/panel = SubResource("SB_chat_plain")
+ChatText/base_type = &"RichTextLabel"
+ChatText/colors/default_color = Color(0.9569, 0.9333, 0.8863, 1)
+ChatText/font_sizes/bold_font_size = 18
+ChatText/font_sizes/italics_font_size = 18
+ChatText/font_sizes/normal_font_size = 18
+ChatText/fonts/bold_font = SubResource("Font_rubik_bold")
+ChatText/fonts/italics_font = SubResource("Font_rubik_italic")
+ChatText/fonts/normal_font = ExtResource("2_rubik")
 ChipPanel/base_type = &"PanelContainer"
 ChipPanel/styles/panel = SubResource("SB_chip")
 CreamButton/base_type = &"Button"

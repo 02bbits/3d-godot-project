@@ -24,7 +24,7 @@
 [ext_resource type="Script" uid="uid://c8y35mer47tpb" path="res://scripts/player/health.gd" id="21_health"]
 [ext_resource type="Script" uid="uid://bxenf2owi6qof" path="res://scripts/modifiers/modifier_manager.gd" id="22_mods"]
 [ext_resource type="PackedScene" path="res://assets/photon/scenes/impact.tscn" id="26_impact"]
-[ext_resource type="PackedScene" path="res://assets/photon/scenes/vfx_explosion.tscn" id="27_death"]
+[ext_resource type="PackedScene" uid="uid://qvbk6pl4651f" path="res://assets/photon/scenes/vfx_explosion.tscn" id="27_death"]
 [ext_resource type="AudioStream" uid="uid://bd32br31ax5qh" path="res://assets/photon/kenney_fps/sounds/jump_a.ogg" id="28_ja"]
 [ext_resource type="AudioStream" uid="uid://dj8dyaoycilf2" path="res://assets/photon/kenney_fps/sounds/jump_b.ogg" id="29_jb"]
 [ext_resource type="AudioStream" uid="uid://64qyvg75eynn" path="res://assets/photon/kenney_fps/sounds/jump_c.ogg" id="30_jc"]
@@ -39,7 +39,7 @@
 [ext_resource type="PackedScene" path="res://scenes/player/hud/mod_tray.tscn" id="39_tray"]
 [ext_resource type="PackedScene" path="res://scenes/player/hud/hit_flash.tscn" id="40_flash"]
 [ext_resource type="PackedScene" path="res://scenes/player/hud/status_chips.tscn" id="41_status"]
-[ext_resource type="Script" path="res://scripts/player/hud/viewmodel_sun.gd" id="42_vmsun"]
+[ext_resource type="Script" uid="uid://qnipccolm1a8" path="res://scripts/player/hud/viewmodel_sun.gd" id="42_vmsun"]
 
 [sub_resource type="Curve" id="Curve_s7fsc"]
 _limits = [10.0, 30.0, 0.0, 60.0]
@@ -52,7 +52,7 @@ _data = [Vector2(0, 3), 0.0, 0.0, 0, 0, Vector2(30, 30), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="FusionReplicationConfig" id="FusionReplicationConfig_player"]
-property_count = 21
+property_count = 22
 properties/0/path = NodePath("Health:net_health")
 properties/0/max_array_capacity = 0
 properties/0/interface_tag = ""
@@ -179,6 +179,12 @@ properties/20/interface_tag = ""
 properties/20/interpolate = 0
 properties/20/element_type = 0
 properties/20/element_class_name = ""
+properties/21/path = NodePath(":net_chat_count")
+properties/21/max_array_capacity = 0
+properties/21/interface_tag = ""
+properties/21/interpolate = 0
+properties/21/element_type = 0
+properties/21/element_class_name = ""
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_jump"]
 streams_count = 3
@@ -1162,6 +1168,17 @@ text = "test"
 font = ExtResource("33_font")
 font_size = 60
 
+[node name="ChatBubble" type="Label3D" parent="VisualRoot"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+billboard = 1
+double_sided = false
+modulate = Color(1, 0.7882, 0.2, 1)
+outline_size = 18
+text = "..."
+font = ExtResource("33_font")
+font_size = 90
+
 [node name="HandAttachement" type="BoneAttachment3D" parent="VisualRoot" unique_id=1541909339]
 transform = Transform3D(0.64988256, 0.01231674, -6.271675e-08, 7.861972e-08, -1.3951659e-07, 0.6499996, 0.012316759, -0.6498828, -1.1707489e-07, 0.5739328, -0.31798053, 0.010878006)
 bone_name = "handslot.r"
@@ -1294,8 +1311,8 @@ mouse_filter = 2
 stretch = true
 
 [node name="Viewport" type="SubViewport" parent="HUD/ViewModel" unique_id=612222732]
-transparent_bg = true
 world_3d = SubResource("World3D_viewmodel")
+transparent_bg = true
 handle_input_locally = false
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
@@ -1308,12 +1325,13 @@ fov = 90.0
 near = 0.01
 far = 100.0
 
-[node name="SunMirror" type="DirectionalLight3D" parent="HUD/ViewModel/Viewport"]
+[node name="SunMirror" type="DirectionalLight3D" parent="HUD/ViewModel/Viewport" unique_id=1143198001]
 layers = 4
 shadow_enabled = true
 script = ExtResource("42_vmsun")
 
 [node name="HitFlash" parent="HUD" unique_id=515301381 instance=ExtResource("40_flash")]
+layout_mode = 3
 
 [node name="Vitals" parent="HUD" unique_id=260973575 instance=ExtResource("9_hb")]
 

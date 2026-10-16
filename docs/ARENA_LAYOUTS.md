@@ -85,6 +85,47 @@ world origin. Spawn markers retain their stable names, `spawn_point` group, and
 floor-base Y convention, and face inward. Existing arena UIDs are preserved;
 the five new scenes have distinct UIDs. The original KayKit assets are unchanged.
 
+## Vertical pass
+
+A second pass added height and architecture to every arena (mirrored on both
+axes like the rest). Each scene's `metadata/playable_heights` lists its floors.
+
+| Arena | Floor bases | Added |
+| --- | --- | --- |
+| Butterfly | -4, 0, 4, 8, 12 | Sunken courts, under-deck hall, raised wing tiers, crown strip over the pavilion |
+| Causeway | -4, 0, 4, 8, 12 | Slopes into the formerly unreachable middle deck, plaza cellars, end-plaza house, tiers, crown |
+| Citadel | -4, 0, 4, 8, 12 | Sunken courts, two houses per quadrant, bastion tiers and bridges, crown |
+| Cross | -4, 0, 4, 8, 12 | Sunken courts, raised tiers, free-standing crown |
+| Foundry | -4, 0, 4, 8, 12 | Sunken courts, workshop, under-deck hall, tiers, gantry crown, bridges |
+| Lanes | -4, 0, 4, 8, 12 | Slopes into the formerly unreachable lower gallery, sunken courts, tiers, crown |
+| Pillars | 0, 4, 8, 12 | Courtyard house, raised tiers, crown, bridge |
+| Ring | 0, 4, 8, 12 | Two houses per quadrant, tiers, crown, bridges at 4 and 8 m |
+| Spire | -4, 0, 4, 8, 12, 16 | Sunken courts, houses, under-deck hall, tiers, crown, free-standing 16 m top |
+
+- **Sunken courts** (-4 m) are Tiles at grid y -2 over Foundations; the rims
+  have Foundations at y -1. Each court has at least two exit slopes.
+- **Houses** are walled ground rooms with a walkable roof deck, reached by a
+  slope or an adjacent deck. **Halls** are the same walls under an existing deck.
+- **Tiers / crowns** are new floors one storey up, each with its own slope.
+  Some slopes sit on new slabs off a deck edge.
+- **Decoration:** rails with gaps on raised edges and court rims, beams under
+  deck edges, corner stilts under deck corners, panels on tall-block faces,
+  props tucked into corners, and inlays in courts and at doorways.
+
+New editor layers (all at the 0.5 m object offset):
+
+| GridMap | Responsibility |
+| --- | --- |
+| EdgesNorth / East / South / West | Wall, window, doorway, rail and beam pieces on that side of a cell |
+| Corners | Corner pillars and stilts |
+| Props | Corner crates, barrels and pallet stacks |
+
+The library gained edge and corner modules (items 22-39): `Edge*` pieces sit on
+a cell's +Z edge and `Corner*`/`*Corner` pieces in its +X+Z corner, so rotate
+them to the side you want. Every new floor is reachable on foot from the
+spawns, and a 2 m player capsule fits on every reachable cell and along every
+slope.
+
 ## Final verification
 
 - Godot 4.7.2 loaded and rendered every arena and the shared mesh library.

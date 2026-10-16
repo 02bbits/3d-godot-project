@@ -1,0 +1,112 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/chat.gd" id="1_chat"]
+[ext_resource type="Theme" uid="uid://dddyjvwbt6svc" path="res://resources/ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/ui/menu/send.svg" id="3_send"]
+
+[node name="Chat" type="PanelContainer"]
+theme = ExtResource("2_theme")
+theme_type_variation = &"CardPanel"
+script = ExtResource("1_chat")
+
+[node name="V" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Title" type="Label" parent="V/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 30
+text = "CHAT"
+
+[node name="Hint" type="Label" parent="V/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 16
+text = "0 online"
+
+[node name="LogPanel" type="PanelContainer" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_type_variation = &"ChatLog"
+
+[node name="Scroll" type="ScrollContainer" parent="V/LogPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Log" type="VBoxContainer" parent="V/LogPanel/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="Row" type="PanelContainer" parent="V/LogPanel/Scroll/Log"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"ChatPlain"
+
+[node name="Text" type="RichTextLabel" parent="V/LogPanel/Scroll/Log/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"ChatText"
+bbcode_enabled = true
+text = "[b]Player[/b] message"
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="InputRow" type="HBoxContainer" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Channel" type="PanelContainer" parent="V/InputRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HostBadge"
+
+[node name="Label" type="Label" parent="V/InputRow/Channel"]
+layout_mode = 2
+theme_type_variation = &"CardTitleLabel"
+theme_override_font_sizes/font_size = 16
+text = "ALL"
+
+[node name="Input" type="LineEdit" parent="V/InputRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+placeholder_text = "Say something…"
+max_length = 120
+keep_editing_on_text_submit = true
+
+[node name="Send" type="Button" parent="V/InputRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 46)
+layout_mode = 2
+tooltip_text = "Send (Enter)"
+theme_type_variation = &"PrimaryButton"
+icon = ExtResource("3_send")
+icon_alignment = 1
+
+[node name="Keys" type="Label" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 14
+text = "Enter to send  •  Esc to close"

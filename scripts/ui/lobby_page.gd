@@ -5,8 +5,10 @@ extends MarginContainer
 ## "ready_<number>"); the host can start once everyone else is ready. A status
 ## line always says what everyone is waiting for. Names, colors and ready flags
 ## arrive as room properties, so the roster is polled while the page is open.
+## The host can reopen the create form to change the lobby's settings.
 
 signal code_copied
+signal edit_requested
 
 const PLAYER_CHIP := preload("res://scenes/ui/player_chip.tscn")
 const EMPTY_SLOT := preload("res://scenes/ui/empty_slot.tscn")
@@ -46,6 +48,7 @@ func _ready() -> void:
 	%LobbyCode.pressed.connect(func() -> void:
 		DisplayServer.clipboard_set(%LobbyCode.text)
 		code_copied.emit())
+	%EditRulesButton.pressed.connect(edit_requested.emit)
 
 
 func _process(delta: float) -> void:
@@ -109,6 +112,7 @@ func refresh() -> void:
 	var am_host := Fusion.is_master_client()
 	var everyone_ready := player_count >= 2 and unready.is_empty() and (am_host or _local_ready)
 	start_button.visible = am_host
+	%EditRulesButton.visible = am_host
 	start_button.disabled = not everyone_ready
 	ready_button.visible = not am_host
 	ready_button.text = "CANCEL READY" if _local_ready else "READY UP"

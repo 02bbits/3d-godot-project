@@ -58,7 +58,8 @@ func _ready() -> void:
 	%JoinLobbyButton.pressed.connect(_show_page.bind("BrowseLobbies"))
 	%PlayBackButton.pressed.connect(_show_page.bind("NameScreen"))
 	%CreateButton.pressed.connect(_on_create_pressed)
-	%CreateBackButton.pressed.connect(_show_page.bind("PlayChoice"))
+	%CreateBackButton.pressed.connect(func() -> void:
+		_show_page("Lobby" if Fusion.is_in_room() else "PlayChoice"))
 	%BrowseBackButton.pressed.connect(_show_page.bind("PlayChoice"))
 	%PromptJoinButton.pressed.connect(_on_password_join_pressed)
 	%PromptBackButton.pressed.connect(_show_page.bind("BrowseLobbies"))
@@ -73,6 +74,7 @@ func _ready() -> void:
 	%JoinCode.text_submitted.connect(_on_join_code_pressed.unbind(1))
 	$Pages/BrowseLobbies.room_chosen.connect(_on_room_row_pressed)
 	lobby_page.code_copied.connect(_status.bind("Code copied"))
+	lobby_page.edit_requested.connect(_show_page.bind("CreateLobby"))
 	name_robot.gui_input.connect(func(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed \
 				and event.button_index == MOUSE_BUTTON_LEFT:
@@ -136,6 +138,10 @@ func _on_name_next_pressed() -> void:
 func _on_create_pressed() -> void:
 	if create_form.room_title().is_empty():
 		_status("Enter a room name")
+		return
+	if Fusion.is_in_room(): # the host editing the waiting room's settings
+		create_form.apply_to(Fusion.get_room())
+		_show_page("Lobby")
 		return
 	_status("Creating lobby...")
 	# ponytail: no collision check (32^5 codes); a clash fails the create, retry then
@@ -332,12 +338,14 @@ func _show_page(page_name: String) -> void:
 			$MenuFx.play_page(page)
 	_status("")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	$Pages/Settings.fit_ui(pages.get_node(page_name))
 	if page_name == "PlayChoice":
 		play_title.text = "READY, %s?" % get_nickname().to_upper()
 
 
 func _hide_all_pages() -> void:
 	_current_page = ""
+	$Pages/Settings.fit_ui(null)
 	visible = false
 	for page in pages.get_children():
 		page.visible = false

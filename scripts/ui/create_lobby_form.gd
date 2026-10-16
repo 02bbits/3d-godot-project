@@ -1,10 +1,12 @@
 extends MarginContainer
 
 ## Create-lobby form: name, password and visibility plus the match rules,
-## turned into the Photon room options `Fusion.create_room` takes.
+## turned into the Photon room options `Fusion.create_room` takes. Opened from
+## inside a room (host's waiting room) it edits that room's settings instead.
 
 const WORLD := preload("res://scripts/worlds/world.gd")
 const MATCH_MANAGER := preload("res://scripts/worlds/match_manager.gd")
+const PLAYER_COUNTS := [2, 3, 4]
 
 @onready var room_name_input: LineEdit = %RoomName
 @onready var password_input: LineEdit = %Password
@@ -19,8 +21,8 @@ var _private := false
 
 
 func _ready() -> void:
-	players.setup([2, 3, 4], 4)
-	rounds.setup(range(1, 11), 3)
+	players.setup(PLAYER_COUNTS, 4)
+	rounds.setup(range(1, 21), 3)
 	wins.setup(range(1, 6), MATCH_MANAGER.MATCH_WINS_PER_ROUND)
 	var map_values: Array = [-1]
 	var map_labels: Array = ["RANDOM"]
@@ -33,6 +35,7 @@ func _ready() -> void:
 	visibility_button.pressed.connect(func() -> void:
 		_private = not _private
 		_refresh())
+	visibility_changed.connect(_on_shown)
 	_refresh()
 
 
@@ -61,6 +64,38 @@ func room_options() -> FusionRoomOptions:
 	# only these reach the lobby list; the password stays out of it
 	options.lobby_properties = PackedStringArray(["title", "phase", "passworded"])
 	return options
+
+
+## Writes the form into the current room (edit mode). The phase is "waiting"
+## while the host can open this, so rewriting it is harmless.
+func apply_to(room) -> void:
+	room.set_properties(room_options().custom_properties)
+	room.set_max_players(players.value)
+	room.set_visible(not _private)
+
+
+# In a room the form shows that room's settings and saves instead of creating.
+func _on_shown() -> void:
+	if not visible:
+		return
+	var room = Fusion.get_room() if Fusion.is_in_room() else null
+	$V/Title.text = "LOBBY SETTINGS" if room != null else "CREATE LOBBY"
+	%CreateButton.text = "SAVE" if room != null else "CREATE LOBBY"
+	if room == null:
+		players.setup(PLAYER_COUNTS, players.value)
+		_refresh()
+		return
+	var props: Dictionary = room.get_custom_properties()
+	room_name_input.text = str(props.get("title", room.get_room_name()))
+	password_input.text = str(props.get("password", ""))
+	_private = bool(props.get("private", false))
+	# never below the players already in the room
+	players.setup(PLAYER_COUNTS.filter(func(n: int) -> bool: return n >= room.get_player_count()),
+			room.get_max_players())
+	rounds.setup(rounds.values, int(props.get("rounds", rounds.value)))
+	wins.setup(wins.values, int(props.get("match_wins", wins.value)))
+	map.setup(map.values, int(props.get("start_map", -1)), map.labels)
+	_refresh()
 
 
 func _refresh() -> void:

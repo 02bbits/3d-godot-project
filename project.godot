@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="MODS-Arena"
+config/name="MODS Arena"
 config/description="A 3D FPS game based on ROUNDS. Player pick modifers to change their stats and how they play the game"
 config/tags=PackedStringArray("fps", "photon")
 run/main_scene="res://scenes/worlds/main.tscn"

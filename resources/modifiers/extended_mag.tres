@@ -10,6 +10,6 @@ type = 1
 max_level = 2
 percent = Dictionary[StringName, float]({
 &"damage": -75.0,
-&"fire_rate": 80.0,
+&"fire_rate": 800.0,
 &"mag_size": 40.0
 })
