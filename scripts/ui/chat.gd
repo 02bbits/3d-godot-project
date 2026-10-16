@@ -12,17 +12,17 @@ extends PanelContainer
 const POLL_SECONDS := 0.25
 const MAX_HISTORY := 50
 # in game with the chat closed: the newest lines show, then fade out
-const RESTING_COUNT := 4
-const RESTING_SECONDS := 8.0
-const RESTING_FADE := 2.0
-const OPEN_LOG_HEIGHT := 320.0
+const RESTING_COUNT := 2
+const RESTING_SECONDS := 4.5
+const RESTING_FADE := 0.75
+const OPEN_LOG_HEIGHT := 200.0
 # in-game pills hug their text up to this width, then wrap
-const PILL_MAX_WIDTH := 460.0
+const PILL_MAX_WIDTH := 360.0
 const WHEEL_STEP := 40
 # fallback name color for players who joined before publishing a color
 const NAME_COLOR := Color("#FFC933")
 
-## in-game overlay: input hidden until Enter, shown only while a game runs
+## in-game overlay: opens on Enter and is visible only during the fight
 @export var in_game := false
 ## world.gd, for the local player and the game start/end signals (in game only)
 @export var world: Node
@@ -63,7 +63,6 @@ func _ready() -> void:
 		%Send.visible = false
 		input.placeholder_text = "Chat message"
 		hint.text = "Mouse wheel to scroll"
-		world.game_started.connect(show)
 		world.game_ended.connect(func() -> void:
 			_close()
 			hide())
@@ -72,6 +71,8 @@ func _ready() -> void:
 		keys.visible = false
 	_set_open(false)
 	_render()
+	if in_game and match_manager != null:
+		_on_phase_changed(match_manager.match_phase, "", match_manager)
 
 
 func _process(delta: float) -> void:
@@ -153,6 +154,14 @@ func _on_input_gui(event: InputEvent) -> void:
 
 
 func _on_phase_changed(phase: String, _previous: String, match_manager: Node) -> void:
+	if in_game:
+		if phase == "fight":
+			show()
+		else:
+			_close()
+			hide()
+		return
+	# Keep match notices in the lobby chat; gameplay has dedicated banners.
 	if phase == "countdown" and int(match_manager.match_number) == 1:
 		_system("Round %d started" % int(match_manager.round))
 	elif phase in ["intermission", "game_over"] \

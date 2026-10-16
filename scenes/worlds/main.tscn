@@ -65,14 +65,14 @@ world = NodePath("..")
 layer = 10
 
 [node name="GameChat" parent="MenuLayer" node_paths=PackedStringArray("world") instance=ExtResource("10_chat")]
-custom_minimum_size = Vector2(520, 0)
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 24.0
-offset_top = 200.0
-offset_right = 544.0
-offset_bottom = 200.0
+custom_minimum_size = Vector2(380, 0)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -220.0
+offset_right = 409.0
+offset_bottom = -145.0
 grow_vertical = 0
 mouse_filter = 2
 in_game = true

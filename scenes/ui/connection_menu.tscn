@@ -16,6 +16,8 @@
 [ext_resource type="Script" uid="uid://bsh0dlqba6p58" path="res://scripts/ui/browse_page.gd" id="13_browse"]
 [ext_resource type="PackedScene" path="res://scenes/ui/chat.tscn" id="14_chat"]
 
+[ext_resource type="Script" path="res://scripts/ui/lobby_layout.gd" id="15_lobby_layout"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blueprint"]
 shader = ExtResource("11_bg")
 shader_parameter/base_top = Color(0.118, 0.161, 0.247, 1)
@@ -747,32 +749,46 @@ theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 28
 script = ExtResource("12_lobby")
 
-[node name="V" type="VBoxContainer" parent="Pages/Lobby" unique_id=676299877]
+[node name="Layout" type="Control" parent="Pages/Lobby"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("15_lobby_layout")
+design_size = Vector2(1440, 808)
+
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/Layout" unique_id=676299877]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 808.0
 theme_override_constants/separation = 24
 
-[node name="Title" type="Label" parent="Pages/Lobby/V" unique_id=148476849]
+[node name="Title" type="Label" parent="Pages/Lobby/Layout/V" unique_id=148476849]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 52
-text = "WAITING ROOM"
+text = "LOBBY"
 horizontal_alignment = 1
 
-[node name="Body" type="HBoxContainer" parent="Pages/Lobby/V" unique_id=2089912412]
+[node name="Body" type="HBoxContainer" parent="Pages/Lobby/Layout/V" unique_id=2089912412]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 28
 
-[node name="PlayersCard" type="PanelContainer" parent="Pages/Lobby/V/Body" unique_id=118845121]
+[node name="Chat" parent="Pages/Lobby/Layout/V/Body" unique_id=641191995 instance=ExtResource("14_chat")]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+
+[node name="PlayersCard" type="PanelContainer" parent="Pages/Lobby/Layout/V/Body" unique_id=118845121]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+size_flags_horizontal = 1
 theme_type_variation = &"CardPanel"
 
-[node name="V" type="VBoxContainer" parent="Pages/Lobby/V/Body/PlayersCard" unique_id=1446461373]
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/Layout/V/Body/PlayersCard" unique_id=1446461373]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="PlayersTitle" type="Label" parent="Pages/Lobby/V/Body/PlayersCard/V" unique_id=855722573]
+[node name="PlayersTitle" type="Label" parent="Pages/Lobby/Layout/V/Body/PlayersCard/V" unique_id=855722573]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
@@ -780,48 +796,44 @@ theme_override_font_sizes/font_size = 34
 text = "PLAYERS  0 / 4"
 horizontal_alignment = 1
 
-[node name="PlayersList" type="GridContainer" parent="Pages/Lobby/V/Body/PlayersCard/V" unique_id=1221706356]
+[node name="PlayersList" type="GridContainer" parent="Pages/Lobby/Layout/V/Body/PlayersCard/V" unique_id=1221706356]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 14
-columns = 2
+columns = 1
 
-[node name="Chat" parent="Pages/Lobby/V/Body" unique_id=641191995 instance=ExtResource("14_chat")]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-
-[node name="InfoCard" type="PanelContainer" parent="Pages/Lobby/V/Body" unique_id=1692067638]
-custom_minimum_size = Vector2(330, 0)
+[node name="InfoCard" type="PanelContainer" parent="Pages/Lobby/Layout/V/Body" unique_id=1692067638]
+custom_minimum_size = Vector2(404, 0)
 layout_mode = 2
 theme_type_variation = &"CardPanel"
 
-[node name="V" type="VBoxContainer" parent="Pages/Lobby/V/Body/InfoCard" unique_id=13514671]
+[node name="V" type="VBoxContainer" parent="Pages/Lobby/Layout/V/Body/InfoCard" unique_id=13514671]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Title" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=736806670]
+[node name="Title" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V" unique_id=736806670]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 30
 text = "ROOM INFO"
 horizontal_alignment = 1
 
-[node name="Grid" type="GridContainer" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=429883792]
+[node name="Grid" type="GridContainer" parent="Pages/Lobby/Layout/V/Body/InfoCard/V" unique_id=429883792]
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 10
 columns = 2
 
-[node name="NameKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1178624304]
+[node name="NameKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=1178624304]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Name"
 horizontal_alignment = 2
 
-[node name="RoomTitle" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1064553243]
+[node name="RoomTitle" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=1064553243]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -830,14 +842,14 @@ theme_override_font_sizes/font_size = 23
 text = "Lobby"
 text_overrun_behavior = 3
 
-[node name="HostKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1959189166]
+[node name="HostKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=1959189166]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Host"
 horizontal_alignment = 2
 
-[node name="HostLabel" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=1918835294]
+[node name="HostLabel" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=1918835294]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -846,14 +858,14 @@ theme_override_font_sizes/font_size = 23
 text = "-"
 text_overrun_behavior = 3
 
-[node name="RoundsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=271161287]
+[node name="RoundsKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=271161287]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Rounds to win"
 horizontal_alignment = 2
 
-[node name="InfoRounds" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=347604084]
+[node name="InfoRounds" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=347604084]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -862,14 +874,14 @@ theme_override_font_sizes/font_size = 23
 text = "3"
 text_overrun_behavior = 3
 
-[node name="WinsKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=623514870]
+[node name="WinsKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=623514870]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Wins per round"
 horizontal_alignment = 2
 
-[node name="InfoWins" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=489874676]
+[node name="InfoWins" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=489874676]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -878,14 +890,14 @@ theme_override_font_sizes/font_size = 23
 text = "2"
 text_overrun_behavior = 3
 
-[node name="MapKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=292376226]
+[node name="MapKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=292376226]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Starting map"
 horizontal_alignment = 2
 
-[node name="InfoMap" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=496150564]
+[node name="InfoMap" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=496150564]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -894,14 +906,14 @@ theme_override_font_sizes/font_size = 23
 text = "RANDOM"
 text_overrun_behavior = 3
 
-[node name="MaxKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=388751000]
+[node name="MaxKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=388751000]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Max players"
 horizontal_alignment = 2
 
-[node name="InfoMax" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V/Grid" unique_id=396936642]
+[node name="InfoMax" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V/Grid" unique_id=396936642]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
@@ -910,14 +922,14 @@ theme_override_font_sizes/font_size = 23
 text = "4"
 text_overrun_behavior = 3
 
-[node name="CodeKey" type="Label" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=865396257]
+[node name="CodeKey" type="Label" parent="Pages/Lobby/Layout/V/Body/InfoCard/V" unique_id=865396257]
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 17
 text = "Lobby code (click to copy)"
 horizontal_alignment = 1
 
-[node name="LobbyCode" type="Button" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=738128379]
+[node name="LobbyCode" type="Button" parent="Pages/Lobby/Layout/V/Body/InfoCard/V" unique_id=738128379]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
@@ -925,7 +937,7 @@ theme_type_variation = &"CreamButton"
 theme_override_font_sizes/font_size = 30
 text = "-----"
 
-[node name="EditRulesButton" type="Button" parent="Pages/Lobby/V/Body/InfoCard/V" unique_id=527420533]
+[node name="EditRulesButton" type="Button" parent="Pages/Lobby/Layout/V/Body/InfoCard/V" unique_id=527420533]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 46)
@@ -933,27 +945,28 @@ layout_mode = 2
 theme_type_variation = &"BlueButton"
 text = "EDIT SETTINGS"
 
-[node name="LobbyStatus" type="Label" parent="Pages/Lobby/V" unique_id=760861189]
+[node name="LobbyStatus" type="Label" parent="Pages/Lobby/Layout/V" unique_id=760861189]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 20
 text = "Waiting for players"
 horizontal_alignment = 1
 
-[node name="Buttons" type="HBoxContainer" parent="Pages/Lobby/V" unique_id=259875905]
+[node name="Buttons" type="HBoxContainer" parent="Pages/Lobby/Layout/V" unique_id=259875905]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="LobbyLeaveButton" type="Button" parent="Pages/Lobby/V/Buttons" unique_id=2060897228]
+[node name="LobbyLeaveButton" type="Button" parent="Pages/Lobby/Layout/V/Buttons" unique_id=2060897228]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(190, 54)
 layout_mode = 2
 theme_type_variation = &"RedButton"
 text = "LEAVE"
 
-[node name="LobbyReadyButton" type="Button" parent="Pages/Lobby/V/Buttons" unique_id=1028231906]
+[node name="LobbyReadyButton" type="Button" parent="Pages/Lobby/Layout/V/Buttons" unique_id=1028231906]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(280, 54)
@@ -961,7 +974,7 @@ layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "READY UP"
 
-[node name="LobbyStartButton" type="Button" parent="Pages/Lobby/V/Buttons" unique_id=734185702]
+[node name="LobbyStartButton" type="Button" parent="Pages/Lobby/Layout/V/Buttons" unique_id=734185702]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 54)
 layout_mode = 2
