@@ -29,7 +29,7 @@ var walk_or_run: String = "WalkState" #keep in memory if play char was walking o
 @export var idle_deccel: float = 5.0
 
 @export_group("Crouch variables")
-@export var crouch_speed: float = 2.0
+@export var crouch_speed: float = 1.8
 @export var crouch_accel: float = 6.0
 @export var crouch_deccel: float = 8.0
 @export var continious_crouch: bool = false #if true, doesn't need to keep crouch button on to crouch
@@ -37,20 +37,20 @@ var walk_or_run: String = "WalkState" #keep in memory if play char was walking o
 @export var crouch_hitbox_height: float = 1.2
 
 @export_group("Walk variables")
-@export var walk_speed: float = 5.1
+@export var walk_speed: float = 3.6
 @export var walk_accel: float = 8.0
 @export var walk_deccel: float = 17.0
 @export var backward_walk_speed_multiplier : float = 0.75
 
 @export_group("Run variables")
-@export var run_speed: float = 7.65
+@export var run_speed: float = 5.4
 @export var run_accel: float = 7.0
 @export var run_deccel: float = 12.0
 @export var continious_run: bool = false #if true, doesn't need to keep run button on to run
 @export var backward_run_speed_multiplier : float = 0.7
 
 @export_group("Jump variables")
-@export var jump_height: float = 2.7
+@export var jump_height: float = 2.1
 @export var jump_time_to_peak: float = 0.6
 @export var jump_time_to_fall: float = 0.35
 @onready var jump_velocity: float = (2.0 * jump_height) / jump_time_to_peak
@@ -180,6 +180,11 @@ var default_input_actions : Dictionary
 # copy): the head, and the arms, which swing past the camera when animating
 @export var head_meshes: Array[MeshInstance3D] = []
 
+@export_group("Chat bubble")
+@export var chat_bubble_seconds: float = 3.0 #how long "..." floats over a robot after it chats
+@export var chat_bubble_fade: float = 0.4
+var _chat_bubble_tween: Tween
+
 @export_group("Head tracking")
 @export_range(0.0, 180.0, 1.0) var head_yaw_limit_degrees: float = 50.0 #neck turn before the torso follows
 @export var body_turn_smoothing: float = 8.0
@@ -206,6 +211,7 @@ var weapon: Node3D
 @onready var model: Node3D = $VisualRoot/ScalingRoot
 @onready var visual_root: Node3D = $VisualRoot
 @onready var nickname_label: Label3D = $VisualRoot/NicknameLabel
+@onready var chat_bubble: Label3D = $VisualRoot/ChatBubble
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var weapon_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Weapon/playback")
 @onready var movement_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/Alive/Movement/playback")

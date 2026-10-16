@@ -4,7 +4,7 @@ extends Modifier
 ## (read from the victim's replicated health).
 
 @export var threshold := 0.3
-@export var bonus_percent := 30.0
+@export var bonus_percent := 20.0
 
 
 func on_damage_dealt(ctx: Dictionary, _me: Node) -> void:
@@ -16,5 +16,5 @@ func on_damage_dealt(ctx: Dictionary, _me: Node) -> void:
 func describe(at_level: int = 1) -> Array[Dictionary]:
 	var lines := super(at_level)
 	lines.append(line("Damage below %d%% HP" % roundi(threshold * 100.0),
-			signed(bonus_percent * at_level) + "%", TONE_GOOD))
+			signed(bonus_percent + at_level * 10.0) + "%", TONE_GOOD))
 	return lines
